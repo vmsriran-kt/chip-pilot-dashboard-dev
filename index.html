@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Chip Pilot 2.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#EBEBE9;--bg2:#E4E4E1;--bg3:#F2F2F0;--bg4:#F8F8F6;--bg5:#DCDBD7;
+  --border:rgba(152,148,144,.28);--sep:rgba(152,148,144,.20);
+  --text:#1C1A18;--text2:#3A3733;--muted:#989490;
+  --green:#3a7200;--amber:#8a5e00;--red:#b82020;--blue:#1a54a0;--cyan:#007080;
+  --nav-w:200px;--hdr-h:48px;--tab-h:38px;
+  --card-r:8px;--shadow:0 1px 4px rgba(60,54,48,.10);
+  --green-bg:rgba(58,114,0,.10);--amber-bg:rgba(138,94,0,.10);
+  --red-bg:rgba(184,32,32,.10);--blue-bg:rgba(26,84,160,.10);
+}
+body.dark{
+  --bg:#050810;--bg2:#040710;--bg3:#080c18;--bg4:#1a2232;--bg5:#1e2a3a;
+  --border:rgba(255,255,255,.12);--sep:rgba(46,61,86,.8);
+  --text:#d8eaf8;--text2:#b8cede;--muted:#6888a0;
+  --green:#7ec200;--amber:#d09800;--red:#cc4444;--blue:#4e9ae0;--cyan:#14b8cc;
+  --shadow:0 2px 12px rgba(0,0,0,.40);
+  --green-bg:rgba(126,194,0,.10);--amber-bg:rgba(208,152,0,.12);
+  --red-bg:rgba(204,68,68,.14);--blue-bg:rgba(78,154,224,.12);
+}
+html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text)}
+/* -- LAYOUT -- */
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+#hdr{height:var(--hdr-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0;z-index:10}
+#body{display:flex;flex:1;overflow:hidden}
+#nav{width:var(--nav-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;font-size:12px}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+#tabs{height:var(--tab-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:0;flex-shrink:0;overflow-x:auto}
+#views{flex:1;overflow-y:auto;padding:14px}
+/* -- HEADER -- */
+.logo{font-size:14px;font-weight:800;letter-spacing:.5px;color:var(--text);display:flex;align-items:center;gap:7px}
+.logo-v{font-size:10px;font-weight:700;color:var(--green);background:var(--green-bg);padding:1px 6px;border-radius:10px;letter-spacing:.5px}
+.hdr-spacer{flex:1}
+.badge{padding:3px 9px;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;border:1px solid;transition:opacity .15s}
+.badge:hover{opacity:.8}
+.badge-r{background:var(--red-bg);color:var(--red);border-color:rgba(184,32,32,.28)}
+.badge-b{background:var(--blue-bg);color:var(--blue);border-color:rgba(26,84,160,.20)}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:6px;cursor:pointer;font-size:11px;transition:all .15s}
+.theme-btn:hover{color:var(--text);border-color:var(--muted)}
+/* -- NAV -- */
+.nav-hdr{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding:10px 12px 6px}
+.nav-grp{border-top:1px solid var(--sep)}
+.nav-grp-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;cursor:pointer;font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);background:rgba(0,0,0,.02);border-left:3px solid transparent;transition:all .15s;user-select:none}
+.nav-grp:not(.closed) .nav-grp-hdr{border-left-color:var(--green);background:var(--green-bg)}
+.nav-grp-hdr:hover{background:var(--green-bg)}
+.nav-grp-arrow{transition:transform .2s;font-size:10px;color:var(--muted)}
+.nav-grp.closed .nav-grp-arrow{transform:rotate(-90deg)}
+.nav-chips{overflow:hidden;max-height:600px;transition:max-height .25s ease}
+.nav-grp.closed .nav-chips{max-height:0}
+.nav-chip{padding:7px 12px 6px 14px;cursor:pointer;border-left:3px solid transparent;transition:all .12s}
+.nav-chip:hover{background:rgba(0,0,0,.03);border-left-color:var(--muted)}
+.nav-chip.active{background:var(--green-bg);border-left-color:var(--green)}
+.nc-code{font-size:11px;font-weight:700;color:var(--text)}
+.nc-name{font-size:10px;color:var(--muted);margin-top:1px}
+.nc-bar{height:3px;background:var(--border);border-radius:2px;margin-top:5px;overflow:hidden}
+.nc-fill{height:100%;border-radius:2px;transition:width .3s}
+.nav-static{border-top:1px solid var(--sep)}
+.nav-static-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 7px;font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);border-left:3px solid var(--blue)}
+.nav-feed{padding:6px 12px;display:flex;flex-direction:column;gap:5px}
+.nf-item{display:flex;flex-direction:column;gap:1px}
+.nf-t{font-size:10px;font-weight:600;color:var(--text2)}
+.nf-s{font-size:9px;color:var(--muted)}
+.nf-r .nf-t{color:var(--red)}
+.nf-g .nf-t{color:var(--green)}
+/* -- TABS -- */
+.tab{padding:0 14px;height:var(--tab-h);display:flex;align-items:center;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;gap:5px;transition:all .12s;user-select:none}
+.tab:hover{color:var(--text2)}
+.tab.on{color:var(--text);border-bottom-color:var(--green)}
+.tab-close{font-size:13px;color:var(--muted);margin-left:4px;line-height:1;border-radius:3px;padding:0 2px;transition:all .12s}
+.tab-close:hover{color:var(--red);background:var(--red-bg)}
+/* -- VIEWS -- */
+.view{display:flex;flex-direction:column;gap:14px}
+.view[hidden]{display:none!important}
+/* -- SECTION LABEL -- */
+.sec-label{display:flex;align-items:center;gap:7px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--muted);padding:4px 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px}
+/* -- CHIP GRID -- */
+.chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.cc{background:var(--bg4);border:1px solid var(--border);border-radius:var(--card-r);padding:11px 12px;cursor:pointer;transition:all .15s;border-left:3px solid var(--border)}
+.cc:hover{transform:translateY(-1px);box-shadow:var(--shadow);border-color:var(--muted)}
+.cc.g{border-left-color:var(--green)}.cc.a{border-left-color:var(--amber)}.cc.r{border-left-color:var(--red)}.cc.b{border-left-color:var(--blue)}
+.cc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.cc-name{font-size:12px;font-weight:700;color:var(--text)}
+.cc-badge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px}
+.bg-g{background:var(--green-bg);color:var(--green)}.bg-a{background:var(--amber-bg);color:var(--amber)}.bg-r{background:var(--red-bg);color:var(--red)}.bg-b{background:var(--blue-bg);color:var(--blue)}.bg-w{background:rgba(100,100,100,.10);color:var(--muted)}
+.cc-phase{font-size:10px;color:var(--muted);margin-bottom:6px}
+.cc-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:6px;overflow:hidden}
+.cc-fill{height:100%;border-radius:2px}
+.cc-row{display:flex;justify-content:space-between;font-size:10px;color:var(--text2)}
+.cc-cm{font-size:10px;color:var(--muted);margin-top:4px}
+.cc-cm span{color:var(--text2);font-weight:600}
+/* -- CARDS -- */
+.card{background:var(--bg4);border:1px solid var(--border);border-radius:var(--card-r);overflow:hidden}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.02)}
+.card-title{font-size:11px;font-weight:700;letter-spacing:.3px;color:var(--text)}
+.card-body{padding:12px}
+/* -- TABLE -- */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{padding:5px 8px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border)}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--sep);color:var(--text2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(0,0,0,.02)}
+/* -- HEATMAP -- */
+.hm-wrap{overflow-x:auto}
+.hm-tbl{border-collapse:separate;border-spacing:2px;font-size:10px;white-space:nowrap}
+.hm-tbl th{font-size:8px;font-weight:700;text-align:center;color:var(--muted);padding:2px 3px}
+.hm-tbl th:first-child{text-align:left;min-width:90px;color:var(--text2)}
+.hm-cell{width:32px;height:22px;border-radius:3px;text-align:center;font-size:9px;font-weight:700;vertical-align:middle}
+.hm-l{background:rgba(58,114,0,.18);color:var(--green)}.hm-m{background:rgba(138,94,0,.22);color:var(--amber)}.hm-h{background:rgba(184,32,32,.22);color:var(--red)}
+.hm-legend{display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--muted);align-items:center}
+.hm-dot{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
+/* -- PM ASSISTANT -- */
+.pm-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.pm-col-hdr{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--text2);padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px}
+.pm-item{background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:9px 10px;margin-bottom:8px;border-left:3px solid var(--border);transition:all .12s}
+.pm-item.urgent{border-left-color:var(--red)}
+.pm-item.week{border-left-color:var(--amber)}
+.pm-item.fyi{border-left-color:var(--blue)}
+.pm-item-title{font-size:11px;font-weight:600;color:var(--text);margin-bottom:3px}
+.pm-item-sub{font-size:10px;color:var(--muted)}
+.pm-item-chip{font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;display:inline-block;margin-top:4px}
+/* -- PM CHIP SELECTOR -- */
+.pm-sel-bar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:10px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--card-r);margin-bottom:14px}
+.pm-sel-lbl{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);flex-shrink:0;margin-right:4px}
+.pm-pill{padding:4px 11px;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--text2);transition:all .12s;white-space:nowrap}
+.pm-pill:hover{border-color:var(--green);color:var(--green)}
+.pm-pill.on{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.pm-chip-header{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--card-r);margin-bottom:14px}
+.pm-chip-name{font-size:16px;font-weight:800;color:var(--text)}
+.pm-chip-meta{font-size:11px;color:var(--muted)}
+/* -- STATUS DRAFT -- */
+.draft-output{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:11px;line-height:1.6;color:var(--text2);white-space:pre-wrap;font-family:'Courier New',monospace;max-height:360px;overflow-y:auto}
+.btn{padding:5px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:all .15s}
+.btn-green{background:var(--green-bg);color:var(--green);border-color:var(--green)}
+.btn-green:hover{background:var(--green);color:#fff}
+/* -- CHIP DETAIL -- */
+.cv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ms-list{display:flex;flex-direction:column;gap:6px}
+.ms-item{display:flex;align-items:center;gap:8px;font-size:11px}
+.ms-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ms-dot.done{background:var(--green)}.ms-dot.now{background:var(--blue)}.ms-dot.wait{background:var(--border)}
+.ms-name{font-weight:600;color:var(--text2)}
+.ms-date{color:var(--muted);font-size:10px;margin-left:auto}
+.risk-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid var(--sep);font-size:11px;color:var(--text2)}
+.risk-item:last-child{border-bottom:none}
+.ri-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.ri-h{background:var(--red)}.ri-m{background:var(--amber)}.ri-l{background:var(--green)}
+/* -- GATE CHECKLIST -- */
+.cl-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--sep);font-size:11px;cursor:pointer}
+.cl-item:last-child{border-bottom:none}
+.cl-item input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:var(--green)}
+.cl-label{color:var(--text2);flex:1}.cl-label.done{text-decoration:line-through;color:var(--muted)}
+.cl-owner{font-size:10px;color:var(--muted)}
+.cl-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
+.cl-fill{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+/* -- RESPONSIVE GRIDS (used in JS render fns) -- */
+.radar-grid{display:flex;flex-direction:column;gap:12px;max-width:860px;margin:0 auto;width:100%}
+.pm-main-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+/* -- NEEDS ATTENTION BAR -- */
+.attn-bar{display:flex;align-items:center;gap:12px;background:var(--bg4);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:var(--card-r);padding:8px 12px;margin-bottom:14px;overflow-x:auto;flex-shrink:0}
+.attn-label{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--red);white-space:nowrap;flex-shrink:0}
+.attn-items{display:flex;gap:7px;flex-wrap:wrap}
+.attn-item{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;transition:all .12s}
+.attn-item:hover{border-color:var(--amber);background:var(--amber-bg)}
+.attn-item.urgent{border-left:2px solid var(--red)}
+.attn-item.warn{border-left:2px solid var(--amber)}
+.attn-chip{font-size:11px;font-weight:700;color:var(--text)}
+.attn-status{font-size:10px;color:var(--muted)}
+.attn-bug{font-size:10px;color:var(--red);font-weight:700}
+/* -- COCKPIT 2-PANE LAYOUT -- */
+.ck-layout{display:flex;gap:14px;align-items:flex-start}
+.ck-chips{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
+.ck-panel{width:260px;flex-shrink:0;display:flex;flex-direction:column;gap:10px}
+@media(max-width:1300px){.ck-panel{display:none}}
+@media(max-width:700px){.attn-items{flex-wrap:nowrap;overflow-x:auto}}
+/* -- LARGE SCREEN: wider nav, cap card width -- */
+@media(min-width:1400px){
+  :root{--nav-w:220px}
+  .chips-grid{grid-template-columns:repeat(auto-fill,minmax(220px,280px))}
+}
+/* -- HAMBURGER & NAV DRAWER -- */
+#nav-toggle{display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--text);padding:2px 8px;line-height:1;border-radius:5px;transition:background .15s}
+#nav-toggle:hover{background:var(--bg5)}
+#nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:19;backdrop-filter:blur(1px)}
+#nav-overlay.open{display:block}
+/* -- BREAKPOINTS -- */
+@media(max-width:900px){
+  #nav{display:none;position:fixed;top:var(--hdr-h);left:0;bottom:0;width:220px;z-index:20;
+       box-shadow:4px 0 20px rgba(0,0,0,.22);overflow-y:auto}
+  #nav.open{display:flex;flex-direction:column}
+  #nav-toggle{display:block}
+  .pm-grid{grid-template-columns:1fr}
+  .cv-grid{grid-template-columns:1fr}
+  .pm-main-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .chips-grid{grid-template-columns:1fr 1fr}
+  #views{padding:10px}
+  .card-body{padding:10px}
+  #hdr{padding:0 10px}
+  .logo{font-size:13px}
+  .badge-b{display:none}
+  .draft-output{max-height:260px}
+}
+@media(max-width:420px){
+  .chips-grid{grid-template-columns:1fr}
+  .tab{padding:0 10px;font-size:10px}
+  #views{padding:8px}
+  .logo-v{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="hdr">
+    <button id="nav-toggle" onclick="toggleNav()" aria-label="Toggle navigation">☰</button>
+    <div class="logo">⚙️ Chip Pilot <span class="logo-v">2.0</span></div>
+    <div class="hdr-spacer"></div>
+    <div class="badge badge-r" id="risk-badge" onclick="openRiskChips()"></div>
+    <div class="badge badge-b" id="multi-badge"></div>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀️ Light</button>
+  </header>
+  <div id="nav-overlay" onclick="toggleNav()"></div>
+  <div id="body">
+    <nav id="nav"></nav>
+    <main id="main">
+      <div id="tabs"></div>
+      <div id="views">
+        <div class="view" id="v-cockpit"></div>
+        <div class="view" id="v-radar" hidden></div>
+        <div class="view" id="v-pm" hidden></div>
+        <div class="view" id="v-chip" hidden></div>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+/* ===============================================
+   CHIP DATA
+=============================================== */
+const GROUPS = [
+  { id:'cpu', icon:'🖥️', label:'CPU' },
+  { id:'gpu', icon:'⚡', label:'GPU' },
+  { id:'fusion', icon:'⚛️', label:'Fusion' },
+];
+
+const CHIPS = {
+  thorz:{ id:'thorz', code:'ThorZ', name:'ThorZ', group:'cpu', cm:'Mayank Kapoor',
+    progress:75, color:'a', phase:'Post-silicon · BNB Declared 5/28 ✅ · MNB Active (73%/65%)',
+    status:'MNB 73%/65% Active', nextGate:'MNB/CS', nextGateDate:'6/13',
+    bugs:2, atRisk:true,
+    milestones:[
+      {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓'},
+      {n:'Bringup',s:'done',d:'✓'},{n:'ES',s:'done',d:'✓'},{n:'BNB',s:'done',d:'✓ 5/28'},
+      {n:'MG',s:'now',d:'MNB 6/7–6/13'},{n:'QS',s:'wait',d:"Q1 '27"},{n:'PRel',s:'wait',d:"Q3 '27"},
+    ],
+    risks:[
+      {l:'h',t:'MaxP scope added by BU (Auto) — new PC cycle required, schedule impact TBD'},
+      {l:'m',t:'SCG HSIO debug ongoing (PCIe/USB/MGBE) — pending close-out'},
+      {l:'m',t:'CPU Soft Lock up active — Bug 6124878, root cause TBD'},
+    ],
+    checklist:[
+      {t:'SCG miniWAT coverage 100%',owner:'Mayank Kapoor',done:true},
+      {t:'MNB/CS completion by 6/13',owner:'HW team',done:false},
+      {t:'CPU Soft Lock up Bug 6124878 resolved',owner:'SW team',done:false},
+      {t:'MODS QS Qual release targeting 6/11',owner:'MODS team',done:false},
+      {t:'QBAA noise — isolated to wafer lot U6F059.000; replacements ordered (5/29)',owner:'PHY team',done:false},
+    ],
+  },
+  vera:{ id:'vera', code:'TB500', name:'Vera', group:'cpu', cm:'Sowjanya',
+    progress:93, color:'a', phase:'Post-silicon · PS SBIOS Released 6/2 ✅ · MODS V8.0 RC 6/4 · BWAT ~6/15',
+    status:'SBIOS Released ✅ · MODS V8.0 RC 6/4 · BWAT 6/15', nextGate:'M-pkg FinalCWAT', nextGateDate:'6/11',
+    bugs:2, atRisk:true,
+    milestones:[
+      {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓'},
+      {n:'Bringup',s:'done',d:'✓'},{n:'ES',s:'done',d:'✓'},{n:'MG',s:'done',d:'91% ✓'},
+      {n:'QS',s:'now',d:'SCG exec complete'},{n:'PS',s:'wait',d:"Q3 '26"},{n:'PRel',s:'wait',d:"Q4 '26"},
+    ],
+    risks:[
+      {l:'h',t:'QS blocker bugs increased from 68 to 90 — DCPOR Strata 4 features remain (closing by 6/5)'},
+      {l:'h',t:'USB transfers instability in OOBHUB (Bug 6103272 / 6091323) — HMC FW & OOBHUB FW WARs pending merge'},
+      {l:'m',t:'MSEQ L2 resets on NVL72 CPU yield issue — CBB MMIO intermittent failures; debug ongoing (Bug 6163858)'},
+      {l:'m',t:'9600MT/s 2R module shortage due to NVL72 allocation — recovery expected end of June'},
+    ],
+    checklist:[
+      {t:'PS SBIOS release ~6/2',owner:'Sowjanya',done:true},
+      {t:'MODS V8.0 RC cut 6/4; target release 6/11',owner:'Sowjanya',done:false},
+      {t:'M-pkg FinalCWAT parts arriving 6/11; SW cutoff 6/3',owner:'Sowjanya',done:false},
+      {t:'P-boards BWAT Final WAT trending 6/15',owner:'HW team',done:false},
+      {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
+    ],
+  },
+  veraUltra:{ id:'veraUltra', code:'TB600', name:'Vera Ultra', group:'cpu', cm:'Hui Fu',
+    progress:40, color:'b', phase:'Pre-silicon · Simulation Req Gathering · IAS/GFD Reviews Active',
+    status:'IAS/GFD Reviews 🔵', nextGate:'ES', nextGateDate:"Q4 '26",
+    bugs:0, atRisk:false,
+    milestones:[
+      {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓'},
+      {n:'Bringup',s:'now',d:'Active 🔵'},{n:'ES',s:'wait',d:"Q4 '26"},
+      {n:'BNB',s:'wait',d:"Q2 '27"},{n:'PRel',s:'wait',d:"Q2 '28"},
+    ],
+    risks:[
+      {l:'m',t:'Gathering simulation requirements from SW teams — IAS and GFD reviews ongoing'},
+      {l:'l',t:'Early stage — no critical blockers identified'},
+    ],
+    checklist:[
+      {t:'POST self-test pass',owner:'Hui Fu',done:true},
+      {t:'DDR5 training validation',owner:'PHY team',done:true},
+      {t:'PCIe enumeration complete',owner:'FW team',done:true},
+      {t:'IAS/GFD reviews complete',owner:'Hui Fu',done:false},
+      {t:'Simulation requirements finalized',owner:'Hui Fu',done:false},
+    ],
+  },
+  n2x:{ id:'n2x', code:'N2x', name:'N2x', group:'cpu', cm:'Vivek Desikan',
+    progress:32, color:'r', phase:'Pre-silicon · FPGA H2.07 Active · FDI 6/30 · H3 Netlist 6/5',
+    status:'FPGA Active ⚠️ · FDI 6/30', nextGate:'FDI', nextGateDate:'6/30 ⚠️',
+    bugs:2, atRisk:true,
+    milestones:[
+      {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'now',d:'FNL 6/29'},{n:'FPGA H2',s:'done',d:'Stable'},
+      {n:'FPGA H3',s:'now',d:'6/5 ⚠️'},{n:'FDI',s:'wait',d:'6/30 ⚠️'},
+      {n:'Tape-out',s:'wait',d:'Nov 17 ⚠️'},{n:'PRel',s:'wait',d:"TBD"},
+    ],
+    risks:[
+      {l:'h',t:'Display bring-up on H2 blocked by Jade HW bug — fix expected this week'},
+      {l:'h',t:'Windows boot not up on N2x FPGA platform — Jade bringing up on p-core only netlist'},
+      {l:'h',t:'D3 discussions ongoing — may result in chip schedule pushout if approved'},
+      {l:'h',t:'VDK — Multiple performance bottlenecks across Display, GPU_RISCV, and front door boot'},
+      {l:'m',t:'NV Perf validation not started due to resource unavailability — expected next week'},
+      {l:'m',t:'Hybrid IPP Bringup delayed due to Jade netlist issues till July'},
+    ],
+    checklist:[
+      {t:'FPGA H3 netlist available (6/5)',owner:'DV team',done:false},
+      {t:'Display H2 Jade HW bug fix resolved',owner:'HW team',done:false},
+      {t:'Testplan L0 to 22% (was 10%) — maintain progress',owner:'DV team',done:true},
+      {t:'Windows boot FPGA coverage gap closed',owner:'SW team',done:false},
+      {t:'NV Perf validation kickoff (next week)',owner:'Vivek Desikan',done:false},
+    ],
+  },
+  tcx10:{ id:'tcx10', code:'TCX10', name:'TCX10', group:'cpu', cm:'Roopa',
+    progress:8, color:'w', phase:'Pre-silicon · POR Discussions Active · 8 New Features Added',
+    status:'POR Active', nextGate:'POR', nextGateDate:'TBD',
+    bugs:0, atRisk:false,
+    milestones:[{n:'POR',s:'now',d:'8 features added'},{n:'RTL',s:'wait',d:'TBD'},{n:'Tape-out',s:'wait',d:'TBD'}],
+    risks:[{l:'m',t:'POR Discussions ongoing — 8 new features added to achieve performance targets; scope expanding'}],
+    checklist:[{t:'POR Kickoff',owner:'Roopa',done:false},{t:'Arch Spec with 8 new features',owner:'TBD',done:false}],
+  },
+  monet:{ id:'monet', code:'T257', name:'Monet', group:'cpu', cm:'Vivek Desikan',
+    progress:10, color:'w', phase:'Pre-silicon · FPGA Validation Active · BMW Design Award Pending',
+    status:'FPGA Val Active', nextGate:'RTL', nextGateDate:"Q3 '26",
+    bugs:0, atRisk:false,
+    milestones:[{n:'POR',s:'now',d:'Active'},{n:'RTL',s:'wait',d:"Q3 '26"},{n:'Tape-out',s:'wait',d:"Q4 '26"}],
+    risks:[{l:'m',t:'BMW design award decision pending — outcome may affect program scope/timeline'}],
+    checklist:[{t:'BMW design award decision',owner:'Vivek Desikan',done:false},{t:'FPGA validation ongoing',owner:'DV team',done:false}],
+  },
+  magni:{ id:'magni', code:'T294', name:'Magni', group:'cpu', cm:'Roopa',
+    progress:8, color:'w', phase:'Pre-silicon · Arch Investigations Active · POR 90% target by 6/30',
+    status:'Arch Readouts Active', nextGate:'POR 90%', nextGateDate:'6/30',
+    bugs:0, atRisk:false,
+    milestones:[{n:'POR',s:'now',d:'90% by 6/30'},{n:'RTL',s:'wait',d:'TBD'}],
+    risks:[{l:'l',t:'Arch investigations and readouts ongoing — targeting 90% POR complete by 6/30'}],
+    checklist:[{t:'Arch readouts complete',owner:'Roopa',done:false},{t:'90% POR by 6/30',owner:'Roopa',done:false}],
+  },
+  gr10x:{ id:'gr10x', code:'GR10x', name:'Rubin', group:'gpu', cm:'Ranjani V · Madhura',
+    progress:95, color:'a', phase:'Post-silicon · QS Done ✅ · PS/PRel In Progress · PRel 6/22',
+    status:'PS/PRel Active · PRel 6/22 ⚠️', nextGate:'PRel', nextGateDate:'6/22 ⚠️',
+    bugs:8, atRisk:true,
+    milestones:[
+      {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓'},
+      {n:'Bringup',s:'done',d:'✓'},{n:'ES',s:'done',d:'✓'},{n:'BNB',s:'done',d:'✓'},
+      {n:'MG',s:'done',d:'✓'},{n:'QS',s:'done',d:'✓'},{n:'PS',s:'now',d:'In Progress 🔵'},
+      {n:'PRel',s:'wait',d:"Q3 '26"},
+    ],
+    risks:[
+      {l:'m',t:'PG558 SW QA — L6 system access obtained 6/1; debugging remaining failure; BWAT 14/18 systems, ETA 6/23'},
+      {l:'h',t:'GFW: TOT inforom issues — blocking MR submissions as of 5/28'},
+      {l:'l',t:'GR10x DVS regressions resolved (Bug 6173668) — VBIOS 99.00.18.00.00 + chips_a CL 38085350; RM sanities clean 6/2'},
+      {l:'m',t:'FW v3.1 patch — NVLink lane drop · PRel blocked'},
+      {l:'m',t:'C2C ENC error window violations (Bug 6203872) — root cause: SBIOS↔VBIOS encryption mismatch; fix validation in progress'},
+      {l:'h',t:'Bug 5116766: No appropriate VBIOS/image for GR102 INT/QS qual — SHTOL WW30 blocked (5/29)'},
+    ],
+    checklist:[
+      {t:'FW v3.1 NVLink lane drop patch merged',owner:'FW team',done:false},
+      {t:'PS validation suite complete',owner:'Ranjani V',done:true},
+      {t:'PRel readiness review',owner:'Madhura',done:false},
+      {t:'L6 system availability for PG558 SW QA',owner:'Madhura',done:false},
+    ],
+  },
+  feynman:{ id:'feynman', code:'FN10x', name:'Feynman', group:'gpu', cm:'Madhura',
+    progress:38, color:'a', phase:'Pre-silicon · Multi-dielet RTL · Phys Final NL In Progress',
+    status:'RTL Active ⚠️', nextGate:'Final NL RTL', nextGateDate:"Jul '26",
+    bugs:4, atRisk:false,
+    milestones:[
+      {n:'Trial NL RTL',s:'done',d:"Aug '25 ✓"},{n:'1st NL RTL',s:'done',d:"Jan '26 ✓"},
+      {n:'Phys Final NL',s:'now',d:"Apr '26 🔵"},{n:'Final NL RTL',s:'wait',d:"Jul '26"},
+      {n:'Tape-out',s:'wait',d:"Sep '26"},{n:'Bringup',s:'wait',d:"Q1 '27"},
+    ],
+    risks:[
+      {l:'h',t:'PRI_HUB delays (>1 month) blocking Phase 23/24'},
+      {l:'h',t:'Phase 21 IODS SECHUB blocked until May 15'},
+      {l:'m',t:'Multi-dielet first — cross-dielet SW integration complexity'},
+    ],
+    checklist:[
+      {t:'Phase 21 IODS SECHUB unblock (May 15)',owner:'Madhura',done:false},
+      {t:'Phase 12 Discovery Flow submission',owner:'SW team',done:false},
+      {t:'IODS Self-boot failure Bug 6052109',owner:'SW team',done:false},
+      {t:'FN662 0-GPC config support',owner:'EMU team',done:false},
+      {t:'Final Netlist RTL gate (Jul 7)',owner:'Madhura',done:false},
+    ],
+  },
+  gr15x:{ id:'gr15x', code:'GR15x', name:'Next GPU', group:'gpu', cm:'Vinay Sharma · Anshul Gupta',
+    progress:5, color:'w', phase:'Pre-silicon · POR Phase · Early Planning',
+    status:'Planning 🔵', nextGate:'POR', nextGateDate:"Q4 '26",
+    bugs:0, atRisk:false,
+    milestones:[{n:'POR',s:'now',d:"Q4 '26"},{n:'RTL',s:'wait',d:'TBD'},{n:'Tape-out',s:'wait',d:'TBD'}],
+    risks:[{l:'l',t:'Early planning — SW CMs assigned, program kicking off'}],
+    checklist:[
+      {t:'POR Kickoff meeting',owner:'Vinay Sharma',done:false},
+      {t:'Arch Spec draft',owner:'Anshul Gupta',done:false},
+      {t:'Milestone schedule defined',owner:'Vinay Sharma',done:false},
+    ],
+  },
+  nr10x:{ id:'nr10x', code:'NR10x', name:'NVLink Fusion', group:'fusion', cm:'Ranjani',
+    progress:12, color:'g', phase:'Pre-silicon · POR Phase',
+    status:'On Track', nextGate:'RTL', nextGateDate:"Q4 '26",
+    bugs:0, atRisk:false,
+    milestones:[{n:'POR',s:'now',d:'Active'},{n:'RTL',s:'wait',d:"Q4 '26"},{n:'Tape-out',s:'wait',d:'TBD'}],
+    risks:[{l:'l',t:'NVLink protocol spec in review — on track'}],
+    checklist:[{t:'NVLink protocol spec signoff',owner:'Ranjani',done:false},{t:'RTL planning kickoff',owner:'Ranjani',done:false}],
+  },
+  beacon:{ id:'beacon', code:'T374', name:'Beacon', group:'fusion', cm:'Roopa',
+    progress:5, color:'w', phase:'Post-silicon · Schedule Alignment Ongoing · QS MODS/Fuse Release Req Under Review',
+    status:'Sched Alignment', nextGate:'QS MODS/Fuse', nextGateDate:'TBD',
+    bugs:0, atRisk:false,
+    milestones:[{n:'POR',s:'done',d:'✓'},{n:'Post-Si',s:'now',d:'Sched align'}],
+    risks:[{l:'m',t:'Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone — reviewing schedule impact'}],
+    checklist:[{t:'Post-Si schedule alignment complete',owner:'Roopa',done:false},{t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false}],
+  },
+};
+
+const HM_COLS=['ThorZ','Vera','V·Ultra','N2x','TCX10','Monet','Magni','GR10x','FN10x','GR15x','NR10x','Beacon'];
+const HM_DATA=[
+  ['SW Bringup',     [1,2,2,2,1,1,1,1,2,1,1,1]],
+  ['Boot/Power-on',  [1,2,2,2,1,1,1,1,2,1,1,1]],
+  ['Driver / OS',    [3,2,1,3,1,1,1,1,2,1,1,1]],
+  ['Firmware',       [3,2,1,2,1,1,1,2,2,1,1,1]],
+  ['DV / Emulation', [1,3,2,3,1,1,1,1,2,1,1,1]],
+  ['Test Coverage',  [2,2,2,3,1,1,1,2,1,1,1,1]],
+  ['MODS / Qual',    [3,2,1,1,1,1,1,1,1,1,1,1]],
+  ['SW Release',     [2,3,1,2,1,1,1,2,1,1,1,1]],
+  ['WAR / WNF',      [1,1,1,1,1,1,1,3,1,1,1,1]],
+  ['SW CM Owner',    [1,1,1,1,1,1,1,1,1,1,1,1]],
+];
+
+const CP_ITEMS=[
+  {t:'FW v3.1 patch — NVLink lane drop',chip:'GR10x',gate:'PRel',s:'r',sl:'Blocked'},
+  {t:'ThorZ MNB/QS Qual — qual testing begun',chip:'ThorZ',gate:"Jun '26",s:'a',sl:'In prog'},
+  {t:'QS-M QBAA board setup pending',chip:'Vera',gate:"Q2 '26",s:'r',sl:'At risk'},
+  {t:'FPGA H3 netlist — VIC VPR fail',chip:'N2x',gate:'6/5',s:'r',sl:'At risk'},
+  {t:'MODS QS Qual release (Bug 6178454)',chip:'ThorZ',gate:'6/5',s:'a',sl:'In prog'},
+  {t:'Windows boot — FPGA coverage gap',chip:'N2x',gate:'Pre-TO',s:'a',sl:'Watch'},
+  {t:'Phase 21 IODS SECHUB bringup',chip:'FN10x',gate:'5/15',s:'a',sl:'In prog'},
+];
+
+const ATTN_ITEMS=[
+  {t:'ThorZ MNB active — 73% coverage, 65% pass; MNB/CS 6/7–6/13',s:'a',chip:'ThorZ'},
+  {t:'N2x FPGA H3 netlist 6/5; Display blocked Jade HW bug; D3 may push schedule',s:'r',chip:'N2x'},
+  {t:'Vera QS blocker bugs up 68→90; BWAT Final WAT ~6/15',s:'a',chip:'Vera'},
+  {t:'GR10x FW v3.1 PRel blocker ongoing',s:'a',chip:'GR10x'},
+];
+
+const FEED_ITEMS=[
+  {t:'PCIe P0 bug filed',sub:'NVBug 4721839 · GR10x',s:'r',time:'09:14'},
+  {t:'NVLink FW handshake ✓',sub:'ThorZ · FW team',s:'g',time:'10:02'},
+  {t:'Vera RTL freeze +2 blks',sub:'Vera · RTL team',s:'r',time:'13:45'},
+  {t:'Sched confidence ↑72%',sub:'All programs · PM',s:'g',time:'14:20'},
+  {t:'DDR5 training fail ×3',sub:'GR10x · PHY team',s:'r',time:'15:55'},
+];
+
+/* ===============================================
+   STATE
+=============================================== */
+const S = {
+  view: 'cockpit',   // cockpit | radar | pm | chip
+  chip: null,
+  pmChip: null,      // null = all chips, or chip id for focused PM view
+  tabs: [],          // [{id, el}]
+  clState: JSON.parse(localStorage.getItem('cl2') || '{}'),
+};
+
+function saveCL(){ localStorage.setItem('cl2', JSON.stringify(S.clState)); }
+
+/* ===============================================
+   THEME
+=============================================== */
+let dark = localStorage.getItem('theme2') === 'dark';
+function applyTheme(){
+  document.body.classList.toggle('dark', dark);
+  document.getElementById('theme-btn').textContent = dark ? '☀️ Light' : '🌙 Dark';
+}
+function toggleTheme(){
+  dark = !dark;
+  localStorage.setItem('theme2', dark ? 'dark' : 'light');
+  applyTheme();
+}
+
+/* ===============================================
+   HEADER BADGES
+=============================================== */
+function renderBadges(){
+  const at = Object.values(CHIPS).filter(c=>c.atRisk).length;
+  const total = Object.keys(CHIPS).length;
+  document.getElementById('risk-badge').innerHTML = `⚠️ ${at} Chips at Risk`;
+  document.getElementById('multi-badge').innerHTML = `⚡ ${total} Chips Active`;
+}
+function openRiskChips(){
+  Object.values(CHIPS).filter(c=>c.atRisk).forEach(c=>openChip(c.id));
+}
+
+/* ===============================================
+   LEFT NAV
+=============================================== */
+function renderNav(){
+  const nav = document.getElementById('nav');
+  let html = `<div class="nav-hdr">Programs</div>`;
+  GROUPS.forEach(g=>{
+    const chips = Object.values(CHIPS).filter(c=>c.group===g.id);
+    html += `<div class="nav-grp closed" id="ng-${g.id}">
+      <div class="nav-grp-hdr" onclick="toggleGrp('${g.id}')">
+        <span>${g.icon} ${g.label}</span><span class="nav-grp-arrow">▾</span>
+      </div>
+      <div class="nav-chips">`;
+    chips.forEach(c=>{
+      const fillColor = c.color==='g'?'var(--green)':c.color==='a'?'var(--amber)':c.color==='r'?'var(--red)':'var(--blue)';
+      html += `<div class="nav-chip" id="nc-${c.id}" data-cid="${c.id}" onclick="openChip('${c.id}')">
+        <div class="nc-code">${c.code}</div>
+        <div class="nc-name">${c.name}</div>
+        <div class="nc-bar"><div class="nc-fill" style="width:${c.progress}%;background:${fillColor}"></div></div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  // Attn panel
+  html += `<div class="nav-static">
+    <div class="nav-static-hdr">🚨 Chip Mgmt Attn <span style="background:var(--red-bg);color:var(--red);padding:1px 6px;border-radius:8px;font-size:9px">${ATTN_ITEMS.length}</span></div>
+    <div class="nav-feed">`;
+  ATTN_ITEMS.forEach(i=>{
+    html += `<div class="nf-item nf-${i.s}"><div class="nf-t">${i.t}</div><div class="nf-s">${i.chip}</div></div>`;
+  });
+  html += `</div></div>`;
+  // Feed panel
+  html += `<div class="nav-static">
+    <div class="nav-static-hdr">📋 Changed Today <span style="font-size:9px;color:var(--muted)">Jun 3</span></div>
+    <div class="nav-feed">`;
+  FEED_ITEMS.forEach(i=>{
+    html += `<div class="nf-item nf-${i.s}"><div class="nf-t">${i.time} · ${i.t}</div><div class="nf-s">${i.sub}</div></div>`;
+  });
+  html += `</div></div>`;
+  nav.innerHTML = html;
+}
+function toggleGrp(id){
+  document.getElementById('ng-'+id).classList.toggle('closed');
+}
+
+/* ===============================================
+   TAB BAR
+=============================================== */
+function renderTabBar(){
+  const bar = document.getElementById('tabs');
+  bar.innerHTML = `
+    <div class="tab ${S.view==='cockpit'?'on':''}" id="t-cockpit" onclick="showView('cockpit')">🏠 Chip Cockpit</div>
+    <div class="tab ${S.view==='radar'?'on':''}" id="t-radar" onclick="showView('radar')">📡 Radar &amp; Heatmap</div>
+    <div class="tab ${S.view==='pm'?'on':''}" id="t-pm" onclick="showView('pm')">🤖 PM Assistant</div>
+    <div id="dyn-tabs" style="display:contents"></div>`;
+  S.tabs.forEach(t=>{
+    const chip = CHIPS[t.id];
+    const tab = document.createElement('div');
+    tab.className = 'tab'+(S.view==='chip'&&S.chip===t.id?' on':'');
+    tab.id = 'dt-'+t.id;
+    tab.innerHTML = `${chip.code} <span class="tab-close" onclick="closeTab('${t.id}',event)">×</span>`;
+    tab.addEventListener('click', ()=>openChip(t.id));
+    document.getElementById('dyn-tabs').appendChild(tab);
+  });
+}
+
+/* ===============================================
+   VIEW ROUTING
+=============================================== */
+function showView(v, chipId=null){
+  S.view = v;
+  S.chip = chipId;
+  // Hide all
+  ['cockpit','radar','pm','chip'].forEach(id=>{
+    document.getElementById('v-'+id).hidden = (id!==v);
+  });
+  // Render target
+  if(v==='cockpit') renderCockpit();
+  else if(v==='radar') renderRadar();
+  else if(v==='pm') renderPM();
+  else if(v==='chip' && chipId) renderChipDetail(chipId);
+  renderTabBar();
+  // Update nav active state
+  document.querySelectorAll('.nav-chip').forEach(el=>{
+    el.classList.toggle('active', el.dataset.cid===chipId && v==='chip');
+  });
+  // Auto-close nav drawer on mobile after navigation
+  closeNavDrawer();
+}
+
+function openChip(id){
+  if(!S.tabs.find(t=>t.id===id)) S.tabs.push({id});
+  S.pmChip = id;   // pre-select in PM Assistant
+  showView('chip', id);
+}
+function openPMForChip(id){
+  S.pmChip = id;
+  showView('pm');
+}
+function closeTab(id, e){
+  e && e.stopPropagation();
+  S.tabs = S.tabs.filter(t=>t.id!==id);
+  if(S.chip===id){
+    const next = S.tabs[S.tabs.length-1];
+    next ? showView('chip', next.id) : showView('cockpit');
+  } else renderTabBar();
+}
+
+/* ===============================================
+   CHIP COCKPIT VIEW
+=============================================== */
+function chipCard(c){
+  const clr = c.color;
+  const barColor = clr==='g'?'var(--green)':clr==='a'?'var(--amber)':clr==='r'?'var(--red)':clr==='b'?'var(--blue)':'#888';
+  const badgeCls = clr==='g'?'bg-g':clr==='a'?'bg-a':clr==='r'?'bg-r':clr==='b'?'bg-b':'bg-w';
+  return `<div class="cc ${clr}" onclick="openChip('${c.id}')">
+    <div class="cc-top">
+      <div class="cc-name">${c.code}${c.name!==c.code?' / '+c.name:''}</div>
+      <span class="cc-badge ${badgeCls}">${c.status}</span>
+    </div>
+    <div class="cc-phase">${c.phase}</div>
+    <div class="cc-bar"><div class="cc-fill" style="width:${c.progress}%;background:${barColor}"></div></div>
+    <div class="cc-row">
+      <span>Gate: <b>${c.nextGate}</b> · ${c.nextGateDate}</span>
+      <span style="color:${c.bugs>0?'var(--red)':'var(--muted)'}">${c.bugs} bug${c.bugs!==1?'s':''}</span>
+    </div>
+    <div class="cc-cm">SW CM: <span>${c.cm}</span></div>
+  </div>`;
+}
+
+function renderCockpit(){
+  const allChips = Object.values(CHIPS);
+
+  // -- Needs Attention bar (top) --
+  const attention = allChips.filter(c=>c.atRisk||c.bugs>0);
+  let attnBar = '';
+  if(attention.length){
+    const items = attention.map(c=>`
+      <div class="attn-item ${c.atRisk?'urgent':'warn'}" onclick="openChip('${c.id}')">
+        <span class="attn-chip">${c.code}</span>
+        <span class="attn-status">${c.status}</span>
+        ${c.bugs>0?`<span class="attn-bug">${c.bugs} bug${c.bugs>1?'s':''}</span>`:''}
+      </div>`).join('');
+    attnBar = `<div class="attn-bar">
+      <span class="attn-label">⚠️ Needs Attention</span>
+      <div class="attn-items">${items}</div>
+    </div>`;
+  }
+
+  // -- Chip sections --
+  let sections = '';
+  GROUPS.forEach(g=>{
+    const chips = allChips.filter(c=>c.group===g.id);
+    sections += `<div><div class="sec-label">${g.icon} ${g.label}</div>
+      <div class="chips-grid">${chips.map(chipCard).join('')}</div></div>`;
+  });
+
+  // -- Right panel: Chip Schedule --
+  const gateItems = allChips.map(c=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--sep)">
+      <div>
+        <span style="font-size:11px;font-weight:600;color:var(--text)">${c.code}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:5px">${c.nextGate}</span>
+      </div>
+      <span style="font-size:10px;color:${c.nextGateDate.includes('⚠️')?'var(--amber)':'var(--muted)'};font-weight:${c.nextGateDate.includes('⚠️')?700:400}">${c.nextGateDate}</span>
+    </div>`).join('');
+
+  const panel = `<div class="ck-panel">
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">📅 Chip Schedule</span></div>
+      <div class="card-body" style="padding-top:4px">${gateItems}</div>
+    </div>
+  </div>`;
+
+  document.getElementById('v-cockpit').innerHTML = attnBar +
+    `<div class="ck-layout"><div class="ck-chips">${sections}</div>${panel}</div>`;
+}
+
+/* ===============================================
+   RADAR & HEATMAP VIEW
+=============================================== */
+function renderRadar(){
+  const cpRows = CP_ITEMS.map(i=>{
+    const sc = i.s==='r'?'var(--red)':i.s==='a'?'var(--amber)':'var(--muted)';
+    const bc = i.s==='r'?'bg-r':i.s==='a'?'bg-a':'bg-b';
+    return `<tr>
+      <td style="color:${sc}">${i.t}</td>
+      <td><b style="color:${sc}">${i.chip}</b></td>
+      <td style="font-weight:700;color:${i.s==='r'?'var(--red)':'var(--amber)'}">${i.gate}</td>
+      <td><span class="cc-badge ${bc}" style="font-size:9px">${i.sl}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Heatmap
+  let hmHead = `<tr><th></th>${HM_COLS.map(c=>`<th>${c}</th>`).join('')}</tr>`;
+  let hmBody = HM_DATA.map(([row,vals])=>{
+    const cells = vals.map(v=>{
+      const cls = v===1?'hm-l':v===2?'hm-m':'hm-h';
+      const lbl = v===1?'L':v===2?'M':'H';
+      return `<td class="hm-cell ${cls}">${lbl}</td>`;
+    }).join('');
+    return `<tr><th style="text-align:left;font-size:10px;font-weight:600;color:var(--text2);padding:3px 4px 3px 0">${row}</th>${cells}</tr>`;
+  }).join('');
+
+  document.getElementById('v-radar').innerHTML = `
+    <div class="radar-grid">
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">SW Critical Path Radar</span>
+          <span class="cc-badge bg-r">${CP_ITEMS.filter(i=>i.s==='r').length} blockers</span>
+        </div>
+        <div class="card-body">
+          <table class="tbl">${cpRows}</table>
+          <div style="margin-top:10px;padding:6px 10px;background:var(--blue-bg);border:1px solid rgba(26,84,160,.20);border-radius:5px;font-size:10px;color:var(--blue)">
+            ⚡ Next SW gate: ThorZ SCG BNB · target May 27 · 85% coverage
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">SW Risk Heatmap</span>
+          <span style="font-size:10px;color:var(--muted)">by domain · all chips</span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center">
+          <div class="hm-wrap" style="width:100%;display:flex;justify-content:center">
+            <table class="hm-tbl"><thead>${hmHead}</thead><tbody>${hmBody}</tbody></table>
+          </div>
+          <div class="hm-legend" style="justify-content:center;margin-top:10px">
+            <span>Risk:</span>
+            <span><span class="hm-dot hm-l"></span>Low</span>
+            <span><span class="hm-dot hm-m"></span>Med</span>
+            <span><span class="hm-dot hm-h"></span>High</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ===============================================
+   PM ASSISTANT VIEW
+=============================================== */
+function selectPMChip(id){
+  S.pmChip = id;
+  renderPM();
+}
+
+function renderPM(){
+  const sel = S.pmChip;
+  const chipList = sel ? [CHIPS[sel]] : Object.values(CHIPS);
+
+  // -- Chip selector bar --
+  const allPill = `<div class="pm-pill${!sel?' on':''}" onclick="selectPMChip(null)">All Chips</div>`;
+  const chipPills = Object.values(CHIPS).map(c=>`
+    <div class="pm-pill${sel===c.id?' on':''}" onclick="selectPMChip('${c.id}')">${c.code}</div>`).join('');
+  const selBar = `<div class="pm-sel-bar">
+    <span class="pm-sel-lbl">Focus:</span>
+    ${allPill}${chipPills}
+  </div>`;
+
+  // -- Focused chip header (when one chip selected) --
+  let chipHeader = '';
+  if(sel){
+    const c = CHIPS[sel];
+    const barColor = c.color==='g'?'var(--green)':c.color==='a'?'var(--amber)':c.color==='r'?'var(--red)':'var(--blue)';
+    chipHeader = `<div class="pm-chip-header">
+      <span class="cc-badge bg-${c.color}" style="font-size:12px">${c.status}</span>
+      <div>
+        <div class="pm-chip-name">${c.code} / ${c.name}</div>
+        <div class="pm-chip-meta">${c.phase} · SW CM: <b style="color:var(--text)">${c.cm}</b> · Next gate: <b style="color:${barColor}">${c.nextGate} · ${c.nextGateDate}</b></div>
+      </div>
+    </div>`;
+  }
+
+  // -- Action queue (filtered) --
+  const urgent = [], thisWeek = [], fyi = [];
+  chipList.forEach(c=>{
+    if(c.bugs>0) urgent.push({t:`${c.bugs} P1 bug${c.bugs>1?'s':''} need action`,chip:c.code,id:c.id,cat:'urgent'});
+    c.checklist.filter(i=>!i.done).slice(0,2).forEach(i=>{
+      if(c.atRisk) urgent.push({t:i.t,chip:c.code,owner:i.owner,id:c.id,cat:'urgent'});
+      else if(c.progress>30) thisWeek.push({t:i.t,chip:c.code,owner:i.owner,id:c.id,cat:'week'});
+      else fyi.push({t:i.t,chip:c.code,owner:i.owner,id:c.id,cat:'fyi'});
+    });
+  });
+
+  function pmCards(items, cls){
+    if(!items.length) return `<div style="color:var(--muted);font-size:11px;padding:8px 0">✓ All clear</div>`;
+    return items.map(i=>`
+      <div class="pm-item ${cls}" onclick="openChip('${i.id}')">
+        <div class="pm-item-title">${i.t}</div>
+        ${i.owner?`<div class="pm-item-sub">Owner: ${i.owner}</div>`:''}
+        ${!sel?`<span class="pm-item-chip bg-${cls==='urgent'?'r':cls==='week'?'a':'b'}">${i.chip}</span>`:''}
+      </div>`).join('');
+  }
+
+  // -- Gate checklist --
+  const chipOpts = Object.values(CHIPS).map(c=>
+    `<option value="${c.id}"${sel===c.id?' selected':''}>${c.code} / ${c.name}</option>`).join('');
+
+  // -- Draft placeholder --
+  const draftPlaceholder = sel
+    ? `Click "Generate" to draft today's status for ${CHIPS[sel].code} / ${CHIPS[sel].name}.`
+    : `Click "Generate" to auto-draft your daily status update across all active chip programs.`;
+
+  document.getElementById('v-pm').innerHTML = selBar + chipHeader + `
+    <div class="pm-main-grid">
+      <!-- Action Queue -->
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-hdr"><span class="card-title">🎯 Today's Action Queue</span>
+          <span style="font-size:10px;color:var(--muted)">${urgent.length} urgent · ${thisWeek.length} this week · ${fyi.length} FYI</span></div>
+        <div class="card-body">
+          <div class="pm-grid">
+            <div><div class="pm-col-hdr" style="color:var(--red)">🚨 Urgent — Today</div>${pmCards(urgent,'urgent')}</div>
+            <div><div class="pm-col-hdr" style="color:var(--amber)">📋 This Week</div>${pmCards(thisWeek,'week')}</div>
+            <div><div class="pm-col-hdr" style="color:var(--blue)">📌 FYI / Next</div>${pmCards(fyi,'fyi')}</div>
+          </div>
+        </div>
+      </div>
+      <!-- Gate Checklist -->
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">✅ Gate Checklist</span>
+          <select id="cl-sel" onchange="renderChecklist()" style="font-size:11px;padding:3px 6px;border-radius:5px;border:1px solid var(--border);background:var(--bg3);color:var(--text)">
+            ${chipOpts}
+          </select>
+        </div>
+        <div class="card-body" id="cl-body"></div>
+      </div>
+      <!-- Daily Status Draft -->
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">📝 Daily Status Update</span>
+          <button class="btn btn-green" onclick="genStatusDraft()">⚡ Generate</button>
+        </div>
+        <div class="card-body">
+          <div class="draft-output" id="draft-out">${draftPlaceholder}</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn btn-green" onclick="copyDraft()">📋 Copy</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  renderChecklist();
+}
+
+function renderChecklist(){
+  const sel = document.getElementById('cl-sel');
+  if(!sel) return;
+  const chip = CHIPS[sel.value];
+  if(!chip) return;
+  const key = chip.id;
+  const done = S.clState[key] || {};
+  const total = chip.checklist.length;
+  const completed = chip.checklist.filter((_,i)=>done[i]).length;
+  const pct = total>0 ? Math.round(completed/total*100) : 0;
+  let html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+    <span style="font-size:11px;color:var(--muted)">Gate: <b style="color:var(--text)">${chip.nextGate}</b> · ${chip.nextGateDate}</span>
+    <span style="font-size:11px;font-weight:700;color:var(--green)">${pct}%</span>
+  </div>
+  <div class="cl-progress"><div class="cl-fill" style="width:${pct}%"></div></div>
+  <div style="margin-top:10px">`;
+  chip.checklist.forEach((item,i)=>{
+    const checked = !!done[i];
+    html += `<div class="cl-item" onclick="toggleCL('${key}',${i})">
+      <input type="checkbox" ${checked?'checked':''} onchange="toggleCL('${key}',${i})" onclick="event.stopPropagation()">
+      <span class="cl-label${checked?' done':''}">${item.t}</span>
+      <span class="cl-owner">${item.owner}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  document.getElementById('cl-body').innerHTML = html;
+}
+
+function toggleCL(chipId, idx){
+  if(!S.clState[chipId]) S.clState[chipId]={};
+  S.clState[chipId][idx] = !S.clState[chipId][idx];
+  saveCL();
+  renderChecklist();
+}
+
+function genStatusDraft(){
+  const d = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const sel = S.pmChip;
+
+  if(sel){
+    // -- Single chip draft --
+    const c = CHIPS[sel];
+    const done = S.clState[c.id] || {};
+    const clDone = c.checklist.filter((_,i)=>done[i]).length;
+    const clPct = c.checklist.length ? Math.round(clDone/c.checklist.length*100) : 0;
+    const openItems = c.checklist.filter((_,i)=>!done[i]).map(i=>i.t);
+    let out = `=== ${c.code} / ${c.name} — DAILY STATUS · ${d} ===\n\n`;
+    out += `SW CM: ${c.cm}\n`;
+    out += `Phase: ${c.phase}\n`;
+    out += `Progress: ${c.progress}% | Status: ${c.status}\n`;
+    out += `Next Gate: ${c.nextGate} · ${c.nextGateDate}\n`;
+    if(c.bugs>0) out += `Active Bugs: ${c.bugs} ⚠️\n`;
+    out += `\n-- Gate Checklist (${clPct}% complete) --\n`;
+    c.checklist.forEach((item,i)=>{
+      out += `  [${done[i]?'✓':' '}] ${item.t} (${item.owner})\n`;
+    });
+    if(c.risks.length){
+      out += `\n-- Risks --\n`;
+      c.risks.forEach(r=>{ out += `  [${r.l.toUpperCase()}] ${r.t}\n`; });
+    }
+    if(openItems.length){
+      out += `\n-- Open Action Items --\n`;
+      openItems.slice(0,5).forEach(t=>{ out += `  • ${t}\n`; });
+    }
+    out += `\n-----------------------------------------`;
+    out += `\nGenerated by Chip Pilot 2.0 · ${d}`;
+    document.getElementById('draft-out').textContent = out;
+  } else {
+    // -- All chips draft --
+    let out = `=== CHIP PROGRAM DAILY STATUS — ${d} ===\n`;
+    out += `\nSUMMARY: ${Object.values(CHIPS).filter(c=>c.atRisk).length} chips at risk · `;
+    out += `${Object.values(CHIPS).reduce((a,c)=>a+c.bugs,0)} active bugs across all programs\n`;
+    out += `-----------------------------------------\n`;
+    GROUPS.forEach(g=>{
+      out += `\n[${g.icon} ${g.label.toUpperCase()}]\n`;
+      Object.values(CHIPS).filter(c=>c.group===g.id).forEach(c=>{
+        out += `\n• ${c.code} / ${c.name} (${c.cm})\n`;
+        out += `  Status: ${c.status} | Progress: ${c.progress}%\n`;
+        out += `  Next Gate: ${c.nextGate} · ${c.nextGateDate}\n`;
+        if(c.risks.filter(r=>r.l!=='l').length)
+          out += `  Risks: ${c.risks.filter(r=>r.l!=='l').map(r=>r.t).join('; ')}\n`;
+        if(c.bugs>0) out += `  ⚠️ Active bugs: ${c.bugs}\n`;
+      });
+    });
+    out += `\n-----------------------------------------`;
+    out += `\nGenerated by Chip Pilot 2.0 · ${d}`;
+    document.getElementById('draft-out').textContent = out;
+  }
+}
+
+function copyDraft(){
+  const txt = document.getElementById('draft-out').textContent;
+  navigator.clipboard.writeText(txt).catch(()=>{
+    const ta = document.createElement('textarea');
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  });
+}
+
+/* ===============================================
+   CHIP DETAIL VIEW
+=============================================== */
+function renderChipDetail(id){
+  const c = CHIPS[id];
+  if(!c) return;
+  const barColor = c.color==='g'?'var(--green)':c.color==='a'?'var(--amber)':c.color==='r'?'var(--red)':'var(--blue)';
+
+  const msList = c.milestones.map(m=>`
+    <div class="ms-item">
+      <div class="ms-dot ${m.s}"></div>
+      <span class="ms-name">${m.n}</span>
+      <span class="ms-date">${m.d}</span>
+    </div>`).join('');
+
+  const riskList = c.risks.map(r=>`
+    <div class="risk-item">
+      <div class="ri-dot ri-${r.l}"></div>
+      <span>${r.t}</span>
+    </div>`).join('');
+
+  const key = c.id;
+  const done = S.clState[key] || {};
+  const pct = c.checklist.length ? Math.round(c.checklist.filter((_,i)=>done[i]).length/c.checklist.length*100) : 0;
+  const clItems = c.checklist.map((item,i)=>`
+    <div class="cl-item" onclick="toggleCLandRefresh('${key}',${i},'${id}')">
+      <input type="checkbox" ${done[i]?'checked':''} onclick="event.stopPropagation()">
+      <span class="cl-label${done[i]?' done':''}">${item.t}</span>
+      <span class="cl-owner">${item.owner}</span>
+    </div>`).join('');
+
+  document.getElementById('v-chip').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div style="font-size:18px;font-weight:800;color:var(--text)">${c.code} / ${c.name}</div>
+      <span class="cc-badge bg-${c.color}" style="font-size:11px">${c.status}</span>
+      <div style="flex:1"></div>
+      <button class="btn btn-green" onclick="openPMForChip('${c.id}')" style="font-size:10px">🤖 PM Assistant</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">${c.phase} · SW CM: <b style="color:var(--text2)">${c.cm}</b></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${c.progress}%;background:${barColor};border-radius:3px"></div>
+      </div>
+      <span style="font-size:11px;font-weight:700;color:var(--text)">${c.progress}%</span>
+    </div>
+    <div class="cv-grid">
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">📅 Milestones</span></div>
+        <div class="card-body"><div class="ms-list">${msList}</div></div>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">⚠️ Risks</span></div>
+        <div class="card-body">${riskList||'<span style="color:var(--muted);font-size:11px">No active risks</span>'}</div>
+      </div>
+      <div class="card" style="grid-column:1/-1">
+        <div class="card-hdr">
+          <span class="card-title">✅ Gate Checklist — ${c.nextGate} · ${c.nextGateDate}</span>
+          <span style="font-size:11px;font-weight:700;color:var(--green)">${pct}% complete</span>
+        </div>
+        <div class="card-body">
+          <div class="cl-progress" style="margin-bottom:10px"><div class="cl-fill" style="width:${pct}%"></div></div>
+          ${clItems}
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleCLandRefresh(key, idx, chipId){
+  toggleCL(key, idx);
+  if(S.view==='chip') renderChipDetail(chipId);
+}
+
+/* ===============================================
+   NAV DRAWER (mobile)
+=============================================== */
+function toggleNav(){
+  const nav = document.getElementById('nav');
+  const overlay = document.getElementById('nav-overlay');
+  const open = nav.classList.toggle('open');
+  overlay.classList.toggle('open', open);
+}
+function closeNavDrawer(){
+  document.getElementById('nav').classList.remove('open');
+  document.getElementById('nav-overlay').classList.remove('open');
+}
+
+/* ===============================================
+   INIT
+=============================================== */
+function init(){
+  applyTheme();
+  renderBadges();
+  renderNav();
+  showView('cockpit');
+}
+init();
+</script>
+</body>
+</html>
