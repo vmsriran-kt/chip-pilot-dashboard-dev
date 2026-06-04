@@ -653,7 +653,7 @@ function renderTabBar(){
     <div class="tab ${S.view==='cockpit'?'on':''}" id="t-cockpit" onclick="showView('cockpit')">🏠 Chip Cockpit</div>
     <div class="tab ${S.view==='radar'?'on':''}" id="t-radar" onclick="showView('radar')">📡 Radar &amp; Heatmap</div>
     <div class="tab ${S.view==='pm'?'on':''}" id="t-pm" onclick="showView('pm')">🤖 PM Assistant</div>
-    <div class="tab ${S.view==='cc'?'on':''}" id="t-cc" onclick="showView('cc')">🎛️ Command Center</div>
+    <div class="tab ${S.view==='cc'?'on':''}" id="t-cc" onclick="showView('cc')">✅ CM-Checklist</div>
     <div id="dyn-tabs" style="display:contents"></div>`;
   S.tabs.forEach(t=>{
     const chip = CHIPS[t.id];
