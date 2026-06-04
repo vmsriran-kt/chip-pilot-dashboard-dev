@@ -302,6 +302,7 @@ const GROUPS = [
 
 const CHIPS = {
   thorz:{ id:'thorz', code:'ThorZ', name:'ThorZ', group:'cpu', cm:'Mayank Kapoor',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     progress:75, color:'a', phase:'Post-silicon · BNB Declared 5/28 ✅ · MNB Active (73%/65%)',
     status:'MNB 73%/65% Active', nextGate:'MNB/CS', nextGateDate:'6/13',
     bugs:2, atRisk:true,
@@ -324,6 +325,7 @@ const CHIPS = {
     ],
   },
   vera:{ id:'vera', code:'TB500', name:'Vera', group:'cpu', cm:'Sowjanya',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     progress:93, color:'a', phase:'Post-silicon · PS SBIOS Released 6/2 ✅ · MODS V8.0 RC 6/4 · BWAT ~6/15',
     status:'SBIOS Released ✅ · MODS V8.0 RC 6/4 · BWAT 6/15', nextGate:'M-pkg FinalCWAT', nextGateDate:'6/11',
     bugs:2, atRisk:true,
@@ -347,6 +349,7 @@ const CHIPS = {
     ],
   },
   veraUltra:{ id:'veraUltra', code:'TB600', name:'Vera Ultra', group:'cpu', cm:'Hui Fu',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS',
     progress:40, color:'b', phase:'Pre-silicon · Simulation Req Gathering · IAS/GFD Reviews Active',
     status:'IAS/GFD Reviews 🔵', nextGate:'ES', nextGateDate:"Q4 '26",
     bugs:0, atRisk:false,
@@ -368,6 +371,7 @@ const CHIPS = {
     ],
   },
   n2x:{ id:'n2x', code:'N2x', name:'N2x', group:'cpu', cm:'Vivek Desikan',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     progress:32, color:'r', phase:'Pre-silicon · FPGA H2.07 Active · FDI 6/30 · H3 Netlist 6/5',
     status:'FPGA Active ⚠️ · FDI 6/30', nextGate:'FDI', nextGateDate:'6/30 ⚠️',
     bugs:2, atRisk:true,
@@ -393,6 +397,7 @@ const CHIPS = {
     ],
   },
   tcx10:{ id:'tcx10', code:'TCX10', name:'TCX10', group:'cpu', cm:'Roopa',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS',
     progress:8, color:'w', phase:'Pre-silicon · POR Discussions Active · 8 New Features Added',
     status:'POR Active', nextGate:'POR', nextGateDate:'TBD',
     bugs:0, atRisk:false,
@@ -401,6 +406,7 @@ const CHIPS = {
     checklist:[{t:'POR Kickoff',owner:'Roopa',done:false},{t:'Arch Spec with 8 new features',owner:'TBD',done:false}],
   },
   monet:{ id:'monet', code:'T257', name:'Monet', group:'cpu', cm:'Vivek Desikan',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS',
     progress:10, color:'w', phase:'Pre-silicon · FPGA Validation Active · BMW Design Award Pending',
     status:'FPGA Val Active', nextGate:'RTL', nextGateDate:"Q3 '26",
     bugs:0, atRisk:false,
@@ -409,6 +415,7 @@ const CHIPS = {
     checklist:[{t:'BMW design award decision',owner:'Vivek Desikan',done:false},{t:'FPGA validation ongoing',owner:'DV team',done:false}],
   },
   magni:{ id:'magni', code:'T294', name:'Magni', group:'cpu', cm:'Roopa',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS',
     progress:8, color:'w', phase:'Pre-silicon · Arch Investigations Active · POR 90% target by 6/30',
     status:'Arch Readouts Active', nextGate:'POR 90%', nextGateDate:'6/30',
     bugs:0, atRisk:false,
@@ -417,6 +424,7 @@ const CHIPS = {
     checklist:[{t:'Arch readouts complete',owner:'Roopa',done:false},{t:'90% POR by 6/30',owner:'Roopa',done:false}],
   },
   gr10x:{ id:'gr10x', code:'GR10x', name:'Rubin', group:'gpu', cm:'Ranjani V · Madhura',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/RubinSW',
     progress:95, color:'a', phase:'Post-silicon · QS Done ✅ · PS/PRel In Progress · PRel 6/22',
     status:'PS/PRel Active · PRel 6/22 ⚠️', nextGate:'PRel', nextGateDate:'6/22 ⚠️',
     bugs:8, atRisk:true,
@@ -442,6 +450,7 @@ const CHIPS = {
     ],
   },
   feynman:{ id:'feynman', code:'FN10x', name:'Feynman', group:'gpu', cm:'Madhura',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/RubinSW',
     progress:38, color:'a', phase:'Pre-silicon · Multi-dielet RTL · Phys Final NL In Progress',
     status:'RTL Active ⚠️', nextGate:'Final NL RTL', nextGateDate:"Jul '26",
     bugs:4, atRisk:false,
@@ -464,6 +473,7 @@ const CHIPS = {
     ],
   },
   gr15x:{ id:'gr15x', code:'GR15x', name:'Next GPU', group:'gpu', cm:'Vinay Sharma · Anshul Gupta',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/3529740918/GR15x+SW+Bringup',
     progress:5, color:'w', phase:'Pre-silicon · POR Phase · Early Planning',
     status:'Planning 🔵', nextGate:'POR', nextGateDate:"Q4 '26",
     bugs:0, atRisk:false,
@@ -476,6 +486,7 @@ const CHIPS = {
     ],
   },
   nr10x:{ id:'nr10x', code:'NR10x', name:'NVLink Fusion', group:'fusion', cm:'Ranjani',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/~ssriranjani/pages/3389539178/NR10+Sirius+SW',
     progress:12, color:'g', phase:'Pre-silicon · POR Phase',
     status:'On Track', nextGate:'RTL', nextGateDate:"Q4 '26",
     bugs:0, atRisk:false,
@@ -484,6 +495,7 @@ const CHIPS = {
     checklist:[{t:'NVLink protocol spec signoff',owner:'Ranjani',done:false},{t:'RTL planning kickoff',owner:'Ranjani',done:false}],
   },
   beacon:{ id:'beacon', code:'T374', name:'Beacon', group:'fusion', cm:'Roopa',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS',
     progress:5, color:'w', phase:'Post-silicon · Schedule Alignment Ongoing · QS MODS/Fuse Release Req Under Review',
     status:'Sched Alignment', nextGate:'QS MODS/Fuse', nextGateDate:'TBD',
     bugs:0, atRisk:false,
@@ -767,6 +779,7 @@ function chipCard(c){
       <span style="color:${c.bugs>0?'var(--red)':'var(--muted)'}">${c.bugs} bug${c.bugs!==1?'s':''}</span>
     </div>
     <div class="cc-cm">SW CM: <span>${c.cm}</span></div>
+    ${c.wikiUrl?`<div style="margin-top:5px"><a href="${c.wikiUrl}" target="_blank" onclick="event.stopPropagation()" style="font-size:9px;color:var(--blue);text-decoration:none;font-weight:600">📄 SW Page ↗</a></div>`:''}
   </div>`;
 }
 
@@ -1119,7 +1132,9 @@ function renderChipDetail(id){
       <div style="flex:1"></div>
       <button class="btn btn-green" onclick="openPMForChip('${c.id}')" style="font-size:10px">🤖 PM Assistant</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">${c.phase} · SW CM: <b style="color:var(--text2)">${c.cm}</b></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:12px">${c.phase} · SW CM: <b style="color:var(--text2)">${c.cm}</b>
+      ${c.wikiUrl?` · <a href="${c.wikiUrl}" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:none">📄 SW Confluence Page ↗</a>`:''}
+    </div>
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
       <div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">
         <div style="height:100%;width:${c.progress}%;background:${barColor};border-radius:3px"></div>
