@@ -1212,8 +1212,6 @@ function renderCC(){
         }).join('')}</div>`
       : '';
 
-    const chip = nc.name.trim().toUpperCase() || 'CHIP';
-    const code = nc.codename.trim() || 'Codename';
     const structureLines = CHIP_PAGE_TMPL.map((p,i)=>
       `${i+1}. ${'  '.repeat(p.level)}${p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code)}`).join('\n');
     const coworkPrompt = `Create Confluence page structure for new chip ${chip} (${code}) in space ~ssriranjani under parent page 1613201410 on nvidia.atlassian.net. SW CM: ${nc.cm||'TBD'}. Use NR10 (page 3389539178) as content template.\n\nPages (indentation = parent):\n${structureLines}\n\nSubstitute NR10/Sirius with ${chip}/${code}. Set SW CM to "${nc.cm||'TBD'}". Leave all [TBD] fields for the team.`;
