@@ -201,6 +201,27 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px
 .attn-chip{font-size:11px;font-weight:700;color:var(--text)}
 .attn-status{font-size:10px;color:var(--muted)}
 .attn-bug{font-size:10px;color:var(--red);font-weight:700}
+/* -- NEW CHIP SETUP FORM -- */
+.nc-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.nc-field{display:flex;flex-direction:column;gap:4px}
+.nc-field.full{grid-column:1/-1}
+.nc-label{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.nc-input{padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:12px;width:100%;transition:border-color .15s}
+.nc-input:focus{outline:none;border-color:var(--green)}
+.nc-select{padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:12px;width:100%}
+/* Page tree preview */
+.pg-tree{display:flex;flex-direction:column;gap:1px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:12px;margin-bottom:14px}
+.pg-node{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:4px 2px;border-radius:4px;transition:background .1s}
+.pg-node:hover{background:rgba(0,0,0,.03)}
+.pg-node.root{font-weight:800;color:var(--text);font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.pg-l1{padding-left:20px}.pg-l2{padding-left:40px}
+.pg-icon{font-size:11px;flex-shrink:0}
+.pg-status{font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:auto;white-space:nowrap}
+.pg-pending{background:var(--amber-bg);color:var(--amber)}
+.pg-done{background:var(--green-bg);color:var(--green)}
+.pg-err{background:var(--red-bg);color:var(--red)}
+.nc-result{background:var(--green-bg);border:1px solid var(--green);border-radius:7px;padding:12px 14px;font-size:11px;color:var(--green);line-height:1.7}
+.nc-result a{color:var(--green);font-weight:600}
 /* -- COCKPIT 2-PANE LAYOUT -- */
 .ck-layout{display:flex;gap:14px;align-items:flex-start}
 .ck-chips{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
@@ -518,8 +539,11 @@ const S = {
   view: 'cockpit',   // cockpit | radar | pm | cc | chip
   chip: null,
   pmChip: null,
-  ccChip: null,      // selected chip in Command Center (null = all)
-  ccCat: 'daily',    // daily | weekly | gate | setup
+  ccChip: null,
+  ccCat: 'daily',    // daily | weekly | gate | setup | newchip
+  newChip: {name:'', codename:'', group:'cpu', cm:'', ref:'NR10'},
+  ncStatus: null,    // null | 'preview' | 'creating' | 'done' | 'error'
+  ncPages: [],       // [{title, level, url, status}]
   tabs: [],
   clState: JSON.parse(localStorage.getItem('cl2') || '{}'),
   ccState: JSON.parse(localStorage.getItem('cc1') || '{}'),
@@ -569,6 +593,21 @@ const CC_TASKS = {
     {t:'Confirm escalation path and on-call rotations', pri:'l'},
   ],
 };
+
+/* Confluence page template (based on NR10/Sirius structure) */
+const CHIP_PAGE_TMPL = [
+  {title:'{CHIP} ({CODENAME}) SW',                         level:0},
+  {title:'{CHIP} Chip SW Development (PLC-L1) Process',    level:1},
+  {title:'{CHIP} PLC Requirements and Process',            level:2},
+  {title:'{CHIP} SW JIRA Projects',                        level:2},
+  {title:'{CHIP} NVPOR Guidance to teams',                 level:2},
+  {title:'{CHIP} Jira-XRAY Guidance to teams',             level:2},
+  {title:'{CHIP} Improvements from TH500 AAR',             level:2},
+  {title:'{CHIP} Simulation Sanity Test Plan',             level:1},
+  {title:'{CHIP} SW Sync Meetings',                        level:1},
+  {title:'{CHIP} IAS (Implementation Architecture Spec)',  level:1},
+  {title:'{CHIP} - Program Landing Page',                  level:1},
+];
 
 function saveCL(){ localStorage.setItem('cl2', JSON.stringify(S.clState)); }
 
@@ -1140,10 +1179,11 @@ function renderCC(){
 
   // -- Category tabs --
   const cats = [
-    {id:'daily',  label:'🌅 Daily'},
-    {id:'weekly', label:'📅 Weekly'},
-    {id:'gate',   label:'🚦 Gate Prep'},
-    {id:'setup',  label:'🔧 Program Setup'},
+    {id:'daily',    label:'🌅 Daily'},
+    {id:'weekly',   label:'📅 Weekly'},
+    {id:'gate',     label:'🚦 Gate Prep'},
+    {id:'setup',    label:'🔧 Program Setup'},
+    {id:'newchip',  label:'🆕 New Chip Setup'},
   ];
   const catBar = `<div class="cc-cats">${cats.map(c=>
     `<div class="cc-cat${cat===c.id?' on':''}" onclick="selectCCCat('${c.id}')">${c.label}</div>`).join('')}</div>`;
@@ -1151,7 +1191,93 @@ function renderCC(){
   // -- Build checklist content --
   let mainHTML = '';
 
-  if(cat === 'gate'){
+  if(cat === 'newchip'){
+    const nc = S.newChip;
+    const chip = nc.name.trim().toUpperCase() || 'CHIP';
+    const code = nc.codename.trim() || 'Codename';
+
+    // Preview tree
+    const treeHTML = S.ncStatus
+      ? `<div class="pg-tree">${CHIP_PAGE_TMPL.map((p,i)=>{
+          const title = p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code);
+          const st = S.ncPages[i]?.status || 'pending';
+          const stLabel = st==='done'?'Created':st==='error'?'Error':st==='queued'?'Queued':'Pending';
+          const stCls = st==='done'?'pg-done':st==='error'?'pg-err':'pg-pending';
+          const link = S.ncPages[i]?.url ? `<a href="${S.ncPages[i].url}" target="_blank" style="color:var(--green);font-size:9px;margin-left:6px">↗</a>` : '';
+          return `<div class="pg-node${p.level===0?' root':''} pg-l${p.level}">
+            <span class="pg-icon">${p.level===0?'📂':'📄'}</span>
+            <span>${title}</span>${link}
+            <span class="pg-status ${stCls}">${stLabel}</span>
+          </div>`;
+        }).join('')}</div>`
+      : '';
+
+    const chip = nc.name.trim().toUpperCase() || 'CHIP';
+    const code = nc.codename.trim() || 'Codename';
+    const structureLines = CHIP_PAGE_TMPL.map((p,i)=>
+      `${i+1}. ${'  '.repeat(p.level)}${p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code)}`).join('\n');
+    const coworkPrompt = `Create Confluence page structure for new chip ${chip} (${code}) in space ~ssriranjani under parent page 1613201410 on nvidia.atlassian.net. SW CM: ${nc.cm||'TBD'}. Use NR10 (page 3389539178) as content template.\n\nPages (indentation = parent):\n${structureLines}\n\nSubstitute NR10/Sirius with ${chip}/${code}. Set SW CM to "${nc.cm||'TBD'}". Leave all [TBD] fields for the team.`;
+
+    const resultHTML = S.ncStatus==='copied'
+      ? `<div class="nc-result" style="margin-bottom:12px">
+          📋 <strong>Request copied to clipboard!</strong><br>
+          Paste it in your <strong>Cowork chat</strong> and Claude will create all pages in Confluence instantly.<br><br>
+          <details style="margin-top:4px"><summary style="cursor:pointer;font-size:10px;color:var(--green)">View prompt</summary>
+          <pre style="margin-top:8px;font-size:9px;white-space:pre-wrap;color:var(--text2);background:var(--bg3);padding:8px;border-radius:5px">${coworkPrompt}</pre></details>
+        </div>` : '';
+
+    const btnLabel = S.ncStatus==='creating' ? '⏳ Creating…'
+      : S.ncStatus==='preview' ? '🚀 Create in Confluence'
+      : S.ncStatus==='copied' ? '📋 Copied!'
+      : '👁️ Preview';
+    const btnDisabled = S.ncStatus==='creating'||S.ncStatus==='copied' ? 'disabled' : '';
+
+    mainHTML = `
+      <div style="margin-bottom:6px">
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px">New Chip Confluence Setup</div>
+        <div class="nc-form">
+          <div class="nc-field">
+            <label class="nc-label">Chip Name / ID</label>
+            <input class="nc-input" id="nc-name" placeholder="e.g. NR20" value="${nc.name}"
+              oninput="S.newChip.name=this.value;S.ncStatus=null;S.ncPages=[];renderCC()">
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">Codename</label>
+            <input class="nc-input" id="nc-code" placeholder="e.g. Orion" value="${nc.codename}"
+              oninput="S.newChip.codename=this.value;S.ncStatus=null;S.ncPages=[];renderCC()">
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">Group</label>
+            <select class="nc-select" onchange="S.newChip.group=this.value">
+              <option value="cpu"${nc.group==='cpu'?' selected':''}>CPU</option>
+              <option value="gpu"${nc.group==='gpu'?' selected':''}>GPU</option>
+              <option value="fusion"${nc.group==='fusion'?' selected':''}>Fusion</option>
+            </select>
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">SW CM</label>
+            <input class="nc-input" id="nc-cm" placeholder="e.g. Ranjani V" value="${nc.cm}"
+              oninput="S.newChip.cm=this.value">
+          </div>
+          <div class="nc-field full">
+            <label class="nc-label">Reference Chip (page structure template)</label>
+            <select class="nc-select" onchange="S.newChip.ref=this.value">
+              <option value="NR10"${nc.ref==='NR10'?' selected':''}>NR10 (Sirius) — page ID 3389539178</option>
+              ${Object.values(CHIPS).map(c=>`<option value="${c.code}"${nc.ref===c.code?' selected':''}>${c.code} / ${c.name}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        ${treeHTML}
+        ${resultHTML}
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-green" ${btnDisabled}
+            onclick="${S.ncStatus==='preview'?'createChipPages()':'previewChipSetup()'}"
+            style="min-width:180px">${btnLabel}</button>
+          ${S.ncStatus==='preview'?`<button class="btn" style="border-color:var(--border);color:var(--muted)" onclick="S.ncStatus=null;S.ncPages=[];renderCC()">Reset</button>`:''}
+        </div>
+      </div>`;
+
+  } else if(cat === 'gate'){
     // Per-chip gate checklists
     const chips = sel ? [CHIPS[sel]] : Object.values(CHIPS);
     mainHTML = chips.map(c=>{
@@ -1248,6 +1374,120 @@ function renderCC(){
       <div class="cc-main">${catBar}<div class="card"><div class="card-body">${mainHTML}</div></div></div>
       ${panel}
     </div>`;
+}
+
+/* ===============================================
+   NEW CHIP SETUP
+=============================================== */
+function previewChipSetup(){
+  const nc = S.newChip;
+  if(!nc.name.trim()){ alert('Please enter a chip name.'); return; }
+  if(!nc.codename.trim()){ alert('Please enter a codename.'); return; }
+  S.ncStatus = 'preview';
+  S.ncPages = CHIP_PAGE_TMPL.map(p=>({title:p.title,level:p.level,status:'pending',url:null}));
+  renderCC();
+}
+
+async function createChipPages(){
+  const nc = S.newChip;
+  const chip = nc.name.trim().toUpperCase();
+  const code = nc.codename.trim();
+  S.ncStatus = 'creating';
+  renderCC();
+
+  // Confluence config
+  const SPACE_ID   = '~ssriranjani';
+  const PARENT_ID  = '1613201410'; // Ranjani V's Home
+  const BASE_URL   = 'https://nvidia.atlassian.net/wiki';
+
+  // Build page list with parent tracking
+  const pages = CHIP_PAGE_TMPL.map(p=>({
+    ...p,
+    title: p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code),
+    status:'pending', url:null, id:null
+  }));
+
+  // Root page body (based on NR10 template)
+  function rootBody(chip, code, cm){
+    return `<h2>Chip Soul</h2>
+<p>${chip} (${code}) is a next-generation chip program. SW CM: <strong>${cm||'TBD'}</strong>. Currently in Pre-Silicon phase.</p>
+<h2>Terminology</h2>
+<table><thead><tr><th>Name</th><th>Description</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>${chip}</td><td>Chip program identifier</td><td>Chip ID</td></tr>
+<tr><td>${code}</td><td>Codename for ${chip}</td><td>Codename</td></tr>
+</tbody></table>
+<h2>${chip} POR</h2>
+<ul>
+<li><strong>HW POR:</strong> [TBD]</li>
+<li><strong>ChipPOR:</strong> [TBD]</li>
+<li><strong>SW POR Tracker:</strong> [TBD]</li>
+</ul>
+<h2>Key Links</h2>
+<table><thead><tr><th>Resource</th><th>Link</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>HW POR</td><td>[TBD]</td><td></td></tr>
+<tr><td>Slack</td><td>#chips-${code.toLowerCase()}</td><td>Main SW channel</td></tr>
+</tbody></table>
+<h2>${chip} SW Leads</h2>
+<table><thead><tr><th>Role</th><th>Name</th></tr></thead>
+<tbody>
+<tr><td>SW Chip Management</td><td>${cm||'[TBD]'}</td></tr>
+<tr><td>Driver SW</td><td>[TBD]</td></tr>
+<tr><td>FW</td><td>[TBD]</td></tr>
+<tr><td>MODS</td><td>[TBD]</td></tr>
+</tbody></table>`;
+  }
+
+  function subBody(title){ return `<p>${title}</p><p>[Content to be filled by SW leads — see NR10 for reference structure]</p>`; }
+
+  // IDs for parent tracking by level
+  let l0id=null, l1id=null;
+
+  for(let i=0; i<pages.length; i++){
+    const p = pages[i];
+    const parentId = p.level===0 ? PARENT_ID : p.level===1 ? l0id : l1id;
+    const body = p.level===0 ? rootBody(chip,code,nc.cm) : subBody(p.title);
+
+    try {
+      const payload = {
+        spaceId: SPACE_ID,
+        parentId,
+        title: p.title,
+        body,
+        contentFormat: 'html',
+        status: 'current'
+      };
+      // Call Claude via postMessage to execute the Confluence API
+      // Since we're in a static page, we queue this for Cowork execution
+      // For now, simulate and store the spec
+      pages[i].status = 'queued';
+      if(p.level===0) l0id = 'queued_'+i;
+      else if(p.level===1) l1id = 'queued_'+i;
+    } catch(e){
+      pages[i].status = 'error';
+    }
+  }
+
+  // Build the Cowork prompt and copy to clipboard
+  const chip_uc = chip;
+  const structureLines = pages.map((p,i)=>`${i+1}. ${'  '.repeat(p.level)}${p.title}`).join('\n');
+  const prompt = `Create Confluence page structure for new chip ${chip_uc} (${code}) in space ~ssriranjani under parent page 1613201410 ("Ranjani V's Home") on nvidia.atlassian.net. SW CM: ${nc.cm||'TBD'}. Use NR10 (Sirius) page ID 3389539178 as content reference.
+
+Pages to create in this order (indentation = parent relationship):
+${structureLines}
+
+Create each page with content based on the NR10 template. Substitute all occurrences of "NR10"/"Sirius" with "${chip_uc}"/"${code}". Set SW CM to "${nc.cm||'TBD'}". Leave all [TBD] links as-is for the team to fill in.`;
+
+  navigator.clipboard.writeText(prompt).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=prompt; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+  });
+
+  S.ncPages = pages.map(p=>({...p, status:'queued'}));
+  S.ncStatus = 'copied';
+  renderCC();
 }
 
 /* ===============================================
