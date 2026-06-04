@@ -553,7 +553,7 @@ const S = {
   pmChip: null,
   ccChip: null,
   ccCat: 'daily',    // daily | weekly | gate | setup | newchip
-  newChip: {name:'', codename:'', group:'cpu', cm:'', ref:'NR10'},
+  newChip: {name:'', codename:'', group:'cpu', cm:'', refId:'nr10x'},
   ncStatus: null,    // null | 'preview' | 'creating' | 'done' | 'error'
   ncPages: [],       // [{title, level, url, status}]
   tabs: [],
@@ -1212,8 +1212,14 @@ function renderCC(){
     const code = nc.codename.trim() || 'Codename';
 
     // Preview tree
+    const refChipObj = nc.refId && CHIPS[nc.refId];
+    const refBanner = S.ncStatus && refChipObj
+      ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--blue-bg);border:1px solid rgba(26,84,160,.20);border-radius:6px;margin-bottom:8px;font-size:10px;color:var(--blue)">
+          <span>📐 Structure based on:</span>
+          <a href="${refChipObj.wikiUrl}" target="_blank" style="font-weight:700;color:var(--blue);text-decoration:none">${refChipObj.code} / ${refChipObj.name} ↗</a>
+        </div>` : '';
     const treeHTML = S.ncStatus
-      ? `<div class="pg-tree">${CHIP_PAGE_TMPL.map((p,i)=>{
+      ? refBanner + `<div class="pg-tree">${CHIP_PAGE_TMPL.map((p,i)=>{
           const title = p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code);
           const st = S.ncPages[i]?.status || 'pending';
           const stLabel = st==='done'?'Created':st==='error'?'Error':st==='queued'?'Queued':'Pending';
@@ -1229,7 +1235,9 @@ function renderCC(){
 
     const structureLines = CHIP_PAGE_TMPL.map((p,i)=>
       `${i+1}. ${'  '.repeat(p.level)}${p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code)}`).join('\n');
-    const coworkPrompt = `Create Confluence page structure for new chip ${chip} (${code}) in space ~ssriranjani under parent page 1613201410 on nvidia.atlassian.net. SW CM: ${nc.cm||'TBD'}. Use NR10 (page 3389539178) as content template.\n\nPages (indentation = parent):\n${structureLines}\n\nSubstitute NR10/Sirius with ${chip}/${code}. Set SW CM to "${nc.cm||'TBD'}". Leave all [TBD] fields for the team.`;
+    const refChip = CHIPS[nc.refId];
+    const refDesc = refChip ? `${refChip.code} / ${refChip.name} (${refChip.wikiUrl})` : 'NR10 (Sirius)';
+    const coworkPrompt = `Create Confluence page structure for new chip ${chip} (${code}) in space ~ssriranjani under parent page 1613201410 on nvidia.atlassian.net. SW CM: ${nc.cm||'TBD'}. Use ${refDesc} as the content and structure reference.\n\nPages to create (indentation = parent relationship):\n${structureLines}\n\nSubstitute the reference chip name/codename with ${chip}/${code} throughout. Set SW CM to "${nc.cm||'TBD'}". Leave all [TBD] fields for the team to fill in.`;
 
     const resultHTML = S.ncStatus==='copied'
       ? `<div class="nc-result" style="margin-bottom:12px">
@@ -1273,11 +1281,22 @@ function renderCC(){
               oninput="S.newChip.cm=this.value;S.ncStatus=null;S.ncPages=[]">
           </div>
           <div class="nc-field full">
-            <label class="nc-label">Reference Chip (page structure template)</label>
-            <select class="nc-select" onchange="S.newChip.ref=this.value">
-              <option value="NR10"${nc.ref==='NR10'?' selected':''}>NR10 (Sirius) — page ID 3389539178</option>
-              ${Object.values(CHIPS).map(c=>`<option value="${c.code}"${nc.ref===c.code?' selected':''}>${c.code} / ${c.name}</option>`).join('')}
+            <label class="nc-label">Reference Chip (copies page structure from this chip's SW space)</label>
+            <select class="nc-select" onchange="S.newChip.refId=this.value;S.ncStatus=null;S.ncPages=[];renderCC()">
+              <option value="">-- Select reference chip --</option>
+              ${Object.values(CHIPS).filter(c=>c.wikiUrl).map(c=>
+                `<option value="${c.id}"${nc.refId===c.id?' selected':''}>${c.code} / ${c.name}</option>`
+              ).join('')}
             </select>
+            ${(()=>{
+              const ref = nc.refId && CHIPS[nc.refId];
+              return ref && ref.wikiUrl
+                ? `<div style="margin-top:6px;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:10px;color:var(--muted)">Reference SW page:</span>
+                    <a href="${ref.wikiUrl}" target="_blank" style="font-size:10px;font-weight:600;color:var(--blue);text-decoration:none">${ref.code} / ${ref.name} ↗</a>
+                  </div>`
+                : `<div style="margin-top:6px;font-size:10px;color:var(--muted);padding:4px 2px">Select a chip to see its SW Confluence page</div>`;
+            })()}
           </div>
         </div>
         ${treeHTML}
@@ -1396,6 +1415,7 @@ function previewChipSetup(){
   const nc = S.newChip;
   if(!nc.name.trim()){ alert('Please enter a chip name.'); return; }
   if(!nc.codename.trim()){ alert('Please enter a codename.'); return; }
+  if(!nc.refId || !CHIPS[nc.refId]){ alert('Please select a reference chip.'); return; }
   S.ncStatus = 'preview';
   S.ncPages = CHIP_PAGE_TMPL.map(p=>({title:p.title,level:p.level,status:'pending',url:null}));
   renderCC();
