@@ -158,6 +158,35 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px
 .cl-owner{font-size:10px;color:var(--muted)}
 .cl-progress{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:6px}
 .cl-fill{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+/* -- COMMAND CENTER -- */
+.cc-cats{display:flex;gap:2px;margin-bottom:12px;background:var(--bg4);border:1px solid var(--border);border-radius:var(--card-r);padding:3px;overflow-x:auto;flex-shrink:0}
+.cc-cat{padding:6px 16px;border-radius:6px;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .12s;white-space:nowrap;user-select:none}
+.cc-cat:hover{color:var(--text)}
+.cc-cat.on{background:var(--bg);color:var(--text);box-shadow:var(--shadow)}
+.cc-layout{display:flex;gap:14px;align-items:flex-start}
+.cc-main{flex:1;min-width:0}
+.cc-panel{width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:10px}
+@media(max-width:1100px){.cc-panel{display:none}}
+.cc-chip-block{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--sep)}
+.cc-chip-block:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.cc-chip-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.cc-chip-code{font-size:12px;font-weight:700;color:var(--text)}
+.cc-chip-gate{font-size:10px;color:var(--muted);flex:1}
+.cc-pct{font-size:11px;font-weight:700}
+.cc-item{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid var(--sep);cursor:pointer;transition:background .1s}
+.cc-item:hover{background:rgba(0,0,0,.02)}
+.cc-item:last-child{border-bottom:none}
+.cc-item input[type=checkbox]{width:14px;height:14px;cursor:pointer;accent-color:var(--green);flex-shrink:0;margin-top:1px}
+.cc-item-body{flex:1;min-width:0}
+.cc-item-text{font-size:11px;color:var(--text2);line-height:1.4}
+.cc-item-text.done{text-decoration:line-through;color:var(--muted)}
+.cc-item-meta{display:flex;align-items:center;gap:6px;margin-top:3px}
+.cc-item-owner{font-size:10px;color:var(--muted)}
+.cc-pri{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;color:#fff;letter-spacing:.4px}
+.cc-pri-h{background:var(--red)}.cc-pri-m{background:var(--amber)}.cc-pri-l{background:var(--muted)}
+.cc-empty{font-size:11px;color:var(--muted);padding:14px 0;text-align:center}
+.cc-score-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--sep);font-size:11px}
+.cc-score-row:last-child{border-bottom:none}
 /* -- RESPONSIVE GRIDS (used in JS render fns) -- */
 .radar-grid{display:flex;flex-direction:column;gap:12px;max-width:860px;margin:0 auto;width:100%}
 .pm-main-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
@@ -234,6 +263,7 @@ html,body{height:100%;font-family:'Segoe UI',system-ui,sans-serif;font-size:13px
         <div class="view" id="v-cockpit"></div>
         <div class="view" id="v-radar" hidden></div>
         <div class="view" id="v-pm" hidden></div>
+        <div class="view" id="v-cc" hidden></div>
         <div class="view" id="v-chip" hidden></div>
       </div>
     </main>
@@ -485,11 +515,59 @@ const FEED_ITEMS=[
    STATE
 =============================================== */
 const S = {
-  view: 'cockpit',   // cockpit | radar | pm | chip
+  view: 'cockpit',   // cockpit | radar | pm | cc | chip
   chip: null,
-  pmChip: null,      // null = all chips, or chip id for focused PM view
-  tabs: [],          // [{id, el}]
+  pmChip: null,
+  ccChip: null,      // selected chip in Command Center (null = all)
+  ccCat: 'daily',    // daily | weekly | gate | setup
+  tabs: [],
   clState: JSON.parse(localStorage.getItem('cl2') || '{}'),
+  ccState: JSON.parse(localStorage.getItem('cc1') || '{}'),
+};
+function saveCC(){ localStorage.setItem('cc1', JSON.stringify(S.ccState)); }
+
+/* ===============================================
+   COMMAND CENTER DATA
+=============================================== */
+const CC_TASKS = {
+  daily: [
+    {t:'Check Slack for overnight blockers or escalations across active chips', pri:'h'},
+    {t:'Triage new P0/P1 bugs — assign owner and set resolution target', pri:'h'},
+    {t:'Verify gate tracker — flag any milestone slippages or date changes', pri:'h'},
+    {t:'Review "Needs Attention" dashboard items and take action', pri:'h'},
+    {t:'Confirm daily standup agenda is ready for at-risk chips', pri:'m'},
+    {t:'Update daily status notes for chips in active bringup/gate phase', pri:'m'},
+    {t:'Check FW/SW build health — verify no new regressions', pri:'m'},
+    {t:'Review any pending WAR approvals or escalation requests', pri:'l'},
+  ],
+  weekly: [
+    {t:'Draft and send weekly status email to leadership and stakeholders', pri:'h'},
+    {t:'Review all at-risk chips with team — agree on mitigation plan', pri:'h'},
+    {t:'Confirm all action items from last week are closed or re-assigned', pri:'h'},
+    {t:'Update risk register for each active chip program', pri:'h'},
+    {t:'Review upcoming gate timelines for the next 4 weeks', pri:'h'},
+    {t:'Check milestone % completion — escalate chips below target', pri:'m'},
+    {t:'Schedule and set agenda for weekly CM sync meeting', pri:'m'},
+    {t:'Review open P2 bugs — determine WAR vs escalation path', pri:'m'},
+    {t:'Sync with HW leads on any cross-team dependencies', pri:'m'},
+    {t:'Update Confluence program status pages', pri:'l'},
+    {t:'Review and close stale action items older than 2 weeks', pri:'l'},
+  ],
+  setup: [
+    {t:'Confirm SW CM assignment — notify team and stakeholders', pri:'h'},
+    {t:'Review and sign off on POR document', pri:'h'},
+    {t:'Create Confluence space for chip program', pri:'h'},
+    {t:'Set up NVBugs project for chip program', pri:'h'},
+    {t:'Create Slack channels: #chip-bringup, #chip-sw-status, #chip-issues', pri:'h'},
+    {t:'Schedule HW-SW alignment kickoff meeting', pri:'h'},
+    {t:'Align on milestone dates with HW PM — lock in gate schedule', pri:'h'},
+    {t:'Add chip to SW Program Dashboard and gate tracker', pri:'m'},
+    {t:'Set up recurring chip status meeting series (weekly or biweekly)', pri:'m'},
+    {t:'Identify and onboard key team leads (FW, SW, PHY, MODS)', pri:'m'},
+    {t:'Set up automated build/test notifications for the chip', pri:'m'},
+    {t:'Review risk template and customize for this chip program', pri:'l'},
+    {t:'Confirm escalation path and on-call rotations', pri:'l'},
+  ],
 };
 
 function saveCL(){ localStorage.setItem('cl2', JSON.stringify(S.clState)); }
@@ -575,6 +653,7 @@ function renderTabBar(){
     <div class="tab ${S.view==='cockpit'?'on':''}" id="t-cockpit" onclick="showView('cockpit')">🏠 Chip Cockpit</div>
     <div class="tab ${S.view==='radar'?'on':''}" id="t-radar" onclick="showView('radar')">📡 Radar &amp; Heatmap</div>
     <div class="tab ${S.view==='pm'?'on':''}" id="t-pm" onclick="showView('pm')">🤖 PM Assistant</div>
+    <div class="tab ${S.view==='cc'?'on':''}" id="t-cc" onclick="showView('cc')">🎛️ Command Center</div>
     <div id="dyn-tabs" style="display:contents"></div>`;
   S.tabs.forEach(t=>{
     const chip = CHIPS[t.id];
@@ -594,13 +673,14 @@ function showView(v, chipId=null){
   S.view = v;
   S.chip = chipId;
   // Hide all
-  ['cockpit','radar','pm','chip'].forEach(id=>{
+  ['cockpit','radar','pm','cc','chip'].forEach(id=>{
     document.getElementById('v-'+id).hidden = (id!==v);
   });
   // Render target
   if(v==='cockpit') renderCockpit();
   else if(v==='radar') renderRadar();
   else if(v==='pm') renderPM();
+  else if(v==='cc') renderCC();
   else if(v==='chip' && chipId) renderChipDetail(chipId);
   renderTabBar();
   // Update nav active state
@@ -1032,6 +1112,142 @@ function renderChipDetail(id){
 function toggleCLandRefresh(key, idx, chipId){
   toggleCL(key, idx);
   if(S.view==='chip') renderChipDetail(chipId);
+}
+
+/* ===============================================
+   COMMAND CENTER VIEW
+=============================================== */
+function selectCCChip(id){ S.ccChip=id; renderCC(); }
+function selectCCCat(cat){ S.ccCat=cat; renderCC(); }
+function toggleCC(key, idx){
+  if(!S.ccState[key]) S.ccState[key]={};
+  S.ccState[key][idx] = !S.ccState[key][idx];
+  saveCC();
+  renderCC();
+}
+
+function renderCC(){
+  const sel = S.ccChip;
+  const cat = S.ccCat || 'daily';
+
+  // -- Chip selector --
+  const allPill = `<div class="pm-pill${!sel?' on':''}" onclick="selectCCChip(null)">All Chips</div>`;
+  const chipPills = Object.values(CHIPS).map(c=>
+    `<div class="pm-pill${sel===c.id?' on':''}" onclick="selectCCChip('${c.id}')">${c.code}</div>`).join('');
+  const selBar = `<div class="pm-sel-bar">
+    <span class="pm-sel-lbl">Chip:</span>${allPill}${chipPills}
+  </div>`;
+
+  // -- Category tabs --
+  const cats = [
+    {id:'daily',  label:'🌅 Daily'},
+    {id:'weekly', label:'📅 Weekly'},
+    {id:'gate',   label:'🚦 Gate Prep'},
+    {id:'setup',  label:'🔧 Program Setup'},
+  ];
+  const catBar = `<div class="cc-cats">${cats.map(c=>
+    `<div class="cc-cat${cat===c.id?' on':''}" onclick="selectCCCat('${c.id}')">${c.label}</div>`).join('')}</div>`;
+
+  // -- Build checklist content --
+  let mainHTML = '';
+
+  if(cat === 'gate'){
+    // Per-chip gate checklists
+    const chips = sel ? [CHIPS[sel]] : Object.values(CHIPS);
+    mainHTML = chips.map(c=>{
+      const key = 'gate_'+c.id;
+      const done = S.ccState[key] || {};
+      const total = c.checklist.length;
+      const completed = c.checklist.filter((_,i)=>!!done[i]).length;
+      const pct = total ? Math.round(completed/total*100) : 0;
+      const pctColor = pct===100?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
+      const items = c.checklist.map((item,i)=>`
+        <div class="cc-item" onclick="toggleCC('${key}',${i})">
+          <input type="checkbox" ${done[i]?'checked':''} onclick="event.stopPropagation()" onchange="toggleCC('${key}',${i})">
+          <div class="cc-item-body">
+            <div class="cc-item-text${done[i]?' done':''}">${item.t}</div>
+            <div class="cc-item-meta"><span class="cc-item-owner">${item.owner}</span></div>
+          </div>
+        </div>`).join('');
+      return `<div class="cc-chip-block">
+        <div class="cc-chip-hdr">
+          <span class="cc-chip-code">${c.code} / ${c.name}</span>
+          <span class="cc-chip-gate">Gate: ${c.nextGate} · ${c.nextGateDate}</span>
+          <span class="cc-pct" style="color:${pctColor}">${pct}%</span>
+        </div>
+        <div class="cl-progress" style="margin-bottom:8px"><div class="cl-fill" style="width:${pct}%"></div></div>
+        ${items||'<div class="cc-empty">No checklist items defined</div>'}
+      </div>`;
+    }).join('');
+
+  } else {
+    // Global task lists (daily / weekly / setup)
+    const tasks = CC_TASKS[cat] || [];
+    const key = cat;
+    const done = S.ccState[key] || {};
+    const completed = tasks.filter((_,i)=>!!done[i]).length;
+    const pct = tasks.length ? Math.round(completed/tasks.length*100) : 0;
+    const pctColor = pct===100?'var(--green)':pct>=50?'var(--amber)':'var(--text)';
+    const items = tasks.map((task,i)=>`
+      <div class="cc-item" onclick="toggleCC('${key}',${i})">
+        <input type="checkbox" ${done[i]?'checked':''} onclick="event.stopPropagation()" onchange="toggleCC('${key}',${i})">
+        <div class="cc-item-body">
+          <div class="cc-item-text${done[i]?' done':''}">${task.t}</div>
+        </div>
+        <span class="cc-pri cc-pri-${task.pri}">${task.pri.toUpperCase()}</span>
+      </div>`).join('');
+    mainHTML = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:11px;color:var(--muted)">${completed} of ${tasks.length} complete</span>
+        <span style="font-size:13px;font-weight:800;color:${pctColor}">${pct}%</span>
+      </div>
+      <div class="cl-progress" style="margin-bottom:14px"><div class="cl-fill" style="width:${pct}%"></div></div>
+      ${items}`;
+  }
+
+  // -- Right panel: scoreboard --
+  const gateRows = Object.values(CHIPS).map(c=>{
+    const key = 'gate_'+c.id;
+    const done = S.ccState[key] || {};
+    const pct = c.checklist.length ? Math.round(c.checklist.filter((_,i)=>!!done[i]).length/c.checklist.length*100) : 0;
+    const col = pct===100?'var(--green)':pct>=50?'var(--amber)':'var(--muted)';
+    return `<div class="cc-score-row">
+      <span style="font-weight:600;font-size:11px;color:var(--text)">${c.code}</span>
+      <div style="flex:1;height:4px;background:var(--border);border-radius:2px;margin:0 10px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${col};border-radius:2px"></div>
+      </div>
+      <span style="font-size:11px;font-weight:700;color:${col};min-width:28px;text-align:right">${pct}%</span>
+    </div>`;
+  }).join('');
+
+  const cadenceRows = ['daily','weekly','setup'].map(k=>{
+    const tasks = CC_TASKS[k]||[];
+    const done = S.ccState[k]||{};
+    const pct = tasks.length ? Math.round(tasks.filter((_,i)=>!!done[i]).length/tasks.length*100) : 0;
+    const labels = {daily:'Daily',weekly:'Weekly',setup:'Program Setup'};
+    const col = pct===100?'var(--green)':pct>=50?'var(--amber)':'var(--muted)';
+    return `<div class="cc-score-row" style="cursor:pointer" onclick="selectCCCat('${k}')">
+      <span style="font-size:11px;color:var(--text2)">${labels[k]}</span>
+      <span style="font-size:11px;font-weight:700;color:${col}">${pct}%</span>
+    </div>`;
+  }).join('');
+
+  const panel = `<div class="cc-panel">
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">📊 Completion</span></div>
+      <div class="card-body" style="padding-top:6px">
+        <div style="font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">CM Cadence</div>
+        ${cadenceRows}
+        <div style="font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin:12px 0 6px">Gate Prep</div>
+        ${gateRows}
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('v-cc').innerHTML = selBar + `
+    <div class="cc-layout">
+      <div class="cc-main">${catBar}<div class="card"><div class="card-body">${mainHTML}</div></div></div>
+      ${panel}
+    </div>`;
 }
 
 /* ===============================================
