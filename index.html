@@ -303,6 +303,24 @@ const GROUPS = [
 const CHIPS = {
   thorz:{ id:'thorz', code:'ThorZ', name:'ThorZ', group:'cpu', cm:'Mayank Kapoor',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
+    pageStructure:[
+      {title:'{CHIP} SW',                                   level:0},
+      {title:'{CHIP} Chip SW Development (PLC-L1) Process', level:1},
+      {title:'{CHIP} Display SW',                           level:1},
+      {title:'{CHIP} Display Bringup Prep',                 level:2},
+      {title:'{CHIP} Display FPGA Execution',               level:2},
+      {title:'{CHIP} Display Silicon Execution',            level:2},
+      {title:'{CHIP} Frontdoor Boot Status',                level:1},
+      {title:'FD Boot SYNC Up Meetings Notes',              level:2},
+      {title:'{CHIP} IST SW',                               level:1},
+      {title:'{CHIP} Key IST, Predictive IST SW',           level:2},
+      {title:'{CHIP} Memory SW',                            level:1},
+      {title:'{CHIP} Simulation Sanity Plan',               level:1},
+      {title:'{CHIP} Board Control',                        level:1},
+      {title:'{CHIP} SW Bringup',                           level:1},
+      {title:'{CHIP} Tegra SW Platforms',                   level:2},
+      {title:'{CHIP} Bringup - Sanity Enablement Plan',     level:2},
+    ],
     progress:75, color:'a', phase:'Post-silicon · BNB Declared 5/28 ✅ · MNB Active (73%/65%)',
     status:'MNB 73%/65% Active', nextGate:'MNB/CS', nextGateDate:'6/13',
     bugs:2, atRisk:true,
@@ -326,6 +344,17 @@ const CHIPS = {
   },
   vera:{ id:'vera', code:'TB500', name:'Vera', group:'cpu', cm:'Sowjanya',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
+    pageStructure:[
+      {title:'{CHIP} SW',                                   level:0},
+      {title:'{CHIP} Chip SW Development (PLC-L1) Process', level:1},
+      {title:'{CHIP} PLC Requirements and Process',         level:2},
+      {title:'{CHIP} SW JIRA Projects',                     level:2},
+      {title:'{CHIP} NVPOR Guidance to teams',              level:2},
+      {title:'{CHIP} Jira-XRAY Guidance to teams',          level:2},
+      {title:'{CHIP} Improvements from TH500 AAR',          level:2},
+      {title:'{CHIP} SW Sync Meetings',                     level:1},
+      {title:'{CHIP} Simulation Sanity Test Plan',          level:1},
+    ],
     progress:93, color:'a', phase:'Post-silicon · PS SBIOS Released 6/2 ✅ · MODS V8.0 RC 6/4 · BWAT ~6/15',
     status:'SBIOS Released ✅ · MODS V8.0 RC 6/4 · BWAT 6/15', nextGate:'M-pkg FinalCWAT', nextGateDate:'6/11',
     bugs:2, atRisk:true,
@@ -474,6 +503,16 @@ const CHIPS = {
   },
   gr15x:{ id:'gr15x', code:'GR15x', name:'Next GPU', group:'gpu', cm:'Vinay Sharma · Anshul Gupta',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/3529740918/GR15x+SW+Bringup',
+    pageStructure:[
+      {title:'{CHIP} SW Bringup',                                  level:0},
+      {title:'{CHIP} Bringup SW Dashboard',                        level:1},
+      {title:'SW-SCG Milestone Definitions',                        level:1},
+      {title:'{CHIP} Bring up Planning Meeting Notes',             level:1},
+      {title:'{CHIP} SW - SSG Sync',                               level:2},
+      {title:'{CHIP} Branching Proposal',                          level:2},
+      {title:'{CHIP} A01TV and A01P Feature Enablement sheet',     level:1},
+      {title:'{CHIP} Bringup NVBugs Keywords and Templates',       level:1},
+    ],
     progress:5, color:'w', phase:'Pre-silicon · POR Phase · Early Planning',
     status:'Planning 🔵', nextGate:'POR', nextGateDate:"Q4 '26",
     bugs:0, atRisk:false,
@@ -487,6 +526,19 @@ const CHIPS = {
   },
   nr10x:{ id:'nr10x', code:'NR10x', name:'NVLink Fusion', group:'fusion', cm:'Ranjani',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/~ssriranjani/pages/3389539178/NR10+Sirius+SW',
+    pageStructure:[
+      {title:'{CHIP} SW',                                   level:0},
+      {title:'{CHIP} Chip SW Development (PLC-L1) Process', level:1},
+      {title:'{CHIP} PLC Requirements and Process',         level:2},
+      {title:'{CHIP} SW JIRA Projects',                     level:2},
+      {title:'{CHIP} NVPOR Guidance to teams',              level:2},
+      {title:'{CHIP} Jira-XRAY Guidance to teams',          level:2},
+      {title:'{CHIP} Improvements from TH500 AAR',          level:2},
+      {title:'{CHIP} Simulation Sanity Test Plan',          level:1},
+      {title:'{CHIP} SW Sync Meetings',                     level:1},
+      {title:'{CHIP} IAS (Implementation Architecture Spec)',level:1},
+      {title:'{CHIP} - Program Landing Page',               level:1},
+    ],
     progress:12, color:'g', phase:'Pre-silicon · POR Phase',
     status:'On Track', nextGate:'RTL', nextGateDate:"Q4 '26",
     bugs:0, atRisk:false,
@@ -606,9 +658,9 @@ const CC_TASKS = {
   ],
 };
 
-/* Confluence page template (based on NR10/Sirius structure) */
+/* Fallback template (used when reference chip has no pageStructure) */
 const CHIP_PAGE_TMPL = [
-  {title:'{CHIP} ({CODENAME}) SW',                         level:0},
+  {title:'{CHIP} SW',                                      level:0},
   {title:'{CHIP} Chip SW Development (PLC-L1) Process',    level:1},
   {title:'{CHIP} PLC Requirements and Process',            level:2},
   {title:'{CHIP} SW JIRA Projects',                        level:2},
@@ -1211,15 +1263,17 @@ function renderCC(){
     const chip = nc.name.trim().toUpperCase() || 'CHIP';
     const code = nc.codename.trim() || 'Codename';
 
-    // Preview tree
+    // Use real page structure from reference chip, or fallback template
     const refChipObj = nc.refId && CHIPS[nc.refId];
+    const activeTmpl = refChipObj?.pageStructure || CHIP_PAGE_TMPL;
     const refBanner = S.ncStatus && refChipObj
       ? `<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--blue-bg);border:1px solid rgba(26,84,160,.20);border-radius:6px;margin-bottom:8px;font-size:10px;color:var(--blue)">
           <span>📐 Structure based on:</span>
           <a href="${refChipObj.wikiUrl}" target="_blank" style="font-weight:700;color:var(--blue);text-decoration:none">${refChipObj.code} / ${refChipObj.name} ↗</a>
+          <span style="margin-left:auto;color:var(--blue);opacity:.7">${activeTmpl.length} pages</span>
         </div>` : '';
     const treeHTML = S.ncStatus
-      ? refBanner + `<div class="pg-tree">${CHIP_PAGE_TMPL.map((p,i)=>{
+      ? refBanner + `<div class="pg-tree">${activeTmpl.map((p,i)=>{
           const title = p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code);
           const st = S.ncPages[i]?.status || 'pending';
           const stLabel = st==='done'?'Created':st==='error'?'Error':st==='queued'?'Queued':'Pending';
@@ -1233,7 +1287,7 @@ function renderCC(){
         }).join('')}</div>`
       : '';
 
-    const structureLines = CHIP_PAGE_TMPL.map((p,i)=>
+    const structureLines = activeTmpl.map((p,i)=>
       `${i+1}. ${'  '.repeat(p.level)}${p.title.replace(/{CHIP}/g,chip).replace(/{CODENAME}/g,code)}`).join('\n');
     const refChip = CHIPS[nc.refId];
     const refDesc = refChip ? `${refChip.code} / ${refChip.name} (${refChip.wikiUrl})` : 'NR10 (Sirius)';
@@ -1416,8 +1470,9 @@ function previewChipSetup(){
   if(!nc.name.trim()){ alert('Please enter a chip name.'); return; }
   if(!nc.codename.trim()){ alert('Please enter a codename.'); return; }
   if(!nc.refId || !CHIPS[nc.refId]){ alert('Please select a reference chip.'); return; }
+  const tmpl = CHIPS[nc.refId]?.pageStructure || CHIP_PAGE_TMPL;
   S.ncStatus = 'preview';
-  S.ncPages = CHIP_PAGE_TMPL.map(p=>({title:p.title,level:p.level,status:'pending',url:null}));
+  S.ncPages = tmpl.map(p=>({title:p.title, level:p.level, status:'pending', url:null}));
   renderCC();
 }
 
