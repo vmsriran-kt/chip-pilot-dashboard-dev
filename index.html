@@ -1237,12 +1237,12 @@ function renderCC(){
           <div class="nc-field">
             <label class="nc-label">Chip Name / ID</label>
             <input class="nc-input" id="nc-name" placeholder="e.g. NR20" value="${nc.name}"
-              oninput="S.newChip.name=this.value;S.ncStatus=null;S.ncPages=[];renderCC()">
+              oninput="S.newChip.name=this.value;S.ncStatus=null;S.ncPages=[]">
           </div>
           <div class="nc-field">
             <label class="nc-label">Codename</label>
             <input class="nc-input" id="nc-code" placeholder="e.g. Orion" value="${nc.codename}"
-              oninput="S.newChip.codename=this.value;S.ncStatus=null;S.ncPages=[];renderCC()">
+              oninput="S.newChip.codename=this.value;S.ncStatus=null;S.ncPages=[]">
           </div>
           <div class="nc-field">
             <label class="nc-label">Group</label>
@@ -1255,7 +1255,7 @@ function renderCC(){
           <div class="nc-field">
             <label class="nc-label">SW CM</label>
             <input class="nc-input" id="nc-cm" placeholder="e.g. Ranjani V" value="${nc.cm}"
-              oninput="S.newChip.cm=this.value">
+              oninput="S.newChip.cm=this.value;S.ncStatus=null;S.ncPages=[]">
           </div>
           <div class="nc-field full">
             <label class="nc-label">Reference Chip (page structure template)</label>
