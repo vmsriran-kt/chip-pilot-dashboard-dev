@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Chip Pilot 2.0</title>
-<meta name="version" content="2026-06-05-r1"/>
+<meta name="version" content="2026-06-08"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -322,8 +322,8 @@ const CHIPS = {
       {title:'{CHIP} Tegra SW Platforms',                   level:2},
       {title:'{CHIP} Bringup - Sanity Enablement Plan',     level:2},
     ],
-    progress:75, color:'a', phase:'Post-silicon · BNB Declared 5/28 ✅ · MNB Active (73%/65%)',
-    status:'MNB 73%/65% Active', nextGate:'MNB/CS', nextGateDate:'6/13',
+    progress:78, color:'a', phase:'Post-silicon · BNB Declared 5/28 ✅ · QS Qual Focus · DTS Released (VF v2) · MaxP/RA Scope Added',
+    status:'QS Qual Focus 🔵 · DTS v2 Released · MODS 6/11', nextGate:'QS Qual MODS', nextGateDate:'6/11',
     bugs:2, atRisk:true,
     milestones:[
       {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓'},
@@ -337,9 +337,10 @@ const CHIPS = {
     ],
     checklist:[
       {t:'SCG miniWAT coverage 100%',owner:'Mayank Kapoor',done:true},
+      {t:'DTS released with VF v2 (PC1000Q, TA1050SA, TA1040SA — ThorZ MaxQ)',owner:'Mayank Kapoor',done:true},
       {t:'MNB/CS completion by 6/13',owner:'HW team',done:false},
       {t:'CPU Soft Lock up Bug 6124878 resolved',owner:'SW team',done:false},
-      {t:'MODS QS Qual release targeting 6/11',owner:'MODS team',done:false},
+      {t:'MODS/SW release trending 6/16 (WA ready; RA mode release TBD)',owner:'MODS team',done:false},
       {t:'QBAA noise — isolated to wafer lot U6F059.000; replacements ordered (5/29)',owner:'PHY team',done:false},
     ],
   },
@@ -454,9 +455,9 @@ const CHIPS = {
     checklist:[{t:'Arch readouts complete',owner:'Roopa',done:false},{t:'90% POR by 6/30',owner:'Roopa',done:false}],
   },
   gr10x:{ id:'gr10x', code:'GR10x', name:'Rubin', group:'gpu', cm:'Ranjani V · Madhura',
-    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/RubinSW',
-    progress:95, color:'a', phase:'Post-silicon · QS Done ✅ · PS/PRel In Progress · PRel 6/22',
-    status:'PS/PRel Active · PRel 6/22 ⚠️', nextGate:'PRel', nextGateDate:'6/22 ⚠️',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
+    progress:95, color:'a', phase:'Post-silicon · QS Done ✅ · PS/PRel Active · DD Chips Delivered 6/5-6/6 ✅ · DRAM BW ~17.8 TB/s ✅ · PRel 6/22',
+    status:'PS/PRel Active · DD Chips ✅ 6/5-6/6 · PRel 6/22 ⚠️', nextGate:'PRel', nextGateDate:'6/22 ⚠️',
     bugs:8, atRisk:true,
     milestones:[
       {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓'},
@@ -466,11 +467,14 @@ const CHIPS = {
     ],
     risks:[
       {l:'m',t:'PG558 SW QA — L6 system access obtained 6/1; debugging remaining failure; BWAT 14/18 systems, ETA 6/23'},
+      {l:'m',t:'SNARC BRF down (6/7) — Itachi being brought up as BRF replacement; TOT regression check in progress'},
       {l:'h',t:'GFW: TOT inforom issues — blocking MR submissions as of 5/28'},
       {l:'l',t:'GR10x DVS regressions resolved (Bug 6173668) — VBIOS 99.00.18.00.00 + chips_a CL 38085350; RM sanities clean 6/2'},
       {l:'m',t:'FW v3.1 patch — NVLink lane drop · PRel blocked'},
       {l:'m',t:'C2C ENC error window violations (Bug 6203872) — root cause: SBIOS↔VBIOS encryption mismatch; fix validation in progress'},
       {l:'h',t:'Bug 5116766: No appropriate VBIOS/image for GR102 INT/QS qual — SHTOL WW30 blocked (5/29)'},
+      {l:'h',t:'NCCL hang on GR100/PDX (NVBug 6241628/6227189) — NCCL_NVLS_ENABLE=0 WAR; suspected driver/fabric manager init issue'},
+      {l:'m',t:'MNNVL CUDA fabric allocation failure (NVBug 6223505) — fix needed in node MNNVL config or supports_mnnvl() detection'},
     ],
     checklist:[
       {t:'FW v3.1 NVLink lane drop patch merged',owner:'FW team',done:false},
@@ -481,9 +485,9 @@ const CHIPS = {
   },
   feynman:{ id:'feynman', code:'FN10x', name:'Feynman', group:'gpu', cm:'Madhura',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/FEYNMANGPUHOST',
-    progress:38, color:'a', phase:'Pre-silicon · Multi-dielet RTL · Phys Final NL In Progress',
-    status:'RTL Active ⚠️', nextGate:'Final NL RTL', nextGateDate:"Jul '26",
-    bugs:4, atRisk:false,
+    progress:38, color:'a', phase:'Pre-silicon · Multi-dielet RTL · Kernel Ready 38% (target 96%) · Test Ready 17% · 43 open issues',
+    status:'RTL Active ⚠️ · Kernel 38%', nextGate:'Final NL RTL', nextGateDate:"Jul '26",
+    bugs:4, atRisk:true,
     milestones:[
       {n:'Trial NL RTL',s:'done',d:"Aug '25 ✓"},{n:'1st NL RTL',s:'done',d:"Jan '26 ✓"},
       {n:'Phys Final NL',s:'now',d:"Apr '26 🔵"},{n:'Final NL RTL',s:'wait',d:"Jul '26"},
@@ -491,7 +495,9 @@ const CHIPS = {
     ],
     risks:[
       {l:'h',t:'PRI_HUB delays (>1 month) blocking Phase 23/24'},
-      {l:'h',t:'Phase 21 IODS SECHUB blocked until May 15'},
+      {l:'h',t:'43 open issues (37 >7 days) — Kernel Ready 38% vs 96% target; Test Ready 17% vs 96% target'},
+      {l:'h',t:'Memory system ordering issues — FB→L2 out-of-order extended DPCTMA barrier (Bugs 6197993, 6193509, 5995557)'},
+      {l:'h',t:'XBAR response-path out-of-order (Bug 6058384); DPC SP skew after MMU (Bug 6084959)'},
       {l:'m',t:'Multi-dielet first — cross-dielet SW integration complexity'},
     ],
     checklist:[
@@ -514,19 +520,25 @@ const CHIPS = {
       {title:'{CHIP} A01TV and A01P Feature Enablement sheet',     level:1},
       {title:'{CHIP} Bringup NVBugs Keywords and Templates',       level:1},
     ],
-    progress:5, color:'w', phase:'Pre-silicon · POR Phase · Early Planning',
-    status:'Planning 🔵', nextGate:'POR', nextGateDate:"Q4 '26",
+    progress:20, color:'g', phase:'Post-silicon · Tapeout Complete ✅ 6/2 · Power On Prep Active · Target 9/6',
+    status:'Tapeout ✅ · Power On Prep 9/6', nextGate:'Power On', nextGateDate:'9/6',
     bugs:0, atRisk:false,
-    milestones:[{n:'POR',s:'now',d:"Q4 '26"},{n:'RTL',s:'wait',d:'TBD'},{n:'Tape-out',s:'wait',d:'TBD'}],
-    risks:[{l:'l',t:'Early planning — SW CMs assigned, program kicking off'}],
+    milestones:[
+      {n:'POR',s:'done',d:'✓'},{n:'RTL',s:'done',d:'✓'},{n:'Tape-out',s:'done',d:'✓ 6/2'},
+      {n:'Power On',s:'now',d:'Target 9/6'},{n:'ES',s:'wait',d:'TBD'},{n:'PRel',s:'wait',d:'TBD'},
+    ],
+    risks:[
+      {l:'m',t:'Transitioning to Power On — early post-silicon phase, power-on risks emerging (target 9/6/2026)'},
+      {l:'l',t:'Bug 5730588 — VBIOS TOT health in progress; presilicon execution complete'},
+    ],
     checklist:[
-      {t:'POR Kickoff meeting',owner:'Vinay Sharma',done:false},
-      {t:'Arch Spec draft',owner:'Anshul Gupta',done:false},
-      {t:'Milestone schedule defined',owner:'Vinay Sharma',done:false},
+      {t:'Silicon tapeout complete (6/2/2026)',owner:'Vinay Sharma',done:true},
+      {t:'Power On preparation kickoff',owner:'Vinay Sharma',done:false},
+      {t:'Milestone schedule defined for post-silicon',owner:'Anshul Gupta',done:false},
     ],
   },
   nr10x:{ id:'nr10x', code:'NR10x', name:'NVLink Fusion', group:'fusion', cm:'Ranjani',
-    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/~ssriranjani/pages/3389539178/NR10+Sirius+SW',
+    wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pageStructure:[
       {title:'{CHIP} SW',                                   level:0},
       {title:'{CHIP} Chip SW Development (PLC-L1) Process', level:1},
@@ -540,11 +552,14 @@ const CHIPS = {
       {title:'{CHIP} IAS (Implementation Architecture Spec)',level:1},
       {title:'{CHIP} - Program Landing Page',               level:1},
     ],
-    progress:12, color:'g', phase:'Pre-silicon · POR Phase',
-    status:'On Track', nextGate:'RTL', nextGateDate:"Q4 '26",
+    progress:12, color:'g', phase:'Pre-silicon · SystemSim Active · NVLink Fusion XNQ Bringup',
+    status:'SystemSim Active', nextGate:'RTL', nextGateDate:"Q4 '26",
     bugs:0, atRisk:false,
     milestones:[{n:'POR',s:'now',d:'Active'},{n:'RTL',s:'wait',d:"Q4 '26"},{n:'Tape-out',s:'wait',d:'TBD'}],
-    risks:[{l:'l',t:'NVLink protocol spec in review — on track'}],
+    risks:[
+      {l:'l',t:'NVLV-8733 / Bug 6137117 — links reaching logical up after SM fix; LFM MAD-drop secondary fix also provided (6/4)'},
+      {l:'l',t:'NVLink Fusion XNQ 23-step sim recipe active — caguid=0x0 expected behavior in FModel (documented)'},
+    ],
     checklist:[{t:'NVLink protocol spec signoff',owner:'Ranjani',done:false},{t:'RTL planning kickoff',owner:'Ranjani',done:false}],
   },
   beacon:{ id:'beacon', code:'T374', name:'Beacon', group:'fusion', cm:'Roopa',
@@ -583,10 +598,10 @@ const CP_ITEMS=[
 ];
 
 const ATTN_ITEMS=[
-  {t:'ThorZ MNB active — 73% coverage, 65% pass; MNB/CS 6/7–6/13',s:'a',chip:'ThorZ'},
-  {t:'N2x FPGA H3 netlist 6/5; Display blocked Jade HW bug; D3 may push schedule',s:'r',chip:'N2x'},
-  {t:'Vera QS blocker bugs up 68→90; BWAT Final WAT ~6/15',s:'a',chip:'Vera'},
-  {t:'GR10x FW v3.1 PRel blocker ongoing',s:'a',chip:'GR10x'},
+  {t:'ThorZ QS Qual focus — DTS released (VF v2); MODS QS Qual release target 6/11; MaxP/RA scope adds schedule risk',s:'a',chip:'ThorZ'},
+  {t:'N2x FPGA H3 netlist (exp 6/5); Display blocked Jade HW bug; D3 may push schedule',s:'r',chip:'N2x'},
+  {t:'Vera QS blocker bugs up 68→90; BWAT Final WAT ~6/15; M-pkg FinalCWAT parts arriving 6/11',s:'a',chip:'Vera'},
+  {t:'GR10x FW v3.1 PRel blocker · SNARC BRF down 6/7 · DD chips delivered 6/5-6/6 ✅',s:'a',chip:'GR10x'},
 ];
 
 const FEED_ITEMS=[
@@ -1584,25 +1599,4 @@ Create each page with content based on the NR10 template. Substitute all occurre
 =============================================== */
 function toggleNav(){
   const nav = document.getElementById('nav');
-  const overlay = document.getElementById('nav-overlay');
-  const open = nav.classList.toggle('open');
-  overlay.classList.toggle('open', open);
-}
-function closeNavDrawer(){
-  document.getElementById('nav').classList.remove('open');
-  document.getElementById('nav-overlay').classList.remove('open');
-}
-
-/* ===============================================
-   INIT
-=============================================== */
-function init(){
-  applyTheme();
-  renderBadges();
-  renderNav();
-  showView('cockpit');
-}
-init();
-</script>
-</body>
-</html>
+  const overlay = document.getElementById('nav-ove
