@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Chip Pilot 2.0</title>
-<meta name="version" content="2026-06-08"/>
+<meta name="version" content="2026-06-09"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -332,7 +332,7 @@ const CHIPS = {
     ],
     risks:[
       {l:'h',t:'MaxP scope added by BU (Auto) — new PC cycle required, schedule impact TBD'},
-      {l:'m',t:'SCG HSIO debug ongoing (PCIe/USB/MGBE) — pending close-out'},
+      {l:'l',t:'SCG HSIO debug (PCIe/MGBE) ongoing — USB LPM final fix CL 341783 submitted, GVS 4261895 triggered 6/7 (Confluence MODS 6/8)'},
       {l:'m',t:'CPU Soft Lock up active — Bug 6124878, root cause TBD'},
     ],
     checklist:[
@@ -370,6 +370,7 @@ const CHIPS = {
       {l:'h',t:'USB transfers instability in OOBHUB (Bug 6103272 / 6091323) — HMC FW & OOBHUB FW WARs pending merge'},
       {l:'m',t:'MSEQ L2 resets on NVL72 CPU yield issue — CBB MMIO intermittent failures; debug ongoing (Bug 6163858)'},
       {l:'m',t:'9600MT/s 2R module shortage due to NVL72 allocation — recovery expected end of June'},
+      {l:'h',t:'M-pkg SK memory decision: do not build with SK memory — Hynix 2R/96GB SOCAMM failing at 4800 MHz (Bug 6217453, Venky Top N 6/7)'},
     ],
     checklist:[
       {t:'PS SBIOS release ~6/2',owner:'Sowjanya',done:true},
@@ -403,7 +404,7 @@ const CHIPS = {
   },
   n2x:{ id:'n2x', code:'N2x', name:'N2x', group:'cpu', cm:'Vivek Desikan',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
-    progress:32, color:'r', phase:'Pre-silicon · FPGA H2.07 Active · FDI 6/30 · H3 Netlist 6/5',
+    progress:32, color:'r', phase:'Pre-silicon · FPGA H2.07 Active · FDI 6/30 · H3 Expected 6/5 · L0:22%↑ L1:11%↑',
     status:'FPGA Active ⚠️ · FDI 6/30', nextGate:'FDI', nextGateDate:'6/30 ⚠️',
     bugs:2, atRisk:true,
     milestones:[
@@ -466,7 +467,7 @@ const CHIPS = {
       {n:'PRel',s:'wait',d:"Q3 '26"},
     ],
     risks:[
-      {l:'m',t:'PG558 SW QA — L6 system access obtained 6/1; debugging remaining failure; BWAT 14/18 systems, ETA 6/23'},
+      {l:'h',t:'PG558 SW QA — 80% complete, still blocked by lack of L6 system (re-escalated Venky Top N 6/7)'},
       {l:'m',t:'SNARC BRF down (6/7) — Itachi being brought up as BRF replacement; TOT regression check in progress'},
       {l:'h',t:'GFW: TOT inforom issues — blocking MR submissions as of 5/28'},
       {l:'l',t:'GR10x DVS regressions resolved (Bug 6173668) — VBIOS 99.00.18.00.00 + chips_a CL 38085350; RM sanities clean 6/2'},
@@ -475,6 +476,7 @@ const CHIPS = {
       {l:'h',t:'Bug 5116766: No appropriate VBIOS/image for GR102 INT/QS qual — SHTOL WW30 blocked (5/29)'},
       {l:'h',t:'NCCL hang on GR100/PDX (NVBug 6241628/6227189) — NCCL_NVLS_ENABLE=0 WAR; suspected driver/fabric manager init issue'},
       {l:'m',t:'MNNVL CUDA fabric allocation failure (NVBug 6223505) — fix needed in node MNNVL config or supports_mnnvl() detection'},
+      {l:'h',t:'Bug 6243309 SWDL_gr10x_BLOCKING — vr200nvl_hecate HPC-X libcudnn.so.9 not found; Sev 2; ARB → Piotr Bialecki & Eddie Yan (6/8)'},
     ],
     checklist:[
       {t:'FW v3.1 NVLink lane drop patch merged',owner:'FW team',done:false},
@@ -1588,15 +1590,7 @@ Create each page with content based on the NR10 template. Substitute all occurre
     ta.value=prompt; document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
   });
-
-  S.ncPages = pages.map(p=>({...p, status:'queued'}));
   S.ncStatus = 'copied';
   renderCC();
 }
-
-/* ===============================================
-   NAV DRAWER (mobile)
-=============================================== */
-function toggleNav(){
-  const nav = document.getElementById('nav');
-  const overlay = document.getElementById('nav-ove
+</script></body></html>
