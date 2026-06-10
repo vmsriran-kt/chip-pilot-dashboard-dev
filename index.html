@@ -554,15 +554,81 @@ const CHIPS = {
       {title:'{CHIP} IAS (Implementation Architecture Spec)',level:1},
       {title:'{CHIP} - Program Landing Page',               level:1},
     ],
-    progress:12, color:'g', phase:'Pre-silicon · SystemSim Active · NVLink Fusion XNQ Bringup',
-    status:'SystemSim Active', nextGate:'RTL', nextGateDate:"Q4 '26",
-    bugs:0, atRisk:false,
-    milestones:[{n:'POR',s:'now',d:'Active'},{n:'RTL',s:'wait',d:"Q4 '26"},{n:'Tape-out',s:'wait',d:'TBD'}],
-    risks:[
-      {l:'l',t:'NVLV-8733 / Bug 6137117 — links reaching logical up after SM fix; LFM MAD-drop secondary fix also provided (6/4)'},
-      {l:'l',t:'NVLink Fusion XNQ 23-step sim recipe active — caguid=0x0 expected behavior in FModel (documented)'},
+    progress:35, color:'a', phase:'Pre-silicon · GFD Done 6/6 · FNL Snap Done 6/8 · DV All 6/19 On Track · FNL 6/29 At Risk',
+    status:'FNL 6/29 At Risk', nextGate:'FNL RTL Snap', nextGateDate:'6/29 At Risk',
+    bugs:2, atRisk:true,
+    milestones:[
+      {n:'GFD Freeze/Signoff',s:'done',d:'6/6'},
+      {n:'FNL Snap (revP4.5)',s:'done',d:'6/8'},
+      {n:'DV All / FCV All',s:'now',d:'6/19 On Track'},
+      {n:'FNL RTL Snap',s:'wait',d:'6/29 At Risk'},
+      {n:'Tape-out Ready',s:'wait',d:'8/31'},
     ],
-    checklist:[{t:'NVLink protocol spec signoff',owner:'Ranjani',done:false},{t:'RTL planning kickoff',owner:'Ranjani',done:false}],
+    risks:[
+      {l:'h',t:'QM4 TREX may slip past FNL RTL snap (Jun 29) — SW teams reviewing critical path to de-risk'},
+      {l:'h',t:'QM4 <-> NR10 emulation link bring-up blocking FM testing — MSE/NetIR loopback up but not talking to QM4; In Debug'},
+      {l:'m',t:'Simulation feature gaps — boot, resets, UCIe init/error handling not exercised; emulation team preparing bare-metal setup'},
+      {l:'m',t:'SystemSim NR10 CAGUID incorrect — init-vector fix in progress, needed before QM4-ready release'},
+      {l:'m',t:'FM PRD / POR dates slipped to 6/30 and 7/30'},
+      {l:'l',t:'Sirius OOB telemetry requirement under revision — scope impact to POR being assessed'},
+    ],
+    checklist:[
+      {t:'QM4 + NR10 emulation link bring-up unblocked',owner:'Ranjani',done:false},
+      {t:'DV All / FCV All by 6/19',owner:'Ranjani',done:false},
+      {t:'FNL SW feature-complete by 6/29',owner:'Ranjani',done:false},
+      {t:'SystemSim CAGUID fix delivered',owner:'Ranjani',done:false},
+      {t:'Co-emulation scope finalized',owner:'Ranjani',done:false},
+    ],
+    latestReport:{date:'06/09/2026',subject:'NR10 Chip SW Status Report (06/09/2026)',body:
+`NR10 Chip SW Status Report — 06/09/2026
+Sent by: Ranjani V  |  To: NVLF-SW-NR10-leads  |  BCC: NVLink-Fusion-SW, SW-Chips-Managers
+
+TOP N  (FNL - 06/29)
+---------------------
+* FNL SW feature-complete is at risk to complete by SOL.
+    - QM4 TREX is the long pole, gated by NR10 + QM4 emulation link bring-up.
+* Simulation
+    - First NVLink Fusion SystemSim model available on NR10 F-model + QM4 (NBU)
+* Emulation
+    - NR10 + QM4 emulation link bring-up still in progress.
+      · MSE/NetIR is up in loopback mode but does not talk to QM4. Loopout mode and P2P in debug.
+      · TREX test cases ready; transition from SU scripts to FM-based config + T-Rex integration planned.
+    - NR10 F-Model for A-die + N-die driver/FW integration planning in works.
+      · Co-emulation scope with finalized SW feature list in works.
+* Sirius/Astera Deliverables
+    - OOB telemetry requirement under revision — scope impact to POR being assessed.
+    - Partner SW delivery model reviewed. Branching / release planning discussion in works.
+    - Production fusing strategy (CP vs. SLT) making progress.
+
+RISKS
+-----
+* [H] QM4 TREX may slip past FNL RTL snap (Jun 29) — SW teams reviewing critical path
+* [H] QM4 <-> NR10 link bring-up blocks FM testing — In Debug
+        Neither emulation nor system-sim can bring up the link; QM4 presence required. Highest-leverage unblock for FNL.
+* [M] Simulation feature gaps — boot, resets, UCIe init/error handling not exercised in sim
+        Emulation team preparing bare-metal setup to cover PHY/resets.
+* [M] SPI boot emulation validation outstanding
+* [M] FM library integration dependency timeline TBD
+* [M] SystemSim NR10 CAGUID incorrect — init-vector fix in progress
+* [M] FM PRD / POR dates slipped to 6/30 and 7/30
+
+CHIP MILESTONES
+---------------
+  NR10 GFD Freeze / Signoff        Jun 6, 2026    DONE
+  FNL Intermediate Snap (revP4.5)  Jun 8, 2026    DONE
+  DV All / FCV All                 Jun 19, 2026   On Track
+  Final Netlist (FNL) RTL Snap     Jun 29, 2026   AT RISK — traffic with SW stack at risk
+  Ready for Tapeout                Aug 31, 2026   Planning
+  Real Tapeout                     Nov 30, 2026   Planning
+
+SW KPI (as of 06/09/2026)
+--------------------------
+  Team      | L0 Pass%  | L1 Pass%  | L2 Pass%  | Platform
+  FM        |  3.70%    |  0%       |  0%       | Quickturn Emulation
+  GFW       | 12.90%    | 13.33%    |  0%       | Fullstack FModel + QT Emulation
+  MODS GPU  | 13.04%    |  0%       |  0%       | Fullstack FModel + QT Emulation
+  MSE       | 100%      | 91.51%    |  0%       | DirectFModel + Emulation
+  RM        | 11.11%    |  0%       |  0%       | Quickturn Emulation`},
   },
   beacon:{ id:'beacon', code:'T374', name:'Beacon', group:'fusion', cm:'Roopa',
     wikiUrl:'https://nvidia.atlassian.net/wiki/spaces/TCS',
@@ -1021,10 +1087,14 @@ function renderPM(){
   const chipOpts = Object.values(CHIPS).map(c=>
     `<option value="${c.id}"${sel===c.id?' selected':''}>${c.code} / ${c.name}</option>`).join('');
 
-  // -- Draft placeholder --
-  const draftPlaceholder = sel
-    ? `Click "Generate" to draft today's status for ${CHIPS[sel].code} / ${CHIPS[sel].name}.`
-    : `Click "Generate" to auto-draft your daily status update across all active chip programs.`;
+  // -- Draft placeholder / latest report --
+  const selChip = sel ? CHIPS[sel] : null;
+  const hasReport = selChip && selChip.latestReport;
+  const draftPlaceholder = hasReport
+    ? selChip.latestReport.body
+    : (sel
+        ? `Click "Generate" to draft today's status for ${CHIPS[sel].code} / ${CHIPS[sel].name}.`
+        : `Click "Generate" to auto-draft your daily status update across all active chip programs.`);
 
   document.getElementById('v-pm').innerHTML = selBar + chipHeader + `
     <div class="pm-main-grid">
@@ -1051,11 +1121,12 @@ function renderPM(){
       </div>
       <!-- Daily Status Draft -->
       <div class="card">
-        <div class="card-hdr"><span class="card-title">📝 Daily Status Update</span>
-          <button class="btn btn-green" onclick="genStatusDraft()">⚡ Generate</button>
+        <div class="card-hdr">
+          <span class="card-title">📝 Daily Status Update${hasReport ? ` <span style="font-size:10px;font-weight:400;color:var(--muted)">· ${selChip.latestReport.date}</span>` : ''}</span>
+          <button class="btn btn-green" onclick="genStatusDraft()">⚡ ${hasReport ? 'Generate Draft' : 'Generate'}</button>
         </div>
         <div class="card-body">
-          <div class="draft-output" id="draft-out">${draftPlaceholder}</div>
+          <div class="draft-output" id="draft-out" style="white-space:pre-wrap;font-family:monospace;font-size:11px;line-height:1.5">${draftPlaceholder}</div>
           <div style="display:flex;gap:8px;margin-top:8px">
             <button class="btn btn-green" onclick="copyDraft()">📋 Copy</button>
           </div>
