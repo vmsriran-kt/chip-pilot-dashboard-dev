@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-/* -- DARK THEME (default) -- */
+/* ── DARK THEME (default) ── */
 :root{
   --nv-green:#76b900;--nv-green-lite:#9fd931;--nv-green-dark:#4d7a00;
   --nv-glow:rgba(118,185,0,.18);--nv-glow-sm:rgba(118,185,0,.1);
@@ -30,7 +30,7 @@
   --chip-hover:rgba(255,255,255,.07);
   --theme-icon:"🌙";
 }
-/* -- LIGHT THEME — NVIDIA website faithful -- */
+/* ── LIGHT THEME — NVIDIA website faithful ── */
 /* nvidia.com: black header · white surfaces · #1a1a1a text · #76b900 green accent */
 body.light{
   --nv-green:#76b900;--nv-green-lite:#90d400;--nv-green-dark:#5a8c00;
@@ -59,11 +59,11 @@ body.light{
 }
 html,body{height:100%;font-family:'Inter',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text);line-height:1.5;overflow:hidden;transition:background .3s,color .3s}
 
-/* -- AMBIENT GLOW -- */
+/* ── AMBIENT GLOW ── */
 body::before{content:'';position:fixed;top:-300px;left:-200px;width:700px;height:700px;background:radial-gradient(circle,var(--glow-top) 0%,transparent 65%);pointer-events:none;z-index:0;transition:background .3s}
 body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,var(--glow-bot) 0%,transparent 65%);pointer-events:none;z-index:0;transition:background .3s}
 
-/* -- LAYOUT -- */
+/* ── LAYOUT ── */
 #app{display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;z-index:1}
 #body{display:flex;flex:1;overflow:hidden}
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -73,7 +73,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;hei
 #content::-webkit-scrollbar-track{background:transparent}
 #content::-webkit-scrollbar-thumb{background:rgba(128,128,128,.18);border-radius:2px}
 
-/* -- SMOOTH TRANSITIONS (both themes) -- */
+/* ── SMOOTH TRANSITIONS (both themes) ── */
 #hdr,#nav,#tabbar,.g-card,.g-card-e,.kpi,.chip-card,.attn,
 .cc-sec-hdr,.cc-row,.ms-row,.risk-row,.s-tbl td,.s-tbl th,
 .anno,.attn-pill,.sel-pill,.cc-ptab,.tab,.nav-item,.nav-home,
@@ -82,14 +82,14 @@ body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;hei
 .sec-lbl,.ms-name,.ms-date,.chip-card-sub,.rd,.status-dot,
 .cp-logo-name,.cp-logo-sub,.cp-nv-eye{transition:background .28s,border-color .28s,color .28s,box-shadow .28s}
 
-/* ==== LIGHT MODE — NVIDIA.COM FAITHFUL ====
+/* ════ LIGHT MODE — NVIDIA.COM FAITHFUL ════
    nvidia.com design DNA:
    • Black nav bar (#1a1a1a)  → authority, brand consistency
    • White content (#fff)     → clean, readable
    • Near-black text          → maximum contrast
    • Green ONLY for accents   → not backgrounds
    • Flat cards, clean borders, no blur wash
-============================================ */
+════════════════════════════════════════════ */
 
 /* PAGE BACKGROUND — neutral light gray like nvidia.com */
 body.light{ background:#f2f2f2 }
@@ -267,7 +267,7 @@ body.light .status-dot.dot-r{ background:#c00000;box-shadow:none }
 /* NAV OVERLAY in light mode */
 body.light #nav-overlay{ background:rgba(0,0,0,.45) }
 
-/* -- HEADER -- */
+/* ── HEADER ── */
 #hdr{
   height:var(--hdr-h);
   background:var(--hdr-bg);
@@ -326,7 +326,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 #nav-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;padding:2px 6px;line-height:1;border-radius:var(--r-xs);transition:background .15s}
 #nav-btn:hover{background:rgba(255,255,255,.07)}
 
-/* -- SIDENAV -- */
+/* ── SIDENAV ── */
 #nav{
   width:var(--nav-w);
   background:var(--nav-bg);
@@ -360,14 +360,14 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .nav-home:hover{color:var(--text);background:rgba(255,255,255,.04);border-left-color:rgba(118,185,0,.3)}
 .nav-home.on{color:var(--nv-green);background:rgba(118,185,0,.07);border-left-color:var(--nv-green)}
 
-/* -- TABS -- */
+/* ── TABS ── */
 #tabbar{height:var(--tab-h);background:var(--tab-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:2px;flex-shrink:0;overflow-x:auto}
 #tabbar::-webkit-scrollbar{display:none}
 .tab{padding:0 14px;height:var(--tab-h);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;border-radius:var(--r-xs) var(--r-xs) 0 0}
 .tab:hover{color:var(--text2);background:rgba(255,255,255,.04)}
 .tab.on{color:var(--nv-green);border-bottom-color:var(--nv-green);background:rgba(118,185,0,.07);font-weight:600}
 
-/* -- GLASS CARDS -- */
+/* ── GLASS CARDS ── */
 .g-card{background:var(--glass);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
 .g-card:hover{border-color:rgba(118,185,0,.22)}
 .g-card-e{background:var(--glass-e);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);box-shadow:var(--shadow)}
@@ -375,11 +375,11 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .c-hdr-title{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
 .c-body{padding:16px}
 
-/* -- SECTION LABEL -- */
+/* ── SECTION LABEL ── */
 .sec-lbl{display:flex;align-items:center;gap:8px;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px}
 .sec-lbl::before{content:'';width:3px;height:14px;background:var(--nv-green);border-radius:2px;flex-shrink:0}
 
-/* -- KPI GRID -- */
+/* ── KPI GRID ── */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
 .kpi{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:all .2s;cursor:default}
 .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--nv-green),transparent);opacity:0;transition:opacity .2s}
@@ -393,7 +393,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .tr-r{background:rgba(255,77,77,.12);color:#ff7070}
 .tr-a{background:rgba(245,166,35,.12);color:#fbbf24}
 
-/* -- CHIP CARDS -- */
+/* ── CHIP CARDS ── */
 .chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:20px}
 .chip-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .chip-card:hover{border-color:rgba(118,185,0,.3);background:var(--chip-hover);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
@@ -414,18 +414,18 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .cp-r{background:linear-gradient(90deg,#c02020,var(--red))}
 .cp-b{background:linear-gradient(90deg,#1a60c0,var(--blue))}
 
-/* -- ATTN STRIP -- */
+/* ── ATTN STRIP ── */
 .attn{display:flex;align-items:center;gap:10px;background:rgba(255,77,77,.06);border:1px solid rgba(255,77,77,.18);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
 .attn::-webkit-scrollbar{display:none}
 .attn-lbl{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#ff7070;white-space:nowrap;flex-shrink:0}
 .attn-pill{display:flex;align-items:center;gap:6px;background:var(--search-bg);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s;color:var(--text2)}
 .attn-pill:hover{background:rgba(255,77,77,.1);border-color:rgba(255,77,77,.3)}
 
-/* -- TWO/THREE COLUMN -- */
+/* ── TWO/THREE COLUMN ── */
 .two-col{display:grid;grid-template-columns:2fr 1fr;gap:14px;align-items:start}
 .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 
-/* -- MILESTONE -- */
+/* ── MILESTONE ── */
 .ms-list{display:flex;flex-direction:column;gap:9px}
 .ms-row{display:flex;align-items:center;gap:10px;font-size:11px}
 .ms-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -435,20 +435,20 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .ms-name{font-weight:600;color:var(--text);flex:1}
 .ms-date{font-size:10px;color:var(--muted);white-space:nowrap}
 
-/* -- RISK ROWS -- */
+/* ── RISK ROWS ── */
 .risk-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;color:var(--text2)}
 .risk-row:last-child{border-bottom:none}
 .rd{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .rd-h{background:var(--red)}.rd-m{background:var(--amber)}.rd-g{background:var(--nv-green)}
 
-/* -- STATUS TABLE -- */
+/* ── STATUS TABLE ── */
 .s-tbl{width:100%;border-collapse:collapse}
 .s-tbl th{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);padding:6px 10px;border-bottom:1px solid var(--border);text-align:left}
 .s-tbl td{padding:9px 10px;font-size:11px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,.04)}
 .s-tbl tr:hover td{background:rgba(255,255,255,.02)}
 .s-tbl tr:last-child td{border-bottom:none}
 
-/* -- CC CHECKLIST -- */
+/* ── CC CHECKLIST ── */
 .cc-phase-bar{display:flex;gap:3px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px;margin-bottom:16px;width:fit-content}
 .cc-ptab{padding:7px 22px;border-radius:var(--r-xs);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted)}
 .cc-ptab:hover{color:var(--text2)}
@@ -471,25 +471,25 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .pri-l{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.08);color:var(--muted)}
 .cc-section-wrap{margin-bottom:14px}
 
-/* -- VIEW SELECTOR PILLS -- */
+/* ── VIEW SELECTOR PILLS ── */
 .sel-bar{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap}
 .sel-pill{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:rgba(255,255,255,.03);transition:all .15s;white-space:nowrap}
 .sel-pill:hover{color:var(--text2);border-color:rgba(255,255,255,.18)}
 .sel-pill.on{background:rgba(118,185,0,.1);border-color:rgba(118,185,0,.35);color:var(--nv-green);font-weight:600}
 
-/* -- ANNOTATION BAR -- */
+/* ── ANNOTATION BAR ── */
 .anno{background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.2);border-radius:var(--r-xs);padding:10px 14px;font-size:11px;color:var(--nv-green);margin-bottom:18px;display:flex;align-items:center;gap:8px}
 
-/* -- HEATMAP -- */
+/* ── HEATMAP ── */
 .hm-cell{display:inline-block;width:44px;height:24px;border-radius:5px;font-size:9px;font-weight:700;text-align:center;line-height:24px;vertical-align:middle}
 .hm-h{background:rgba(255,77,77,.28);color:#ff7070}
 .hm-m{background:rgba(245,166,35,.28);color:#fbbf24}
 .hm-l{background:rgba(118,185,0,.2);color:var(--nv-green)}
 
-/* -- NAV OVERLAY -- */
+/* ── NAV OVERLAY ── */
 #nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99;backdrop-filter:blur(2px)}
 
-/* -- RESPONSIVE -- */
+/* ── RESPONSIVE ── */
 @media(max-width:1200px){.two-col{grid-template-columns:1fr}}
 @media(max-width:960px){
   #nav{display:none;position:fixed;top:var(--hdr-h);left:0;bottom:0;width:240px;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,.5)}
@@ -512,12 +512,25 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
   .kpi-grid{grid-template-columns:1fr}
   .kpi-val{font-size:24px}
 }
+/* ── New Chip Setup ── */
+.nc-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.nc-field{display:flex;flex-direction:column;gap:4px}
+.nc-field.full{grid-column:1/-1}
+.nc-label{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.nc-input,.nc-select{padding:7px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:12px;width:100%;transition:border-color .15s}
+.nc-input:focus{outline:none;border-color:var(--nv-green)}
+.nc-ref-link{margin-top:6px;padding:7px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--muted)}
+.pg-tree{display:flex;flex-direction:column;gap:2px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:12px;margin-bottom:14px}
+.pg-node{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);padding:3px 2px;border-radius:4px}
+.pg-node.root{font-weight:800;color:var(--text);font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.pg-l1{padding-left:20px}.pg-l2{padding-left:40px}
+.pg-pill{font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:auto;background:rgba(118,185,0,.12);color:var(--nv-green)}
 </style>
 </head>
 <body>
 <div id="app">
 
-<!-- === HEADER === -->
+<!-- ═══ HEADER ═══ -->
 <header id="hdr">
   <button id="nav-btn" onclick="toggleNav()" aria-label="Menu">☰</button>
   <div class="nv-brand">
@@ -553,7 +566,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 
 <div id="body">
 
-<!-- === SIDENAV === -->
+<!-- ═══ SIDENAV ═══ -->
 <nav id="nav">
   <div class="nav-search-icon">
     <div class="nav-search-wrap">
@@ -641,7 +654,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
   <div class="nav-home" onclick="showView('cc')">✅ CM Checklist</div>
 </nav>
 
-<!-- === MAIN === -->
+<!-- ═══ MAIN ═══ -->
 <main id="main">
 
   <!-- TAB BAR -->
@@ -656,7 +669,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
   <div id="content">
   <div class="content-inner">
 
-    <!-- ================ COCKPIT ================ -->
+    <!-- ════════════════ COCKPIT ════════════════ -->
     <div id="v-cockpit">
 
       <!-- Attention strip -->
@@ -867,7 +880,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
       </div></div><!-- /cockpit -->
 
 
-    <!-- ================ CM CHECKLIST ================ -->
+    <!-- ════════════════ CM CHECKLIST ════════════════ -->
     <div id="v-cc" style="display:none">
 
       <div class="sel-bar">
@@ -893,13 +906,14 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
         <div class="cc-ptab" onclick="setCCCat('weekly',this)">📅 Weekly</div>
         <div class="cc-ptab" onclick="setCCCat('gate',this)">🚦 Gate Prep</div>
         <div class="cc-ptab" onclick="setCCCat('setup',this)">🔧 Program Setup</div>
+        <div class="cc-ptab" onclick="setCCCat('newchip',this)">🆕 New Chip Setup</div>
       </div>
 
       <div id="cc-body"></div>
     </div><!-- /cc -->
 
 
-    <!-- ================ RISK RADAR ================ -->
+    <!-- ════════════════ RISK RADAR ════════════════ -->
     <div id="v-radar" style="display:none">
 
       <div class="sec-lbl">Portfolio Risk Heatmap — All 12 Programs</div>
@@ -942,7 +956,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
       </div>
 
     </div><!-- /radar -->
-<!-- ================ PM ASSISTANT ================ -->
+<!-- ════════════════ PM ASSISTANT ════════════════ -->
     <div id="v-pm" style="display:none">
       <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 11, 2026 · Generated from Slack + Email signals</div>
       <div class="three-col">
@@ -971,7 +985,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
     </div><!-- /pm -->
 
 
-    <!-- ================ CHIP DETAIL (DYNAMIC) ================ -->
+    <!-- ════════════════ CHIP DETAIL (DYNAMIC) ════════════════ -->
     <div id="v-chip" style="display:none">
       <div id="chip-header" style="display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap">
         <div>
@@ -1039,7 +1053,8 @@ const WEEKLY_TASKS=[
   {t:'Archive meeting notes to Confluence bring-up wiki',pri:'l'},
 ];
 
-const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}')};
+const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}'),
+  newChip:{name:'',codename:'',group:'cpu',cm:'',refId:'nr10x'},ncPreview:false};
 function saveS(){localStorage.setItem('cp2_cc',JSON.stringify(S.ccState))}
 
 function priTag(p){return p==='h'?'<span class="pri-h">High</span>':p==='m'?'<span class="pri-m">Med</span>':'<span class="pri-l">Low</span>'}
@@ -1103,6 +1118,65 @@ function renderCC(){
       : 'Program Setup tasks will appear here — Confluence page, mailing lists, Slack channels, NVBugs keywords, branching strategy, and lab environment setup.';
     body.innerHTML=chipBanner+`<div class="cc-section-wrap"><div class="cc-sec-hdr"><span class="cc-sec-title">${label}</span></div>
       <div style="padding:20px 16px;color:var(--muted);font-size:13px;line-height:1.6">${desc}</div></div>`;
+  } else if(S.ccCat==='newchip') {
+    const nc=S.newChip;
+    const refChip=CHIP_DB[nc.refId]||CHIP_DB['nr10x'];
+    const ps=refChip.pageStructure||[];
+    const groupOpts=['cpu','gpu','networking','storage','platform'].map(g=>
+      `<option value="${g}"${nc.group===g?' selected':''}>${g.toUpperCase()}</option>`).join('');
+    const refOpts=Object.keys(CHIP_DB).map(k=>
+      `<option value="${k}"${nc.refId===k?' selected':''}>${CHIP_DB[k].title.split('·')[0].trim()}</option>`).join('');
+    let treeHtml='';
+    if(ps.length){
+      const chipName=nc.codename||'{CHIP}';
+      treeHtml='<div class="pg-tree">';
+      ps.forEach(p=>{
+        const indent=p.level===0?'root':p.level===1?'pg-l1':'pg-l2';
+        const title=p.title.replace(/\{CHIP\}/g,chipName);
+        treeHtml+=`<div class="pg-node ${indent}">
+          <span>${title}</span>
+          <span class="pg-pill">${p.level===0?'HOME':'PAGE'}</span>
+        </div>`;
+      });
+      treeHtml+='</div>';
+    }
+    body.innerHTML=`<div class="cc-section-wrap">
+      <div class="cc-sec-hdr"><span class="cc-sec-title">🆕 New Chip Setup</span>
+        <span class="cc-sec-count" style="font-size:10px;color:var(--muted)">Confluence page tree preview</span>
+      </div>
+      <div style="padding:14px 16px">
+        <form class="nc-form" onsubmit="return false">
+          <div class="nc-field">
+            <label class="nc-label">Chip Name</label>
+            <input class="nc-input" id="nc-name" placeholder="e.g. GR20x" value="${nc.name}" oninput="S.newChip.name=this.value;renderCC()">
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">Codename</label>
+            <input class="nc-input" id="nc-code" placeholder="e.g. RubinNext" value="${nc.codename||''}" oninput="S.newChip.codename=this.value;renderCC()">
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">Group / Domain</label>
+            <select class="nc-select" onchange="S.newChip.group=this.value;renderCC()">${groupOpts}</select>
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">SW CM</label>
+            <input class="nc-input" id="nc-cm" placeholder="CM name or email" value="${nc.cm}" oninput="S.newChip.cm=this.value;renderCC()">
+          </div>
+          <div class="nc-field full">
+            <label class="nc-label">Reference Chip (copy page structure from)</label>
+            <select class="nc-select" onchange="S.newChip.refId=this.value;renderCC()">${refOpts}</select>
+          </div>
+        </form>
+        ${ps.length ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
+          Confluence Page Tree Preview (${ps.length} pages — based on ${refChip.title.split('·')[0].trim()})
+        </div>${treeHtml}` : '<div style="color:var(--muted);font-size:12px;padding:12px 0">No page structure defined for the selected reference chip.</div>'}
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="act-btn" onclick="copySetupPrompt()" style="background:var(--nv-green);color:#000;font-weight:700">📋 Copy Setup Prompt</button>
+          <button class="act-btn" onclick="clearNewChipForm()" style="background:var(--bg2);border:1px solid var(--border)">🗑 Clear</button>
+        </div>
+        <div id="nc-copy-confirm" style="display:none;margin-top:8px;font-size:11px;color:var(--nv-green)">✓ Prompt copied to clipboard — paste into Cowork to create Confluence pages</div>
+      </div>
+    </div>`;
   } else {
     const tasks=S.ccCat==='daily'?DAILY_TASKS:WEEKLY_TASKS;
     const sk=S.ccCat+chipKey,done=S.ccState[sk]||{};
@@ -1124,6 +1198,46 @@ function toggleCC(sk,k){
   if(!S.ccState[sk])S.ccState[sk]={};
   S.ccState[sk][k]=!S.ccState[sk][k];
   saveS();renderCC();
+}
+
+function copySetupPrompt(){
+  const nc=S.newChip;
+  const refChip=CHIP_DB[nc.refId]||CHIP_DB['nr10x'];
+  const ps=refChip.pageStructure||[];
+  const chipName=nc.name||'[CHIP NAME]';
+  const codename=nc.codename||'[CODENAME]';
+  const cm=nc.cm||'[CM]';
+  const group=nc.group||'[GROUP]';
+  let pages=ps.map(p=>('  '.repeat(p.level||0))+'- '+p.title.replace(/\{CHIP\}/g,chipName)).join('\n');
+  const prompt=`Please create the following Confluence pages for a new chip program:
+
+Chip Name: ${chipName}
+Codename: ${codename}
+Domain/Group: ${group.toUpperCase()}
+SW CM: ${cm}
+Reference Structure: Based on ${refChip.title.split('·')[0].trim()}
+
+Page Structure to create:
+${pages}
+
+For each page:
+1. Use the chip name "${chipName}" in the title
+2. Add placeholder sections matching the page topic
+3. Tag with labels: chip-sw, ${chipName.toLowerCase()}, ${group}
+4. Set CM "${cm}" as page owner
+
+Please confirm once all pages are created and provide links.`;
+  navigator.clipboard.writeText(prompt).then(()=>{
+    const el=document.getElementById('nc-copy-confirm');
+    if(el){el.style.display='block';setTimeout(()=>{el.style.display='none';},3000);}
+  }).catch(()=>{
+    prompt&&window.prompt('Copy this prompt:',prompt);
+  });
+}
+
+function clearNewChipForm(){
+  S.newChip={name:'',codename:'',group:'cpu',cm:'',refId:'nr10x'};
+  renderCC();
 }
 function setPhase(p){S.phase=p;localStorage.setItem('cp2_phase',p);renderCC()}
 function setCCCat(c,el){S.ccCat=c;document.querySelectorAll('.cc-ptab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderCC()}
@@ -1285,7 +1399,7 @@ function updateThemeBtn(){
   if(btn)btn.textContent=document.body.classList.contains('light')?'☀️':'🌙';
 }
 
-// =========================== CHIP DATA + DYNAMIC RENDERER ===================
+// ═══════════════════════════ CHIP DATA + DYNAMIC RENDERER ═══════════════════
 const CHIP_DB = {
   nr10x: {
     title: 'NR10x · NVLink Fusion',
@@ -1328,7 +1442,20 @@ const CHIP_DB = {
       {ch:'#swgpu-chips-nvlink-fusion',from:'Edward Sears',time:'Today 12:54pm',msg:'Is the question about determining HW coverage risk if NR10 SW verif is not done by FNL?'},
       {ch:'DM: David Tsai',from:'Ranjani V',time:'Jun 9',msg:'FNL SW feature-complete AT RISK by 06/29. QM4 TREX is long pole. MSE/NetIR up in loopback but not talking to QM4.'},
     ],
-    prog: 35, phase:'Pre-Silicon'
+    prog: 35, phase:'Pre-Silicon',
+    pageStructure: [
+      {title:'NR10x SW Program Home',level:0},
+      {title:'Schedule & Milestones',level:1},
+      {title:'SW Architecture',level:1},
+      {title:'Feature POR',level:1},
+      {title:'Emulation & Simulation',level:1},
+      {title:'Verification Plan',level:1},
+      {title:'Risk Register',level:1},
+      {title:'Branching Strategy',level:1},
+      {title:'Release Plan',level:1},
+      {title:'Mailing Lists & Slack Channels',level:1},
+      {title:'Lab Environment Setup',level:1},
+    ]
   },
   gr10x: {
     title: 'GR10x · Rubin GPU',
@@ -1393,7 +1520,17 @@ const CHIP_DB = {
     ],
     emails: [],
     slack: [],
-    prog: 20, phase:'Post-Silicon'
+    prog: 20, phase:'Post-Silicon',
+    pageStructure: [
+      {title:'GR15x SW Program Home',level:0},
+      {title:'Schedule & Milestones',level:1},
+      {title:'SW Architecture',level:1},
+      {title:'Feature POR',level:1},
+      {title:'Power-On Preparation',level:1},
+      {title:'Verification Plan',level:1},
+      {title:'Risk Register',level:1},
+      {title:'Branching Strategy',level:1},
+    ]
   },
   tb500: {
     title: 'TB500 · Vera CPU',
@@ -1422,7 +1559,18 @@ const CHIP_DB = {
       {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Today 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
     ],
     slack: [],
-    prog: 93, phase:'Post-Silicon'
+    prog: 93, phase:'Post-Silicon',
+    pageStructure: [
+      {title:'TB500 SW Program Home',level:0},
+      {title:'Schedule & Milestones',level:1},
+      {title:'NVL72 SW Releases',level:1},
+      {title:'SBIOS Release Notes',level:1},
+      {title:'MODS Release Notes',level:1},
+      {title:'Bug Tracking & WAR Registry',level:1},
+      {title:'BWAT Results',level:1},
+      {title:'Customer Enablement',level:1},
+      {title:'Lab Environment Setup',level:1},
+    ]
   },
   tb600: {
     title: 'TB600 · Vera Ultra',
@@ -1471,7 +1619,25 @@ const CHIP_DB = {
     slack: [
       {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 9 8:35pm',msg:'ThorZ MCU test run: 387/463 passed. ASILNA(1), PwrCtrl(29), TMON(6), VMON(30) regressions flagged for owner triage.'},
     ],
-    prog: 78, phase:'Post-Silicon'
+    prog: 78, phase:'Post-Silicon',
+    pageStructure: [
+      {title:'ThorZ SW Program Home',level:0},
+      {title:'Schedule & Milestones',level:1},
+      {title:'Post-Silicon Validation Plan',level:1},
+      {title:'SW Architecture',level:1},
+      {title:'DTS & Release Notes',level:1},
+      {title:'Bug Tracking & WAR Registry',level:1},
+      {title:'Mailing Lists & Slack Channels',level:1},
+      {title:'Lab Environment Setup',level:1},
+      {title:'MCU Test Results',level:1},
+      {title:'Safety Plan',level:1},
+      {title:'QS Exit Criteria',level:1},
+      {title:'Customer Enablement',level:1},
+      {title:'PC Cycle Log',level:1},
+      {title:'SCG Coverage Reports',level:1},
+      {title:'OTA Update Plan',level:1},
+      {title:'AAR (After Action Review)',level:1},
+    ]
   },
   fn10x: {
     title: 'FN10x · Feynman',
