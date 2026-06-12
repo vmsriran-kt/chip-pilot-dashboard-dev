@@ -1121,7 +1121,7 @@ const KNOWN_SPACES = [
 ];
 
 const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}'),
-  newChip:{name:'',codename:'',group:'cpu',cm:'',refId:'nr10x',
+  newChip:{name:'',codename:'',group:'fusion',cm:'',refId:'nr10x',
            confluenceSpace: USER_PERSONAL_SPACE, confluenceParent:''},
   ncPreview:false};
 function saveS(){localStorage.setItem('cp2_cc',JSON.stringify(S.ccState))}
@@ -1192,8 +1192,8 @@ function renderCC(){
     const refChip=CHIP_DB[nc.refId]||CHIP_DB['nr10x'];
     const ps=refChip.pageStructure||[];
     const displayName=nc.name||'{CHIP}';
-    const groupOpts=['cpu','gpu','networking','storage','platform'].map(g=>
-      `<option value="${g}"${nc.group===g?' selected':''}>${g.toUpperCase()}</option>`).join('');
+    const groupOpts=[{v:'cpu',l:'CPU'},{ v:'gpu',l:'GPU'},{v:'fusion',l:'Fusion Chips'}].map(g=>
+      `<option value="${g.v}"${nc.group===g.v?' selected':''}>${g.l}</option>`).join('');
     const refOpts=Object.keys(CHIP_DB).map(k=>
       `<option value="${k}"${nc.refId===k?' selected':''}>${CHIP_DB[k].title.split('·')[0].trim()}</option>`).join('');
     const spaceOpts=KNOWN_SPACES.map(s=>
@@ -1359,7 +1359,8 @@ function buildAgentPrompt(){
   const codename=nc.codename||'[CODENAME]';
   const cm=nc.cm||CURRENT_USER.name;
   const cmEmail=nc.cm&&nc.cm.includes('@')?nc.cm:CURRENT_USER.email;
-  const group=(nc.group||'cpu').toUpperCase();
+  const groupMap={cpu:'CPU',gpu:'GPU',fusion:'Fusion Chips'};
+  const group=groupMap[nc.group]||nc.group||'CPU';
   const spaceKey=nc.confluenceSpace||USER_PERSONAL_SPACE;
   const parentPage=nc.confluenceParent||'';
   const refName=refChip.title.split('·')[0].trim();
@@ -1456,7 +1457,7 @@ function previewPrompt(){
 }
 
 function clearNewChipForm(){
-  S.newChip={name:'',codename:'',group:'cpu',cm:'',refId:'nr10x',
+  S.newChip={name:'',codename:'',group:'fusion',cm:'',refId:'nr10x',
              confluenceSpace:USER_PERSONAL_SPACE,confluenceParent:''};
   const el=document.getElementById('nc-prompt-preview');
   if(el)el.style.display='none';
