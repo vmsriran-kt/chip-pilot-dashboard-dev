@@ -1239,20 +1239,18 @@ function renderCC(){
             <label class="nc-label">Chip Name <span style="color:#e53e3e">*</span></label>
             <input class="nc-input" id="nc-f-name" placeholder="e.g. GR20x" value="${nc.name}"
               oninput="S.newChip.name=this.value;ncLiveUpdate()"
-              onchange="renderCC()"
               style="${!nc.name?'border-color:rgba(229,62,62,.5)':''}">
           </div>
 
           <div class="nc-field">
             <label class="nc-label">Codename</label>
             <input class="nc-input" id="nc-f-code" placeholder="e.g. RubinNext" value="${nc.codename||''}"
-              oninput="S.newChip.codename=this.value"
-              onchange="renderCC()">
+              oninput="S.newChip.codename=this.value">
           </div>
 
           <div class="nc-field">
             <label class="nc-label">Group / Domain</label>
-            <select class="nc-select" onchange="S.newChip.group=this.value;renderCC()">${groupOpts}</select>
+            <select class="nc-select" onchange="S.newChip.group=this.value;ncRebuildPreview()">${groupOpts}</select>
           </div>
 
           <div class="nc-field" style="position:relative">
@@ -1261,7 +1259,6 @@ function renderCC(){
             </label>
             <input class="nc-input" id="nc-f-cm" placeholder="Type name to search directory…" value="${nc.cm}"
               oninput="S.newChip.cm=this.value;ncCMSearch(this.value);ncLiveUpdate()"
-              onchange="renderCC()"
               onblur="setTimeout(()=>ncHideCMPicker(),150)"
               onfocus="ncCMSearch(this.value)"
               autocomplete="off"
@@ -1271,7 +1268,7 @@ function renderCC(){
 
           <div class="nc-field full">
             <label class="nc-label">Reference Chip (page structure template)</label>
-            <select class="nc-select" onchange="S.newChip.refId=this.value;renderCC()">${refOpts}</select>
+            <select class="nc-select" onchange="S.newChip.refId=this.value;ncRebuildPreview()">${refOpts}</select>
           </div>
 
           <div class="nc-field" style="grid-column:1/-1;margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">
@@ -1280,41 +1277,40 @@ function renderCC(){
 
           <div class="nc-field">
             <label class="nc-label">Space</label>
-            <select class="nc-select" onchange="
-              if(this.value==='__custom__'){S.newChip.confluenceSpace='';renderCC();}
-              else{S.newChip.confluenceSpace=this.value;renderCC();}">${spaceOpts}</select>
+            <select class="nc-select" onchange="S.newChip.confluenceSpace=this.value==='__custom__'?'':this.value;ncRebuildPreview()">${spaceOpts}</select>
           </div>
 
           <div class="nc-field">
             <label class="nc-label">Parent Page <span style="color:var(--muted)">(optional — blank = root)</span></label>
             <input class="nc-input" id="nc-f-parent" placeholder="Leave blank = root of space" value="${nc.confluenceParent||''}"
-              oninput="S.newChip.confluenceParent=this.value"
-              onchange="renderCC()">
+              oninput="S.newChip.confluenceParent=this.value;ncRebuildPreview()">
           </div>
 
           ${isCustomSpace?`<div class="nc-field full">
             <label class="nc-label">Custom Space Key</label>
-            <input class="nc-input" placeholder="e.g. MYSPC" value="${nc.confluenceSpace||''}"
-              oninput="S.newChip.confluenceSpace=this.value"
-              onchange="renderCC()">
+            <input class="nc-input" id="nc-f-spacecustom" placeholder="e.g. MYSPC" value="${nc.confluenceSpace||''}"
+              oninput="S.newChip.confluenceSpace=this.value;ncRebuildPreview()">
           </div>`:''}
         </form>
 
-        <!-- Path breadcrumb -->
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:var(--muted);flex-wrap:wrap">
-          <span>📂</span>
-          <span style="font-family:monospace;background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:4px;color:var(--text2)">${spaceKey}</span>
-          <span>›</span><span>${parentPath}</span>
-          <span>›</span><span id="nc-path-end" style="color:var(--text2);font-weight:600">${displayName} SW Program Home</span>
+        <!-- Preview zone — only this section gets patched by ncRebuildPreview / ncLiveUpdate -->
+        <div id="nc-preview-zone">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:var(--muted);flex-wrap:wrap">
+            <span>📂</span>
+            <span id="nc-path-space" style="font-family:monospace;background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:4px;color:var(--text2)">${spaceKey}</span>
+            <span>›</span><span id="nc-path-parent">${parentPath}</span>
+            <span>›</span><span id="nc-path-end" style="color:var(--text2);font-weight:600">${displayName} SW Program Home</span>
+          </div>
+          <div id="nc-tree-wrap">
+            ${ps.length
+              ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
+                  Page Tree — ${ps.length} pages · based on ${refChip.title.split('·')[0].trim()}
+                 </div>${treeHtml}`
+              : '<div style="color:var(--muted);font-size:12px;padding:12px 0">Select a reference chip above to preview the page tree.</div>'}
+          </div>
         </div>
 
-        ${ps.length
-          ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
-              Page Tree — ${ps.length} pages · based on ${refChip.title.split('·')[0].trim()}
-             </div>${treeHtml}`
-          : '<div style="color:var(--muted);font-size:12px;padding:12px 0">Select a reference chip above to preview the page tree.</div>'}
-
-        <div id="nc-missing" style="${!canGenerate?'':'display:none'};font-size:11px;color:var(--amber);margin-bottom:10px">
+        <div id="nc-missing" style="${!canGenerate?'':'display:none'};font-size:11px;color:var(--amber);margin-bottom:10px;min-height:1em">
           ${missing.length?'⚠ Fill in: '+missing.join(', '):''}
         </div>
 
@@ -1471,28 +1467,76 @@ function clearNewChipForm(){
   renderCC();
 }
 
-// ── New Chip live update (no full re-render — just patches the DOM) ──
+// ── ncLiveUpdate: text-only DOM patch, ZERO re-render, ZERO layout shift ──
+// Called on every oninput — never touches the form HTML, never loses focus
 function ncLiveUpdate(){
-  const name=S.newChip.name||'{CHIP}';
-  const pathEnd=document.getElementById('nc-path-end');
-  if(pathEnd)pathEnd.textContent=name+' SW Program Home';
-  // update copy button state
-  const btn=document.getElementById('nc-copy-btn');
-  const warn=document.getElementById('nc-missing');
-  const ok=S.newChip.name&&S.newChip.cm;
-  if(btn){btn.style.background=ok?'var(--nv-green)':'var(--border)';btn.style.color=ok?'#000':'var(--muted)';}
+  const name = S.newChip.name || '{CHIP}';
+  const ok   = !!(S.newChip.name && S.newChip.cm);
+  // 1. Path breadcrumb chip name
+  const pathEnd = document.getElementById('nc-path-end');
+  if(pathEnd) pathEnd.textContent = name + ' SW Program Home';
+  // 2. Copy button state
+  const btn = document.getElementById('nc-copy-btn');
+  if(btn){ btn.style.background=ok?'var(--nv-green)':'var(--border)'; btn.style.color=ok?'#000':'var(--muted)'; }
+  // 3. Missing warning — use min-height:1em so height never changes (no layout shift)
+  const warn = document.getElementById('nc-missing');
   if(warn){
-    const missing=[];
-    if(!S.newChip.name)missing.push('Chip Name');
-    if(!S.newChip.cm)missing.push('SW CM');
-    warn.textContent=missing.length?'⚠ Fill in: '+missing.join(', '):'';
-    warn.style.display=missing.length?'':'none';
+    const m=[];
+    if(!S.newChip.name)m.push('Chip Name');
+    if(!S.newChip.cm)  m.push('SW CM');
+    warn.textContent = m.length ? '⚠ Fill in: '+m.join(', ') : '';
+    warn.style.visibility = m.length ? 'visible' : 'hidden'; // visibility not display — no shift
   }
-  // highlight required inputs
-  const nameInp=document.getElementById('nc-f-name');
-  const cmInp=document.getElementById('nc-f-cm');
-  if(nameInp)nameInp.style.borderColor=S.newChip.name?'':'rgba(229,62,62,.5)';
-  if(cmInp)cmInp.style.borderColor=S.newChip.cm?'':'rgba(229,62,62,.5)';
+  // 4. Border colour on required fields only
+  const nameInp = document.getElementById('nc-f-name');
+  const cmInp   = document.getElementById('nc-f-cm');
+  if(nameInp) nameInp.style.borderColor = S.newChip.name ? '' : 'rgba(229,62,62,.5)';
+  if(cmInp)   cmInp.style.borderColor   = S.newChip.cm   ? '' : 'rgba(229,62,62,.5)';
+}
+
+// ── ncRebuildPreview: rebuilds only tree + path when dropdowns change ──
+// Dropdowns can't lose focus, so a full rebuild of the preview zone is safe here
+function ncRebuildPreview(){
+  const nc = S.newChip;
+  const refChip = CHIP_DB[nc.refId] || CHIP_DB['nr10x'];
+  const ps = refChip.pageStructure || [];
+  const spaceKey = nc.confluenceSpace || USER_PERSONAL_SPACE;
+  const parentPath = nc.confluenceParent || '(root of space)';
+  const displayName = nc.name || '{CHIP}';
+  const confBase = 'https://nvidia.atlassian.net/wiki/spaces/';
+
+  // Update path breadcrumb parts
+  const spEl = document.getElementById('nc-path-space');
+  const ppEl = document.getElementById('nc-path-parent');
+  const peEl = document.getElementById('nc-path-end');
+  if(spEl) spEl.textContent = spaceKey;
+  if(ppEl) ppEl.textContent = parentPath;
+  if(peEl) peEl.textContent = displayName + ' SW Program Home';
+
+  // Rebuild tree
+  const treeWrap = document.getElementById('nc-tree-wrap');
+  if(!treeWrap) return;
+  let treeHtml = '';
+  if(ps.length){
+    treeHtml = `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
+      Page Tree — ${ps.length} pages · based on ${refChip.title.split('·')[0].trim()}
+    </div><div class="pg-tree">`;
+    ps.forEach(p => {
+      const indent = p.level===0?'root':p.level===1?'pg-l1':'pg-l2';
+      const title  = p.title.replace(/\{CHIP\}/g, displayName);
+      const isHome = p.level===0;
+      treeHtml += `<div class="pg-node ${indent}">
+        <span style="flex:1">${title}</span>
+        ${isHome?`<a href="${confBase}${spaceKey}/overview" target="_blank" style="font-size:9px;color:var(--nv-green);text-decoration:none;opacity:.7">${spaceKey} ↗</a>`:''}
+        <span class="pg-pill">${isHome?'HOME':'PAGE'}</span>
+      </div>`;
+    });
+    treeHtml += '</div>';
+  } else {
+    treeHtml = '<div style="color:var(--muted);font-size:12px;padding:12px 0">Select a reference chip above to preview the page tree.</div>';
+  }
+  treeWrap.innerHTML = treeHtml;
+  ncLiveUpdate();
 }
 
 // ── Active Directory people picker ─────────────────────────────────
