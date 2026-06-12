@@ -1092,8 +1092,20 @@ const WEEKLY_TASKS=[
 
 // MY_CHIPS populated after CHIP_DB is defined (see below)
 
+// Derive personal Confluence space from email (e.g. ssriranjani@nvidia.com → ~ssriranjani)
+const USER_PERSONAL_SPACE = '~' + CURRENT_USER.email.split('@')[0];
+const KNOWN_SPACES = [
+  {key: USER_PERSONAL_SPACE, label: 'My Personal Space (' + USER_PERSONAL_SPACE + ')'},
+  {key: 'TCS',  label: 'TCS — Tegra Chip SW'},
+  {key: 'NBS',  label: 'NBS — NVLink Bridge/Switches'},
+  {key: 'RubinSW', label: 'RubinSW — Rubin GPU SW'},
+  {key: 'FEYNMANGPUHOST', label: 'FEYNMANGPUHOST — Feynman GPU'},
+];
+
 const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}'),
-  newChip:{name:'',codename:'',group:'cpu',cm:'',refId:'nr10x'},ncPreview:false};
+  newChip:{name:'',codename:'',group:'cpu',cm:'',refId:'nr10x',
+           confluenceSpace: USER_PERSONAL_SPACE, confluenceParent:''},
+  ncPreview:false};
 function saveS(){localStorage.setItem('cp2_cc',JSON.stringify(S.ccState))}
 
 function priTag(p){return p==='h'?'<span class="pri-h">High</span>':p==='m'?'<span class="pri-m">Med</span>':'<span class="pri-l">Low</span>'}
@@ -1161,59 +1173,134 @@ function renderCC(){
     const nc=S.newChip;
     const refChip=CHIP_DB[nc.refId]||CHIP_DB['nr10x'];
     const ps=refChip.pageStructure||[];
+    const chipName=nc.name||'';
+    const displayName=chipName||'{CHIP}';
     const groupOpts=['cpu','gpu','networking','storage','platform'].map(g=>
       `<option value="${g}"${nc.group===g?' selected':''}>${g.toUpperCase()}</option>`).join('');
     const refOpts=Object.keys(CHIP_DB).map(k=>
       `<option value="${k}"${nc.refId===k?' selected':''}>${CHIP_DB[k].title.split('·')[0].trim()}</option>`).join('');
+    const spaceOpts=KNOWN_SPACES.map(s=>
+      `<option value="${s.key}"${nc.confluenceSpace===s.key?' selected':''}>${s.label}</option>`).join('') +
+      `<option value="__custom__"${!KNOWN_SPACES.find(s=>s.key===nc.confluenceSpace)?' selected':''}>Custom space key…</option>`;
+    const isCustomSpace=!KNOWN_SPACES.find(s=>s.key===nc.confluenceSpace);
+    const spaceKey=nc.confluenceSpace||USER_PERSONAL_SPACE;
+    const parentPath=nc.confluenceParent ? nc.confluenceParent : '(root of space)';
+    const confBaseUrl='https://nvidia.atlassian.net/wiki/spaces/';
+
+    // Build tree HTML
     let treeHtml='';
     if(ps.length){
-      const chipName=nc.codename||'{CHIP}';
       treeHtml='<div class="pg-tree">';
-      ps.forEach(p=>{
+      ps.forEach((p,i)=>{
         const indent=p.level===0?'root':p.level===1?'pg-l1':'pg-l2';
-        const title=p.title.replace(/\{CHIP\}/g,chipName);
+        const title=p.title.replace(/\{CHIP\}/g,displayName);
+        const isHome=p.level===0;
+        const pageUrl=isHome
+          ? `${confBaseUrl}${spaceKey}/overview`
+          : `${confBaseUrl}${spaceKey}/pages/new`;
         treeHtml+=`<div class="pg-node ${indent}">
-          <span>${title}</span>
-          <span class="pg-pill">${p.level===0?'HOME':'PAGE'}</span>
+          <span style="flex:1">${title}</span>
+          ${isHome?`<a href="${pageUrl}" target="_blank" style="font-size:9px;color:var(--nv-green);text-decoration:none;opacity:.7">${spaceKey} ↗</a>`:''}
+          <span class="pg-pill">${isHome?'HOME':'PAGE'}</span>
         </div>`;
       });
       treeHtml+='</div>';
     }
+
+    // Readiness check
+    const missing=[];
+    if(!nc.name) missing.push('Chip Name');
+    if(!nc.cm)   missing.push('SW CM');
+    const canGenerate=missing.length===0 && ps.length>0;
+
     body.innerHTML=`<div class="cc-section-wrap">
       <div class="cc-sec-hdr"><span class="cc-sec-title">🆕 New Chip Setup</span>
-        <span class="cc-sec-count" style="font-size:10px;color:var(--muted)">Confluence page tree preview</span>
+        <span class="cc-sec-count" style="font-size:10px;color:var(--muted)">${ps.length} pages · ${spaceKey}</span>
       </div>
       <div style="padding:14px 16px">
+
         <form class="nc-form" onsubmit="return false">
           <div class="nc-field">
-            <label class="nc-label">Chip Name</label>
-            <input class="nc-input" id="nc-name" placeholder="e.g. GR20x" value="${nc.name}" oninput="S.newChip.name=this.value;renderCC()">
+            <label class="nc-label">Chip Name <span style="color:#e53e3e">*</span></label>
+            <input class="nc-input" placeholder="e.g. GR20x" value="${nc.name}"
+              oninput="S.newChip.name=this.value;renderCC()"
+              style="${!nc.name?'border-color:rgba(229,62,62,.5)':''}">
           </div>
           <div class="nc-field">
             <label class="nc-label">Codename</label>
-            <input class="nc-input" id="nc-code" placeholder="e.g. RubinNext" value="${nc.codename||''}" oninput="S.newChip.codename=this.value;renderCC()">
+            <input class="nc-input" placeholder="e.g. RubinNext" value="${nc.codename||''}"
+              oninput="S.newChip.codename=this.value;renderCC()">
           </div>
           <div class="nc-field">
             <label class="nc-label">Group / Domain</label>
             <select class="nc-select" onchange="S.newChip.group=this.value;renderCC()">${groupOpts}</select>
           </div>
           <div class="nc-field">
-            <label class="nc-label">SW CM</label>
-            <input class="nc-input" id="nc-cm" placeholder="CM name or email" value="${nc.cm}" oninput="S.newChip.cm=this.value;renderCC()">
+            <label class="nc-label">SW CM <span style="color:#e53e3e">*</span></label>
+            <input class="nc-input" placeholder="name or email" value="${nc.cm}"
+              oninput="S.newChip.cm=this.value;renderCC()"
+              style="${!nc.cm?'border-color:rgba(229,62,62,.5)':''}">
           </div>
           <div class="nc-field full">
-            <label class="nc-label">Reference Chip (copy page structure from)</label>
+            <label class="nc-label">Reference Chip (page structure template)</label>
             <select class="nc-select" onchange="S.newChip.refId=this.value;renderCC()">${refOpts}</select>
           </div>
+
+          <div class="nc-field" style="grid-column:1/-1;margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">
+            <label class="nc-label" style="color:var(--nv-green)">📍 Confluence Destination</label>
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">Space</label>
+            <select class="nc-select" onchange="
+              if(this.value==='__custom__'){S.newChip.confluenceSpace='';renderCC();}
+              else{S.newChip.confluenceSpace=this.value;renderCC();}">${spaceOpts}</select>
+          </div>
+          <div class="nc-field">
+            <label class="nc-label">Parent Page <span style="color:var(--muted)">(optional)</span></label>
+            <input class="nc-input" placeholder="Leave blank = root of space" value="${nc.confluenceParent||''}"
+              oninput="S.newChip.confluenceParent=this.value;renderCC()">
+          </div>
+          ${isCustomSpace?`<div class="nc-field full">
+            <label class="nc-label">Custom Space Key</label>
+            <input class="nc-input" placeholder="e.g. MYSPC" value="${nc.confluenceSpace||''}"
+              oninput="S.newChip.confluenceSpace=this.value;renderCC()">
+          </div>`:''}
         </form>
-        ${ps.length ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
-          Confluence Page Tree Preview (${ps.length} pages — based on ${refChip.title.split('·')[0].trim()})
-        </div>${treeHtml}` : '<div style="color:var(--muted);font-size:12px;padding:12px 0">No page structure defined for the selected reference chip.</div>'}
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="act-btn" onclick="copySetupPrompt()" style="background:var(--nv-green);color:#000;font-weight:700">📋 Copy Setup Prompt</button>
-          <button class="act-btn" onclick="clearNewChipForm()" style="background:var(--bg2);border:1px solid var(--border)">🗑 Clear</button>
+
+        <!-- Space path pill -->
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:var(--muted)">
+          <span style="font-size:10px">📂</span>
+          <span style="font-family:monospace;background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:4px;color:var(--text2)">${spaceKey}</span>
+          <span>›</span>
+          <span style="color:var(--muted)">${parentPath}</span>
+          <span>›</span>
+          <span style="color:var(--text2);font-weight:600">${displayName} SW Program Home</span>
         </div>
-        <div id="nc-copy-confirm" style="display:none;margin-top:8px;font-size:11px;color:var(--nv-green)">✓ Prompt copied to clipboard — paste into Cowork to create Confluence pages</div>
+
+        ${ps.length ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
+          Page Tree Preview — ${ps.length} pages based on ${refChip.title.split('·')[0].trim()}
+        </div>${treeHtml}` : '<div style="color:var(--muted);font-size:12px;padding:12px 0">Select a reference chip above to preview the page tree.</div>'}
+
+        ${!canGenerate?`<div style="font-size:11px;color:var(--amber);margin-bottom:10px">⚠ Fill in: ${missing.join(', ')}</div>`:''}
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <button class="act-btn" onclick="copySetupPrompt()"
+            style="background:${canGenerate?'var(--nv-green)':'var(--border)'};color:${canGenerate?'#000':'var(--muted)'};font-weight:700;cursor:${canGenerate?'pointer':'default'}">
+            📋 Copy Agent Prompt
+          </button>
+          <button class="act-btn" onclick="previewPrompt()"
+            style="background:var(--bg2);border:1px solid var(--border)">
+            👁 Preview Prompt
+          </button>
+          <button class="act-btn" onclick="clearNewChipForm()"
+            style="background:var(--bg2);border:1px solid var(--border)">
+            🗑 Clear
+          </button>
+        </div>
+        <div id="nc-copy-confirm" style="display:none;margin-top:8px;font-size:11px;color:var(--nv-green)">
+          ✓ Agent prompt copied — paste into Claude, Cowork, or any MCP-capable tool
+        </div>
+        <div id="nc-prompt-preview" style="display:none;margin-top:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;font-family:monospace;white-space:pre-wrap;color:var(--text2);max-height:280px;overflow-y:auto;line-height:1.5"></div>
       </div>
     </div>`;
   } else {
@@ -1239,43 +1326,115 @@ function toggleCC(sk,k){
   saveS();renderCC();
 }
 
-function copySetupPrompt(){
+function buildAgentPrompt(){
   const nc=S.newChip;
   const refChip=CHIP_DB[nc.refId]||CHIP_DB['nr10x'];
   const ps=refChip.pageStructure||[];
   const chipName=nc.name||'[CHIP NAME]';
   const codename=nc.codename||'[CODENAME]';
-  const cm=nc.cm||'[CM]';
-  const group=nc.group||'[GROUP]';
-  let pages=ps.map(p=>('  '.repeat(p.level||0))+'- '+p.title.replace(/\{CHIP\}/g,chipName)).join('\n');
-  const prompt=`Please create the following Confluence pages for a new chip program:
+  const cm=nc.cm||CURRENT_USER.name;
+  const cmEmail=nc.cm&&nc.cm.includes('@')?nc.cm:CURRENT_USER.email;
+  const group=(nc.group||'cpu').toUpperCase();
+  const spaceKey=nc.confluenceSpace||USER_PERSONAL_SPACE;
+  const parentPage=nc.confluenceParent||'';
+  const refName=refChip.title.split('·')[0].trim();
+  const confBase='https://nvidia.atlassian.net/wiki/spaces/';
 
-Chip Name: ${chipName}
-Codename: ${codename}
-Domain/Group: ${group.toUpperCase()}
-SW CM: ${cm}
-Reference Structure: Based on ${refChip.title.split('·')[0].trim()}
+  // Build the hierarchical page list with parent linkage
+  let homeTitle='';
+  const pageLines=ps.map((p,i)=>{
+    const title=p.title.replace(/\{CHIP\}/g,chipName);
+    if(p.level===0){homeTitle=title;return `  - [HOME] ${title}`;}
+    return `${'  '.repeat(p.level+1)}- ${title}`;
+  }).join('\n');
 
-Page Structure to create:
-${pages}
+  return `# New Chip SW Program Setup — ${chipName}
 
-For each page:
-1. Use the chip name "${chipName}" in the title
-2. Add placeholder sections matching the page topic
-3. Tag with labels: chip-sw, ${chipName.toLowerCase()}, ${group}
-4. Set CM "${cm}" as page owner
+## Task
+Create the Confluence page tree for the **${chipName}** SW program in the following Confluence space. Use the Atlassian MCP tool (createConfluencePage) or the Confluence REST API to create each page.
 
-Please confirm once all pages are created and provide links.`;
+## Program Details
+| Field | Value |
+|-------|-------|
+| Chip Name | ${chipName} |
+| Codename | ${codename||'TBD'} |
+| Domain | ${group} |
+| SW CM | ${cm} (${cmEmail}) |
+| Reference Structure | ${refName} |
+
+## Confluence Destination
+- **Space Key:** \`${spaceKey}\`
+- **Space URL:** ${confBase}${spaceKey}/overview
+- **Parent Page:** ${parentPage||'Root of space (no parent)'}
+- **Home Page Title:** ${homeTitle||chipName+' SW Program Home'}
+
+## Page Hierarchy to Create
+\`\`\`
+${pageLines}
+\`\`\`
+
+## Instructions for Each Page
+1. **Title:** Use exact title from the hierarchy above (with "${chipName}" substituted)
+2. **Space:** Always use space key \`${spaceKey}\`
+3. **Parent:** Home page is created first under "${parentPage||'root'}"; all other pages are children of the Home page
+4. **Initial Content:** Add a brief placeholder body matching the page topic:
+   - Schedule pages → table with Milestone, Target Date, Status columns
+   - Architecture/Feature pages → heading sections with TBD placeholders
+   - Risk/Bug pages → risk table template (Risk, Severity, Owner, Mitigation)
+   - Release/WAR pages → version table template
+5. **Labels:** Add labels: \`chip-sw\`, \`${chipName.toLowerCase()}\`, \`${(nc.group||'cpu').toLowerCase()}\`
+6. **Owner:** Set page owner to \`${cmEmail}\`
+
+## API Reference (Confluence REST)
+\`\`\`
+POST https://nvidia.atlassian.net/wiki/rest/api/content
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "type": "page",
+  "title": "<page title>",
+  "space": {"key": "${spaceKey}"},
+  "ancestors": [{"id": "<parent-page-id>"}],
+  "body": {"storage": {"value": "<html content>", "representation": "storage"}}
+}
+\`\`\`
+
+## Success Criteria
+- All ${ps.length} pages created successfully
+- Home page appears under ${parentPage||'root of '+spaceKey}
+- All sub-pages are children of the Home page
+- Return a list of all created page URLs
+
+## Notes
+- If the space key \`${spaceKey}\` is a personal space, no special permissions needed
+- If a page with the same title already exists, skip and report it
+- Create pages in order (parent before children)`;
+}
+
+function copySetupPrompt(){
+  const prompt=buildAgentPrompt();
   navigator.clipboard.writeText(prompt).then(()=>{
     const el=document.getElementById('nc-copy-confirm');
-    if(el){el.style.display='block';setTimeout(()=>{el.style.display='none';},3000);}
+    if(el){el.style.display='block';setTimeout(()=>{el.style.display='none';},4000);}
   }).catch(()=>{
-    prompt&&window.prompt('Copy this prompt:',prompt);
+    window.prompt('Copy this agent prompt:',prompt);
   });
 }
 
+function previewPrompt(){
+  const el=document.getElementById('nc-prompt-preview');
+  if(!el)return;
+  if(el.style.display==='block'){el.style.display='none';return;}
+  el.textContent=buildAgentPrompt();
+  el.style.display='block';
+}
+
 function clearNewChipForm(){
-  S.newChip={name:'',codename:'',group:'cpu',cm:'',refId:'nr10x'};
+  S.newChip={name:'',codename:'',group:'cpu',cm:'',refId:'nr10x',
+             confluenceSpace:USER_PERSONAL_SPACE,confluenceParent:''};
+  const el=document.getElementById('nc-prompt-preview');
+  if(el)el.style.display='none';
   renderCC();
 }
 function setPhase(p){S.phase=p;localStorage.setItem('cp2_phase',p);renderCC()}
