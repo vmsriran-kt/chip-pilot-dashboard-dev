@@ -1090,12 +1090,7 @@ const WEEKLY_TASKS=[
   {t:'Archive meeting notes to Confluence bring-up wiki',pri:'l'},
 ];
 
-// Detect chips the current user is CM for
-MY_CHIPS = Object.keys(CHIP_DB).filter(id => {
-  const d = CHIP_DB[id];
-  return (d.sub && d.sub.toLowerCase().includes(CURRENT_USER.tag.toLowerCase())) ||
-         (d.checklist && d.checklist.some(c => c.owner && c.owner.toLowerCase().includes(CURRENT_USER.tag.toLowerCase())));
-});
+// MY_CHIPS populated after CHIP_DB is defined (see below)
 
 const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}'),
   newChip:{name:'',codename:'',group:'cpu',cm:'',refId:'nr10x'},ncPreview:false};
@@ -1319,23 +1314,70 @@ function buildHeatmap(){
   </tr>`).join('');
 }
 
+// Chip detail view mode: 'single' = one chip, 'collage' = all chips grid
+window.CHIP_VIEW_MODE = null; // null = auto (role-based)
+
 function renderChipView(chipId) {
   const d = CHIP_DB[chipId];
   if(!d) return;
 
-  // Render My Chips quick-nav pills
+  // Determine effective view mode based on role
+  const mode = window.CHIP_VIEW_MODE || (CURRENT_USER.role === 'mgmt' ? 'collage' : 'single');
+
+  // ── My Chips quick-nav bar ──────────────────────────────────────
   const myPillsEl = document.getElementById('my-chips-pills');
-  if(myPillsEl && MY_CHIPS.length) {
-    myPillsEl.innerHTML = MY_CHIPS.map(id => {
-      const cd = CHIP_DB[id];
-      const isActive = id === chipId;
-      const statusColor = cd.prog >= 80 ? 'var(--nv-green)' : cd.prog >= 40 ? 'var(--amber)' : 'var(--red)';
-      return `<button onclick="showView('chip','${id}')" style="padding:4px 10px;border-radius:5px;border:1px solid ${isActive?'var(--nv-green)':'var(--border)'};background:${isActive?'rgba(118,185,0,.15)':'var(--bg2)'};color:${isActive?'var(--nv-green)':'var(--text)'};font-size:11px;font-weight:${isActive?'800':'600'};cursor:pointer;transition:all .15s">
-        ${id.toUpperCase()} <span style="font-size:9px;color:${statusColor}">●</span>
-      </button>`;
-    }).join('');
+  if(myPillsEl) {
+    if(MY_CHIPS.length > 0) {
+      myPillsEl.innerHTML = MY_CHIPS.map(id => {
+        const cd = CHIP_DB[id];
+        const isActive = id === chipId && mode === 'single';
+        const statusColor = cd.prog >= 80 ? 'var(--nv-green)' : cd.prog >= 40 ? 'var(--amber)' : 'var(--red)';
+        return `<button onclick="window.CHIP_VIEW_MODE='single';showView('chip','${id}')" style="padding:4px 10px;border-radius:5px;border:1px solid ${isActive?'var(--nv-green)':'var(--border)'};background:${isActive?'rgba(118,185,0,.15)':'var(--bg2)'};color:${isActive?'var(--nv-green)':'var(--text2)'};font-size:11px;font-weight:${isActive?'800':'600'};cursor:pointer;transition:all .15s">${id.toUpperCase()} <span style="color:${statusColor}">●</span></button>`;
+      }).join('') +
+      `<button onclick="window.CHIP_VIEW_MODE='collage';renderChipView(window.ACTIVE_CHIP)" style="padding:4px 10px;border-radius:5px;border:1px solid ${mode==='collage'?'var(--nv-green)':'var(--border)'};background:${mode==='collage'?'rgba(118,185,0,.15)':'var(--bg2)'};color:${mode==='collage'?'var(--nv-green)':'var(--muted)'};font-size:11px;font-weight:600;cursor:pointer;transition:all .15s">⊞ All Programs</button>`;
+    } else {
+      // mgmt: show role label + collage toggle
+      myPillsEl.innerHTML = `<span style="font-size:11px;color:var(--muted)">Portfolio view — all 12 programs</span>
+        <button onclick="window.CHIP_VIEW_MODE='single';renderChipView(window.ACTIVE_CHIP)" style="padding:4px 10px;border-radius:5px;border:1px solid ${mode==='single'?'var(--nv-green)':'var(--border)'};background:${mode==='single'?'rgba(118,185,0,.15)':'var(--bg2)'};color:${mode==='single'?'var(--nv-green)':'var(--muted)'};font-size:11px;cursor:pointer">≡ Single Chip</button>
+        <button onclick="window.CHIP_VIEW_MODE='collage';renderChipView(window.ACTIVE_CHIP)" style="padding:4px 10px;border-radius:5px;border:1px solid ${mode==='collage'?'var(--nv-green)':'var(--border)'};background:${mode==='collage'?'rgba(118,185,0,.15)':'var(--bg2)'};color:${mode==='collage'?'var(--nv-green)':'var(--muted)'};font-size:11px;cursor:pointer">⊞ All Programs</button>`;
+    }
   }
 
+  // ── COLLAGE VIEW — all chips grid ───────────────────────────────
+  if(mode === 'collage') {
+    document.getElementById('chip-title').textContent = 'Portfolio Overview';
+    document.getElementById('chip-subtitle').textContent = `All 12 programs · ${CURRENT_USER.name}`;
+    document.getElementById('chip-anno').textContent = '';
+    document.getElementById('chip-pills').innerHTML = '';
+    const statusOrder = {'Pre-Silicon':0,'Post-Silicon':1};
+    const chips = Object.entries(CHIP_DB);
+    const grid = chips.map(([id,c]) => {
+      const pct = c.prog;
+      const col = pct >= 80 ? '#76b900' : pct >= 40 ? '#f5a623' : '#e53e3e';
+      const borderCol = pct >= 80 ? 'rgba(118,185,0,.4)' : pct >= 40 ? 'rgba(245,166,35,.4)' : 'rgba(229,62,62,.4)';
+      const isMine = MY_CHIPS.includes(id);
+      const highRisks = (c.risks||[]).filter(r=>r.p==='h').length;
+      const mainPill = c.pills && c.pills[0] ? `<span style="font-size:8px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(118,185,0,.1);color:var(--nv-green)">${c.pills[0][1]}</span>` : '';
+      return `<div onclick="window.CHIP_VIEW_MODE='single';showView('chip','${id}')" style="background:var(--bg2);border:1.5px solid ${isMine?'var(--nv-green)':borderCol};border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .18s;position:relative" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+        ${isMine?`<div style="position:absolute;top:8px;right:8px;font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;background:var(--nv-green);color:#000">MY CHIP</div>`:''}
+        <div style="font-size:16px;font-weight:900;color:var(--text);margin-bottom:3px">${id.toUpperCase()}</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:8px">${c.title.split('·')[1]?.trim()||''}</div>
+        ${mainPill}
+        <div style="margin-top:8px;height:5px;background:var(--border);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${col};border-radius:3px"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--muted)">
+          <span>${c.phase}</span>
+          <span style="color:${col};font-weight:700">${pct}%</span>
+        </div>
+        ${highRisks > 0 ? `<div style="margin-top:6px;font-size:9px;color:#e53e3e;font-weight:700">⚠ ${highRisks} HIGH risk${highRisks>1?'s':''}</div>` : ''}
+      </div>`;
+    }).join('');
+    document.getElementById('chip-body').innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px">${grid}</div>`;
+    return;
+  }
+
+  // ── SINGLE CHIP VIEW ────────────────────────────────────────────
   document.getElementById('chip-title').textContent = d.title;
   // Update tab label
   var tabEl = document.getElementById('tab-chip');
@@ -1419,10 +1461,8 @@ function showView(id,chipId,tabEl){
   if(t)t.classList.add('on');
   if(id==='cc')renderCC();
   if(id==='chip') {
-    // If no chip selected yet, default to user's primary chip
-    if(!window.ACTIVE_CHIP) {
-      window.ACTIVE_CHIP = MY_CHIPS[0] || Object.keys(CHIP_DB)[0];
-    }
+    // Ensure a chip is always active
+    if(!window.ACTIVE_CHIP) window.ACTIVE_CHIP = MY_CHIPS[0] || Object.keys(CHIP_DB)[0];
     // Highlight active chip in nav
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
     var activeChipId=window.ACTIVE_CHIP;
@@ -1829,6 +1869,20 @@ const CHIP_DB = {
     prog: 5, phase:'Post-Silicon'
   }
 };
+
+// ── User chip detection (runs after CHIP_DB is defined) ───────────
+MY_CHIPS = Object.keys(CHIP_DB).filter(id => {
+  const d = CHIP_DB[id];
+  const tag = CURRENT_USER.tag.toLowerCase();
+  return (d.sub && d.sub.toLowerCase().includes(tag)) ||
+         (d.checklist && d.checklist.some(c => c.owner && c.owner.toLowerCase().includes(tag)));
+});
+
+// Role: 'cm' = SW CM (has assigned chips), 'mgmt' = manager/viewer
+CURRENT_USER.role = MY_CHIPS.length > 0 ? 'cm' : 'mgmt';
+
+// Pre-set active chip so Chip Detail tab never opens blank
+window.ACTIVE_CHIP = MY_CHIPS[0] || Object.keys(CHIP_DB)[0];
 
 
 </script>
