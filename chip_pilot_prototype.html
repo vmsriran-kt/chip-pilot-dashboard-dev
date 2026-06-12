@@ -342,7 +342,20 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .nav-search::placeholder{color:var(--muted)}
 .nav-search:focus{border-color:rgba(118,185,0,.4);background:rgba(118,185,0,.04)}
 .nav-search-icon{position:relative}
-.nav-search-icon::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;z-index:1}
+.nav-search-icon::before{content:'⌕';position:absolute;left:22px;top:26px;color:var(--muted);font-size:13px;pointer-events:none;z-index:1}
+.nav-sr-item{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .12s}
+.nav-sr-item:last-child{border-bottom:none}
+.nav-sr-item:hover,.nav-sr-item.focused{background:rgba(118,185,0,.08)}
+.nav-sr-chip{font-size:12px;font-weight:800;color:var(--text);min-width:44px}
+.nav-sr-meta{flex:1;min-width:0}
+.nav-sr-title{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-sr-sub{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-sr-pill{font-size:8px;font-weight:700;padding:2px 6px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+.nav-sr-pill.g{background:rgba(118,185,0,.12);color:var(--nv-green)}
+.nav-sr-pill.a{background:rgba(245,166,35,.12);color:var(--amber)}
+.nav-sr-pill.r{background:rgba(229,62,62,.12);color:var(--red)}
+.nav-sr-empty{padding:12px;font-size:11px;color:var(--muted);text-align:center}
+mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:0 1px}
 .nav-section{padding:10px 14px 4px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .nav-my-badge{font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;background:var(--nv-green);color:#000;margin-left:4px;vertical-align:middle;letter-spacing:.3px}
 .nav-my-section{padding:10px 14px 4px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--nv-green)}
@@ -573,9 +586,14 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 <!-- ═══ SIDENAV ═══ -->
 <nav id="nav">
   <div class="nav-search-icon">
-    <div class="nav-search-wrap">
-      <input class="nav-search" placeholder="Search chips…" aria-label="Search chips">
+    <div class="nav-search-wrap" style="position:relative">
+      <input class="nav-search" id="nav-search-input" placeholder="Search chips, CM, status…" aria-label="Search"
+        oninput="navSearch(this.value)"
+        onkeydown="navSearchKey(event)"
+        autocomplete="off">
+      <span id="nav-search-clear" onclick="clearNavSearch()" style="display:none;position:absolute;right:18px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--muted);font-size:14px;line-height:1">×</span>
     </div>
+    <div id="nav-search-results" style="display:none;margin:0 8px 8px;border-radius:7px;overflow:hidden;border:1px solid var(--border);background:var(--bg2)"></div>
   </div>
 
   <div class="nav-home on" id="nav-home" onclick="showView('cockpit')">🏠 Command Center</div>
@@ -1437,6 +1455,111 @@ function clearNewChipForm(){
   if(el)el.style.display='none';
   renderCC();
 }
+// ── Sidebar Search ────────────────────────────────────────────────
+let _srFocus = -1;
+
+function navSearch(q) {
+  const inp = document.getElementById('nav-search-input');
+  const panel = document.getElementById('nav-search-results');
+  const clrBtn = document.getElementById('nav-search-clear');
+  const navItems = document.querySelectorAll('#nav .nav-item');
+  q = q.trim();
+
+  // Show/hide clear button
+  if(clrBtn) clrBtn.style.display = q ? 'block' : 'none';
+  _srFocus = -1;
+
+  if(!q) {
+    // Restore all nav items
+    navItems.forEach(n => n.style.display = '');
+    document.querySelectorAll('#nav .nav-section, #nav .nav-sep, #nav .nav-my-section, #nav .user-chip-row').forEach(n => n.style.display = '');
+    panel.style.display = 'none';
+    return;
+  }
+
+  // Hide all nav sections while searching — results replace them
+  navItems.forEach(n => n.style.display = 'none');
+  document.querySelectorAll('#nav .nav-section, #nav .nav-sep, #nav .nav-my-section, #nav .user-chip-row').forEach(n => n.style.display = 'none');
+
+  const ql = q.toLowerCase();
+
+  // Search fields: id, title, sub, codename, CM name, pills, anno, phase
+  const results = Object.entries(CHIP_DB).filter(([id, d]) => {
+    return id.toLowerCase().includes(ql) ||
+      d.title.toLowerCase().includes(ql) ||
+      (d.sub && d.sub.toLowerCase().includes(ql)) ||
+      (d.anno && d.anno.toLowerCase().includes(ql)) ||
+      (d.phase && d.phase.toLowerCase().includes(ql)) ||
+      (d.pills && d.pills.some(p => p[1].toLowerCase().includes(ql)));
+  });
+
+  if(!results.length) {
+    panel.innerHTML = `<div class="nav-sr-empty">No chips match "${q}"</div>`;
+    panel.style.display = 'block';
+    return;
+  }
+
+  function hl(str) {
+    if(!str) return '';
+    const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+    return str.replace(re, '<mark>$1</mark>');
+  }
+
+  panel.innerHTML = results.map(([id, d], i) => {
+    const pct = d.prog;
+    const pillCls = pct >= 80 ? 'g' : pct >= 40 ? 'a' : 'r';
+    const mainPill = d.pills && d.pills[0] ? d.pills[0][1] : d.phase;
+    const cmMatch = d.sub ? d.sub.match(/CM[s]?:\s*([^·]+)/i) : null;
+    const cm = cmMatch ? cmMatch[1].trim() : '';
+    const isMine = MY_CHIPS.includes(id);
+    return `<div class="nav-sr-item" data-chip="${id}" tabindex="-1"
+        onclick="clearNavSearch();showView('chip','${id}')">
+      <div class="nav-sr-chip">${hl(id.toUpperCase())}${isMine ? '<span style="font-size:7px;vertical-align:middle;margin-left:3px;background:var(--nv-green);color:#000;padding:0 3px;border-radius:2px;font-weight:800">ME</span>' : ''}</div>
+      <div class="nav-sr-meta">
+        <div class="nav-sr-title">${hl(d.title.split('·').slice(1).join('·').trim())}</div>
+        <div class="nav-sr-sub">${cm ? hl('CM: '+cm) : ''} ${d.phase || ''}</div>
+      </div>
+      <span class="nav-sr-pill ${pillCls}">${mainPill}</span>
+    </div>`;
+  }).join('');
+
+  panel.style.display = 'block';
+}
+
+function navSearchKey(e) {
+  const panel = document.getElementById('nav-search-results');
+  const items = panel.querySelectorAll('.nav-sr-item');
+  if(!items.length) return;
+  if(e.key === 'ArrowDown') {
+    e.preventDefault();
+    _srFocus = Math.min(_srFocus + 1, items.length - 1);
+  } else if(e.key === 'ArrowUp') {
+    e.preventDefault();
+    _srFocus = Math.max(_srFocus - 1, -1);
+  } else if(e.key === 'Enter' && _srFocus >= 0) {
+    e.preventDefault();
+    items[_srFocus].click();
+    return;
+  } else if(e.key === 'Escape') {
+    clearNavSearch();
+    return;
+  }
+  items.forEach((item, i) => item.classList.toggle('focused', i === _srFocus));
+  if(_srFocus >= 0) items[_srFocus].scrollIntoView({block:'nearest'});
+}
+
+function clearNavSearch() {
+  const inp = document.getElementById('nav-search-input');
+  const panel = document.getElementById('nav-search-results');
+  const clrBtn = document.getElementById('nav-search-clear');
+  if(inp) inp.value = '';
+  if(clrBtn) clrBtn.style.display = 'none';
+  if(panel) panel.style.display = 'none';
+  // Restore all nav items
+  document.querySelectorAll('#nav .nav-item').forEach(n => n.style.display = '');
+  document.querySelectorAll('#nav .nav-section, #nav .nav-sep, #nav .nav-my-section, #nav .user-chip-row').forEach(n => n.style.display = '');
+}
+
 function setPhase(p){S.phase=p;localStorage.setItem('cp2_phase',p);renderCC()}
 function setCCCat(c,el){S.ccCat=c;document.querySelectorAll('.cc-ptab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderCC()}
 function setChipFilter(chipId,el){
