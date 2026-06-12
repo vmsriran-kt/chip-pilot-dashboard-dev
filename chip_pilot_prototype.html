@@ -1900,7 +1900,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: 'FNL SW feature-complete at risk. QM4 T-Rex critical long pole -- emulation link bring-up not working. GFD Done 6/6 -- FNL Snap Done 6/8 -- DV All 6/19 On Track -- FNL 6/29 At Risk.',
+    anno: 'FNL SW feature-complete at risk. QM4 T-Rex critical long pole -- emulation link bring-up not working. GFD Done 6/6 -- FNL Snap Done 6/8 -- DV All 6/19 On Track -- FNL 6/29 At Risk. First NVLink Fusion SystemSim model available (nvl_fusion_xnq, XNQ Release 2.0.0). PON slipped to Apr-2027.',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
@@ -1956,7 +1956,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · PS/PRel Active · PRel 6/22',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
     pills: [['pill-g','QS DONE'],['pill-g','PREL 6/22']],
-    anno: 'QS complete. PS/PRel Active. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. PRel 6/22 at risk. NCCL hang GR100/PDX under investigation.',
+    anno: 'QS complete. PS/PRel Active. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. PRel 6/22 at risk. SHTOL: MR1 boards bad heater rods; T48 burnin WW29; PreQual EVT complete. QS SW 0.6 in progress. P-Board key constraint. NCCL hang GR100/PDX under investigation.',
     meetings: [
       {time:'3:15 PM', title:'Rubin-Compute Execution RM Sync', pill:'pill-g'},
       {time:'9:00 PM', title:'GR10x chip schedule alignment', pill:'pill-a'},
@@ -1996,15 +1996,15 @@ const CHIP_DB = {
   },
   gr15x: {
     title: 'GR15x · Next GPU',
-    sub: 'Post-Silicon · SW CMs: Vinay Sharma · Anshul Gupta · Tapeout 6/2',
+    sub: 'Post-Silicon · SW CMs: Vinay Sharma · Anshul Gupta · A01 Power-On Early Aug 2026',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/3529740918/GR15x+SW+Bringup',
     pills: [['pill-g','POWER-ON'],['pill-g','TAPEOUT DONE']],
-    anno: 'Tapeout completed Jun 2. Physical data review Jun 11 7pm. Power-on target 9/6/2026.',
+    anno: 'Tapeout completed Jun 2. Physical data review Jun 11 (complete). A01 power-on early Aug 2026 (TV bringup only). A01P power-on Jan 2027 (QM5 + self-hosted).',
     meetings: [
       {time:'7:00 PM', title:'GR15x Physical Data review', pill:'pill-g'},
     ],
     risks: [
-      {p:'m',t:'Transitioning to Power On -- early post-silicon phase; power-on risks emerging (target 9/6/2026)'},
+      {p:'m',t:'A01 power-on early Aug 2026 (TV bringup only); A01P Jan 2027 (QM5 + self-hosted) -- transitioning to power-on phase; risks emerging'},
       {p:'l',t:'Bug 5730588 -- VBIOS TOT health in progress; presilicon execution complete'},
     ],
     checklist: [
@@ -2028,16 +2028,16 @@ const CHIP_DB = {
   },
   tb500: {
     title: 'TB500 · Vera CPU',
-    sub: 'Post-Silicon · SW CM: Sowjanya · NVL72 SW 0.6 Active · BWAT ~6/15',
+    sub: 'Post-Silicon · SW CM: Sowjanya · NVL72 SW 0.6 Build 4 in QA · M-pkg Rel ~6/24',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
-    pills: [['pill-g','93% COMPLETE'],['pill-g','NVL72 SW 0.6']],
-    anno: 'PS SBIOS Released 6/2. MODS V8.0 RC 6/4. M-pkg FinalCWAT parts arriving 6/11. BWAT target ~6/15. Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz).',
+    pills: [['pill-g','93% COMPLETE'],['pill-a','M-PKG ~6/24']],
+    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. SCG Final WAT trending 6/15. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz).',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
     risks: [
       {p:'h',t:'M-pkg SK memory decision: do not build with SK memory -- Hynix 2R/96GB SOCAMM failing at 4800 MHz (Bug 6217453)'},
-      {p:'h',t:'QS blocker bugs: 90 open -- DCPOR Strata 4 features remain (closing by 6/5)'},
+      {p:'h',t:'SBIOS P-rel blocker bugs: 49 open -- Test Package from DFX no ETA (IST-3146 blocked); GVS enablement issues; P-rel CRI interrupt L2 boot fail (Bug 6239716) and MNOC Port 0 SKernel panic (Bug 6254611)'},
       {p:'h',t:'USB transfers instability in OOBHUB (Bug 6103272 / 6091323) -- HMC FW & OOBHUB FW WARs pending merge'},
       {p:'m',t:'MSEQ L2 resets on NVL72 CPU yield issue -- CBB MMIO intermittent failures; debug ongoing (Bug 6163858)'},
       {p:'m',t:'9600MT/s 2R module shortage due to NVL72 allocation -- recovery expected end of June'},
@@ -2050,7 +2050,8 @@ const CHIP_DB = {
       {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
     ],
     emails: [
-      {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Today 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
+      {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Jun 11 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
+      {sub:'[CRITICAL PATH] Vera Rubin NVL72 0.6 SW/FW Release',from:'Sowjanya',time:'Jun 12',body:'0.6 Build 4 In QA. Release target 7/9. Dev Drop 1: 6/29. P-rel/PS-FGI for TB500-M moved to 7/31.'},
     ],
     slack: [],
     prog: 93, phase:'Post-Silicon',
@@ -2091,13 +2092,13 @@ const CHIP_DB = {
   },
   thorz: {
     title: 'ThorZ · CPU',
-    sub: 'Post-Silicon · SW CM: Mayank Kapoor · BNB 5/28 · QS Qual Focus · DTS Released',
+    sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS POR Update · QS Qual ~6/16',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
-    pills: [['pill-a','QS FOCUS'],['pill-g','BNB DONE']],
-    anno: 'BNB Declared 5/28. QS Qual Focus. DTS Released (VF v2). MCU regressions: ASILNA, PwrCtrl (29), TMON, VMON (30). MaxP scope added by BU -- new PC cycle required.',
+    pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
+    anno: 'BNB Declared 5/28. QS Qual targeting 6/16. POR updated: 360→420 TOPS (73.3W→84.3W +11W). Dual RAM assist modes: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. MNB schedule under review. HWQA MNB: Coverage 95.66%, Pass 85.23%. MODS IFT SLT release in progress.',
     meetings: [],
     risks: [
-      {p:'h',t:'MaxP scope added by BU (Auto) -- new PC cycle required, schedule impact TBD'},
+      {p:'h',t:'POR updated 360→420 TOPS (+11W: 73.3W→84.3W) -- dual RAM assist modes required; MNB schedule under review pending Liquid-Cool/Read-Assist mode timelines'},
       {p:'m',t:'CPU Soft Lock up active -- Bug 6124878, root cause TBD'},
       {p:'l',t:'SCG HSIO debug (PCIe/MGBE) ongoing -- USB LPM final fix CL 341783 submitted, GVS 4261895 triggered 6/7'},
     ],
@@ -2160,10 +2161,10 @@ const CHIP_DB = {
   },
   n2x: {
     title: 'N2x · CPU',
-    sub: 'Pre-Silicon · SW CM: Vivek Desikan · FPGA H2.07 Active · FDI 6/30',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · H3 Netlist to Emulation · SOC FDI 6/30 At Risk',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'N2x at risk. FPGA H2.07 validation active. FDI 6/30. Display bring-up H2 blocked by Jade HW bug. Windows boot not up on N2x FPGA. D3 discussions ongoing.',
+    anno: 'SOC FDI 6/30 at risk. H3 netlist released to emulation. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. NVPOR: 474 total; Testplan L0: 27%, L1: 12%. D3 discussions ongoing.',
     meetings: [],
     risks: [
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
@@ -2174,7 +2175,7 @@ const CHIP_DB = {
       {p:'m',t:'Hybrid IPP Bringup delayed due to Jade netlist issues till July'},
     ],
     checklist: [
-      {t:'FPGA H3 netlist available (6/5)',owner:'DV team',done:false},
+      {t:'FPGA H3 netlist released to emulation',owner:'DV team',done:true},
       {t:'Display H2 Jade HW bug fix resolved',owner:'HW team',done:false},
       {t:'Testplan L0 to 22% (was 10%) -- maintain progress',owner:'DV team',done:true},
       {t:'Windows boot FPGA coverage gap closed',owner:'SW team',done:false},
