@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ChipPilot — NVIDIA Executive Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+/* -- DARK THEME (default) -- */
+:root{
+  --nv-green:#76b900;--nv-green-lite:#9fd931;--nv-green-dark:#4d7a00;
+  --nv-glow:rgba(118,185,0,.18);--nv-glow-sm:rgba(118,185,0,.1);
+  --bg:#07080e;--bg2:#0c0e18;--bg3:#111320;--bg4:rgba(255,255,255,.04);
+  --glass:rgba(14,16,26,.68);--glass-e:rgba(20,23,36,.78);
+  --border:rgba(255,255,255,.09);--border-h:rgba(118,185,0,.38);
+  --text:#f0f2f8;--text2:rgba(240,242,248,.68);--muted:rgba(240,242,248,.36);
+  --red:#ff4d4d;--amber:#f5a623;--blue:#4d9fff;
+  --red-g:rgba(255,77,77,.14);--amber-g:rgba(245,166,35,.14);--blue-g:rgba(77,159,255,.14);
+  --nav-w:220px;--hdr-h:56px;--tab-h:42px;
+  --r:12px;--r-sm:8px;--r-xs:6px;
+  --shadow:0 8px 32px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06);
+  --shadow-sm:0 4px 16px rgba(0,0,0,.32);
+  --hdr-bg:rgba(7,8,14,.88);--nav-bg:rgba(7,8,14,.55);--tab-bg:rgba(7,8,14,.65);
+  --glow-top:rgba(118,185,0,.055);--glow-bot:rgba(77,159,255,.04);
+  --hdr-line:linear-gradient(90deg,#76b900 0%,#9fd931 40%,transparent 80%);
+  --search-bg:rgba(255,255,255,.05);--search-focus:rgba(118,185,0,.04);
+  --chip-hover:rgba(255,255,255,.07);
+  --theme-icon:"🌙";
+}
+/* -- LIGHT THEME — NVIDIA website faithful -- */
+/* nvidia.com: black header · white surfaces · #1a1a1a text · #76b900 green accent */
+body.light{
+  --nv-green:#76b900;--nv-green-lite:#90d400;--nv-green-dark:#5a8c00;
+  --nv-glow:rgba(118,185,0,.12);--nv-glow-sm:rgba(118,185,0,.08);
+  /* surfaces — white like nvidia.com content area */
+  --bg:#f2f2f2;--bg2:#e8e8e8;--bg3:#ffffff;--bg4:rgba(255,255,255,.8);
+  --glass:#ffffff;--glass-e:#ffffff;
+  --border:rgba(0,0,0,.1);--border-h:rgba(118,185,0,.5);
+  /* text — very dark, nvidia.com uses near-black for all body copy */
+  --text:#1a1a1a;--text2:#393939;--muted:#767676;
+  --red:#c00000;--amber:#a05c00;--blue:#0a4fa0;
+  --red-g:rgba(192,0,0,.08);--amber-g:rgba(160,92,0,.08);--blue-g:rgba(10,79,160,.08);
+  --shadow:0 1px 4px rgba(0,0,0,.12),0 4px 16px rgba(0,0,0,.06);
+  --shadow-sm:0 1px 3px rgba(0,0,0,.1);
+  /* header: nvidia.com uses solid BLACK nav bar */
+  --hdr-bg:#1a1a1a;
+  /* sidebar: dark like nvidia's nav drawer */
+  --nav-bg:#1a1a1a;
+  /* tab bar: white/light surface below the black header */
+  --tab-bg:#ffffff;
+  --glow-top:rgba(0,0,0,0);--glow-bot:rgba(0,0,0,0);
+  --hdr-line:linear-gradient(90deg,#76b900 0%,#90d400 35%,transparent 70%);
+  --search-bg:rgba(255,255,255,.12);--search-focus:rgba(255,255,255,.18);
+  --chip-hover:#ffffff;
+  --theme-icon:"☀️";
+}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text);line-height:1.5;overflow:hidden;transition:background .3s,color .3s}
+
+/* -- AMBIENT GLOW -- */
+body::before{content:'';position:fixed;top:-300px;left:-200px;width:700px;height:700px;background:radial-gradient(circle,var(--glow-top) 0%,transparent 65%);pointer-events:none;z-index:0;transition:background .3s}
+body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,var(--glow-bot) 0%,transparent 65%);pointer-events:none;z-index:0;transition:background .3s}
+
+/* -- LAYOUT -- */
+#app{display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;z-index:1}
+#body{display:flex;flex:1;overflow:hidden}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#content{flex:1;overflow-y:auto;padding:20px;scroll-behavior:smooth}
+.content-inner{max-width:1440px;margin:0 auto;width:100%}
+#content::-webkit-scrollbar{width:4px}
+#content::-webkit-scrollbar-track{background:transparent}
+#content::-webkit-scrollbar-thumb{background:rgba(128,128,128,.18);border-radius:2px}
+
+/* -- SMOOTH TRANSITIONS (both themes) -- */
+#hdr,#nav,#tabbar,.g-card,.g-card-e,.kpi,.chip-card,.attn,
+.cc-sec-hdr,.cc-row,.ms-row,.risk-row,.s-tbl td,.s-tbl th,
+.anno,.attn-pill,.sel-pill,.cc-ptab,.tab,.nav-item,.nav-home,
+.hdr-badge,.prog-fill,.chip-card-name,.chip-card-sub,
+.nav-chip-code,.nav-chip-sub,.c-hdr-title,.kpi-lbl,.kpi-val,.kpi-sub,
+.sec-lbl,.ms-name,.ms-date,.chip-card-sub,.rd,.status-dot,
+.cp-logo-name,.cp-logo-sub,.cp-nv-eye{transition:background .28s,border-color .28s,color .28s,box-shadow .28s}
+
+/* ==== LIGHT MODE — NVIDIA.COM FAITHFUL ====
+   nvidia.com design DNA:
+   • Black nav bar (#1a1a1a)  → authority, brand consistency
+   • White content (#fff)     → clean, readable
+   • Near-black text          → maximum contrast
+   • Green ONLY for accents   → not backgrounds
+   • Flat cards, clean borders, no blur wash
+============================================ */
+
+/* PAGE BACKGROUND — neutral light gray like nvidia.com */
+body.light{ background:#f2f2f2 }
+
+/* HEADER — solid black, just like nvidia.com top nav */
+body.light #hdr{
+  background:#1a1a1a !important;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  border-bottom:2px solid #76b900;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+body.light #hdr::before{ background:none }  /* no gradient line — border does the job */
+body.light .cp-logo-name{ color:#ffffff }
+body.light .cp-logo-sub{ color:#76b900 }
+body.light .cp-nv-eye{ color:#76b900 }
+body.light .cp-logo-badge{ background:rgba(255,255,255,.08);border-color:rgba(118,185,0,.35) }
+body.light .cp-logo-badge:hover{ background:rgba(255,255,255,.15);border-color:#76b900 }
+body.light .hdr-badge.bd-danger{ background:rgba(255,255,255,.1);color:#ff7070;border-color:rgba(255,100,100,.4) }
+body.light .hdr-badge.bd-info{ background:rgba(255,255,255,.1);color:#90c8ff;border-color:rgba(100,180,255,.4) }
+body.light .theme-toggle{ background:rgba(255,255,255,.1);color:#ffffff;border-color:rgba(255,255,255,.25) }
+body.light .theme-toggle:hover{ background:rgba(118,185,0,.25);border-color:#76b900 }
+body.light .hdr-avatar{ border-color:rgba(118,185,0,.6) }
+
+/* SIDEBAR — dark like nvidia.com drawer nav */
+body.light #nav{
+  background:#1a1a1a;
+  border-right:1px solid #333;
+}
+body.light .nav-search{ background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.15);color:#fff }
+body.light .nav-search::placeholder{ color:rgba(255,255,255,.4) }
+body.light .nav-search:focus{ border-color:#76b900;background:rgba(118,185,0,.08) }
+body.light .nav-section{ color:rgba(255,255,255,.4) }
+body.light .nav-item{ border-left-color:transparent }
+body.light .nav-item:hover{ background:rgba(255,255,255,.06);border-left-color:rgba(118,185,0,.5) }
+body.light .nav-item.on{ background:rgba(118,185,0,.15);border-left-color:#76b900 }
+body.light .nav-chip-code{ color:#ffffff }
+body.light .nav-chip-sub{ color:rgba(255,255,255,.5) }
+body.light .nav-prog{ background:rgba(255,255,255,.12) }
+body.light .nav-prog-fill{ background:#76b900 }
+body.light .nav-home{ color:rgba(255,255,255,.7) }
+body.light .nav-home:hover{ color:#ffffff;background:rgba(255,255,255,.06);border-left-color:rgba(118,185,0,.5) }
+body.light .nav-home.on{ color:#76b900;background:rgba(118,185,0,.12);border-left-color:#76b900 }
+body.light .nav-sep{ background:rgba(255,255,255,.1) }
+
+/* TAB BAR — clean white surface */
+body.light #tabbar{
+  background:#ffffff;
+  border-bottom:1px solid #e0e0e0;
+  backdrop-filter:none;
+}
+body.light .tab{ color:#767676 }
+body.light .tab:hover{ color:#1a1a1a;background:#f5f5f5 }
+body.light .tab.on{ color:#76b900;border-bottom-color:#76b900;background:rgba(118,185,0,.05) }
+
+/* CONTENT AREA — pure white cards on light gray page */
+body.light #content{ background:#f2f2f2 }
+body.light #content::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.18) }
+
+/* GLASS CARDS → flat white cards (nvidia.com style) */
+body.light .g-card{
+  background:#ffffff;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  border:1px solid #e0e0e0;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+body.light .g-card:hover{ border-color:#76b900;box-shadow:0 3px 12px rgba(0,0,0,.1) }
+body.light .c-hdr{ background:#f8f8f8;border-bottom:1px solid #e0e0e0 }
+body.light .c-hdr-title{ color:#1a1a1a;font-weight:800;letter-spacing:.6px }
+
+/* KPI TILES — white cards, very dark headings */
+body.light .kpi{
+  background:#ffffff;
+  backdrop-filter:none;
+  border:1px solid #e0e0e0;
+  box-shadow:0 1px 4px rgba(0,0,0,.07);
+}
+body.light .kpi:hover{ border-color:#76b900;box-shadow:0 4px 14px rgba(0,0,0,.1);transform:translateY(-2px) }
+body.light .kpi::after{ background:#76b900 }
+body.light .kpi-lbl{ color:#767676;font-weight:700 }
+body.light .kpi-val{ color:#1a1a1a }
+body.light .kpi-sub{ color:#767676 }
+body.light .kpi-trend.tr-g{ background:rgba(118,185,0,.12);color:#4d7a00 }
+body.light .kpi-trend.tr-r{ background:rgba(192,0,0,.1);color:#c00000 }
+body.light .kpi-trend.tr-a{ background:rgba(160,92,0,.1);color:#a05c00 }
+
+/* SECTION LABELS — bold near-black, green left bar */
+body.light .sec-lbl{ color:#1a1a1a;border-bottom-color:#e0e0e0;font-weight:800 }
+body.light .sec-lbl::before{ background:#76b900 }
+
+/* CHIP CARDS */
+body.light .chip-card{
+  background:#ffffff;
+  backdrop-filter:none;
+  border:1px solid #e0e0e0;
+  box-shadow:0 1px 3px rgba(0,0,0,.07);
+}
+body.light .chip-card:hover{ background:#ffffff;border-color:#76b900;box-shadow:0 4px 14px rgba(0,0,0,.1) }
+body.light .chip-card-name{ color:#1a1a1a;font-weight:800 }
+body.light .chip-card-sub{ color:#767676 }
+body.light .chip-prog{ background:#e8e8e8 }
+body.light .cp-g{ background:linear-gradient(90deg,#4d7a00,#76b900) }
+body.light .cp-a{ background:linear-gradient(90deg,#7a4400,#c07000) }
+body.light .cp-r{ background:linear-gradient(90deg,#880000,#c00000) }
+body.light .cp-b{ background:linear-gradient(90deg,#0a3a7a,#0a4fa0) }
+
+/* PILLS */
+body.light .pill-g{ background:rgba(118,185,0,.1);color:#4d7a00;border-color:rgba(118,185,0,.4) }
+body.light .pill-a{ background:rgba(160,92,0,.08);color:#7a4400;border-color:rgba(160,92,0,.35) }
+body.light .pill-r{ background:rgba(192,0,0,.08);color:#880000;border-color:rgba(192,0,0,.3) }
+body.light .pill-b{ background:rgba(10,79,160,.08);color:#0a3a7a;border-color:rgba(10,79,160,.3) }
+
+/* ATTENTION STRIP */
+body.light .attn{ background:#fff4f4;border-color:#e0a0a0 }
+body.light .attn-lbl{ color:#c00000 }
+body.light .attn-pill{ background:#ffffff;border-color:#e0e0e0;color:#393939 }
+body.light .attn-pill:hover{ background:#fff0f0;border-color:#c00000 }
+
+/* ANNOTATION BAR */
+body.light .anno{ background:#f5f9ec;border-color:rgba(118,185,0,.35);color:#4d7a00 }
+
+/* MILESTONES */
+body.light .ms-name{ color:#1a1a1a }
+body.light .ms-date{ color:#767676 }
+body.light .ms-done{ box-shadow:0 0 5px rgba(118,185,0,.4) }
+body.light .ms-active{ box-shadow:0 0 5px rgba(10,79,160,.4) }
+body.light .ms-wait{ background:#cccccc }
+
+/* RISK ROWS */
+body.light .risk-row{ color:#393939;border-bottom-color:#f0f0f0 }
+body.light .rd-h{ background:#c00000 }
+body.light .rd-m{ background:#a05c00 }
+body.light .rd-g{ background:#4d7a00 }
+
+/* STATUS TABLE */
+body.light .s-tbl th{ color:#767676;border-bottom-color:#e0e0e0 }
+body.light .s-tbl td{ color:#393939;border-bottom-color:#f0f0f0 }
+body.light .s-tbl tr:hover td{ background:#f8f8f8 }
+
+/* CHECKLIST */
+body.light .cc-sec-hdr{ background:#f5f9ec;border-color:rgba(118,185,0,.3) }
+body.light .cc-sec-title{ color:#1a1a1a }
+body.light .cc-sec-count{ color:#4d7a00 }
+body.light .cc-row:hover{ background:#f8f8f8 }
+body.light .cc-row{ border-bottom-color:#f0f0f0 }
+body.light .cc-text{ color:#393939 }
+body.light .cc-text.done{ color:#aaaaaa }
+body.light .cc-ptab{ color:#767676 }
+body.light .cc-ptab:hover{ color:#1a1a1a }
+body.light .cc-ptab.on{ background:#76b900;color:#ffffff }
+body.light .prog-track{ background:#e8e8e8 }
+body.light .prog-fill{ background:linear-gradient(90deg,#4d7a00,#76b900) }
+body.light .prog-pct{ color:#4d7a00 }
+body.light .pri-h{ background:rgba(192,0,0,.08);color:#880000 }
+body.light .pri-m{ background:rgba(160,92,0,.08);color:#7a4400 }
+body.light .pri-l{ background:#f0f0f0;color:#767676 }
+
+/* SELECTION PILLS */
+body.light .sel-pill{ background:#ffffff;border-color:#e0e0e0;color:#767676 }
+body.light .sel-pill:hover{ color:#1a1a1a;border-color:#aaaaaa }
+body.light .sel-pill.on{ background:rgba(118,185,0,.1);border-color:#76b900;color:#4d7a00 }
+
+/* PHASE TABS */
+body.light .cc-phase-bar{ background:#f5f5f5;border-color:#e0e0e0 }
+
+/* HEATMAP CELLS */
+body.light .hm-l{ background:rgba(118,185,0,.15);color:#4d7a00 }
+body.light .hm-m{ background:rgba(160,92,0,.15);color:#7a4400 }
+body.light .hm-h{ background:rgba(192,0,0,.12);color:#880000 }
+
+/* STATUS DOTS — no glow in flat light design */
+body.light .status-dot.dot-g{ background:#4d7a00;box-shadow:none }
+body.light .status-dot.dot-a{ background:#a05c00;box-shadow:none }
+body.light .status-dot.dot-r{ background:#c00000;box-shadow:none }
+
+/* NAV OVERLAY in light mode */
+body.light #nav-overlay{ background:rgba(0,0,0,.45) }
+
+/* -- HEADER -- */
+#hdr{
+  height:var(--hdr-h);
+  background:var(--hdr-bg);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:14px;
+  flex-shrink:0;z-index:100;position:relative
+}
+#hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--hdr-line)}
+
+.nv-brand{display:flex;align-items:center}
+.cp-logo-badge{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px 5px 8px;
+  background:rgba(118,185,0,.1);
+  border:1px solid rgba(118,185,0,.25);
+  border-radius:8px;
+  cursor:default;
+  transition:background .2s,border-color .2s;
+  flex-shrink:0;
+}
+.cp-logo-badge:hover{background:rgba(118,185,0,.16);border-color:rgba(118,185,0,.4)}
+.cp-nv-eye{
+  width:22px;height:22px;
+  color:var(--nv-green);
+  flex-shrink:0;
+  transition:color .25s;
+}
+.cp-logo-text{display:flex;flex-direction:column;gap:1px}
+.cp-logo-name{
+  font-size:13px;font-weight:800;letter-spacing:.4px;
+  color:var(--text);line-height:1.1;
+  transition:color .25s;
+}
+.cp-logo-sub{
+  font-size:8px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--nv-green);line-height:1;
+  transition:color .25s;
+}
+/* light logo overrides moved to NVIDIA block */
+.hdr-spacer{flex:1}
+.hdr-badge{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid;transition:opacity .15s}
+.hdr-badge:hover{opacity:.8}
+.bd-danger{background:var(--red-g);color:#ff7070;border-color:rgba(255,77,77,.25)}
+.bd-info{background:var(--blue-g);color:#70b0ff;border-color:rgba(77,159,255,.25)}
+.hdr-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--nv-green-dark),var(--nv-green));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#000;flex-shrink:0;cursor:pointer;border:1.5px solid rgba(118,185,0,.4)}
+.theme-toggle{
+  background:rgba(255,255,255,.08);border:1px solid var(--border);
+  color:var(--text2);width:32px;height:32px;border-radius:50%;
+  cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;line-height:1
+}
+.theme-toggle:hover{background:rgba(118,185,0,.15);border-color:rgba(118,185,0,.35)}
+body.light .theme-toggle{background:rgba(0,0,0,.07)}
+#nav-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;padding:2px 6px;line-height:1;border-radius:var(--r-xs);transition:background .15s}
+#nav-btn:hover{background:rgba(255,255,255,.07)}
+
+/* -- SIDENAV -- */
+#nav{
+  width:var(--nav-w);
+  background:var(--nav-bg);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  overflow-y:auto;flex-shrink:0;
+}
+#nav::-webkit-scrollbar{display:none}
+.nav-search-wrap{padding:12px;border-bottom:1px solid var(--border)}
+.nav-search{width:100%;padding:7px 10px 7px 28px;background:var(--search-bg);border:1px solid var(--border);border-radius:var(--r-xs);color:var(--text);font-size:11px;font-family:inherit;outline:none;transition:border-color .2s}
+.nav-search::placeholder{color:var(--muted)}
+.nav-search:focus{border-color:rgba(118,185,0,.4);background:rgba(118,185,0,.04)}
+.nav-search-icon{position:relative}
+.nav-search-icon::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;z-index:1}
+.nav-section{padding:10px 14px 4px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.nav-item{padding:10px 14px;cursor:pointer;border-left:2px solid transparent;transition:all .15s;position:relative}
+.nav-item:hover{background:rgba(255,255,255,.04);border-left-color:rgba(118,185,0,.3)}
+.nav-item.on{background:rgba(118,185,0,.08);border-left-color:var(--nv-green)}
+.nav-chip-code{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;justify-content:space-between}
+.nav-chip-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.nav-prog{height:2px;background:rgba(255,255,255,.08);border-radius:1px;margin-top:6px;overflow:hidden}
+.nav-prog-fill{height:100%;border-radius:1px;background:var(--nv-green);transition:width .4s ease}
+.nav-sep{height:1px;background:var(--border);margin:6px 14px}
+.status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px;flex-shrink:0}
+.dot-g{background:var(--nv-green);box-shadow:0 0 5px rgba(118,185,0,.7)}
+.dot-a{background:var(--amber);box-shadow:0 0 5px rgba(245,166,35,.7)}
+.dot-r{background:var(--red);box-shadow:0 0 5px rgba(255,77,77,.7)}
+.nav-home{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);border-left:2px solid transparent;transition:all .15s}
+.nav-home:hover{color:var(--text);background:rgba(255,255,255,.04);border-left-color:rgba(118,185,0,.3)}
+.nav-home.on{color:var(--nv-green);background:rgba(118,185,0,.07);border-left-color:var(--nv-green)}
+
+/* -- TABS -- */
+#tabbar{height:var(--tab-h);background:var(--tab-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:2px;flex-shrink:0;overflow-x:auto}
+#tabbar::-webkit-scrollbar{display:none}
+.tab{padding:0 14px;height:var(--tab-h);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;border-radius:var(--r-xs) var(--r-xs) 0 0}
+.tab:hover{color:var(--text2);background:rgba(255,255,255,.04)}
+.tab.on{color:var(--nv-green);border-bottom-color:var(--nv-green);background:rgba(118,185,0,.07);font-weight:600}
+
+/* -- GLASS CARDS -- */
+.g-card{background:var(--glass);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
+.g-card:hover{border-color:rgba(118,185,0,.22)}
+.g-card-e{background:var(--glass-e);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);box-shadow:var(--shadow)}
+.c-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.15)}
+.c-hdr-title{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
+.c-body{padding:16px}
+
+/* -- SECTION LABEL -- */
+.sec-lbl{display:flex;align-items:center;gap:8px;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.sec-lbl::before{content:'';width:3px;height:14px;background:var(--nv-green);border-radius:2px;flex-shrink:0}
+
+/* -- KPI GRID -- */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:all .2s;cursor:default}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--nv-green),transparent);opacity:0;transition:opacity .2s}
+.kpi:hover{border-color:rgba(118,185,0,.3);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.kpi:hover::after{opacity:1}
+.kpi-lbl{font-size:10px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.kpi-val{font-size:30px;font-weight:800;line-height:1;letter-spacing:-1px;color:var(--text)}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;margin-top:8px}
+.tr-g{background:rgba(118,185,0,.12);color:var(--nv-green)}
+.tr-r{background:rgba(255,77,77,.12);color:#ff7070}
+.tr-a{background:rgba(245,166,35,.12);color:#fbbf24}
+
+/* -- CHIP CARDS -- */
+.chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:20px}
+.chip-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.chip-card:hover{border-color:rgba(118,185,0,.3);background:var(--chip-hover);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.cc-green{border-left:3px solid var(--nv-green)}
+.cc-amber{border-left:3px solid var(--amber)}
+.cc-red{border-left:3px solid var(--red)}
+.cc-blue{border-left:3px solid var(--blue)}
+.chip-card-name{font-size:14px;font-weight:800;color:var(--text)}
+.chip-card-sub{font-size:10px;color:var(--muted);margin-top:2px}
+.pill{font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.4px;border:1px solid}
+.pill-g{background:rgba(118,185,0,.12);color:var(--nv-green);border-color:rgba(118,185,0,.28)}
+.pill-a{background:rgba(245,166,35,.12);color:#fbbf24;border-color:rgba(245,166,35,.28)}
+.pill-r{background:rgba(255,77,77,.12);color:#ff7070;border-color:rgba(255,77,77,.28)}
+.pill-b{background:rgba(77,159,255,.12);color:#70b0ff;border-color:rgba(77,159,255,.28)}
+.chip-prog{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin:10px 0 8px;overflow:hidden}
+.cp-g{background:linear-gradient(90deg,var(--nv-green-dark),var(--nv-green))}
+.cp-a{background:linear-gradient(90deg,#c07800,var(--amber))}
+.cp-r{background:linear-gradient(90deg,#c02020,var(--red))}
+.cp-b{background:linear-gradient(90deg,#1a60c0,var(--blue))}
+
+/* -- ATTN STRIP -- */
+.attn{display:flex;align-items:center;gap:10px;background:rgba(255,77,77,.06);border:1px solid rgba(255,77,77,.18);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
+.attn::-webkit-scrollbar{display:none}
+.attn-lbl{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#ff7070;white-space:nowrap;flex-shrink:0}
+.attn-pill{display:flex;align-items:center;gap:6px;background:var(--search-bg);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s;color:var(--text2)}
+.attn-pill:hover{background:rgba(255,77,77,.1);border-color:rgba(255,77,77,.3)}
+
+/* -- TWO/THREE COLUMN -- */
+.two-col{display:grid;grid-template-columns:2fr 1fr;gap:14px;align-items:start}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+/* -- MILESTONE -- */
+.ms-list{display:flex;flex-direction:column;gap:9px}
+.ms-row{display:flex;align-items:center;gap:10px;font-size:11px}
+.ms-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ms-done{background:var(--nv-green);box-shadow:0 0 7px rgba(118,185,0,.5)}
+.ms-active{background:var(--blue);box-shadow:0 0 7px rgba(77,159,255,.5)}
+.ms-wait{background:rgba(255,255,255,.15)}
+.ms-name{font-weight:600;color:var(--text);flex:1}
+.ms-date{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* -- RISK ROWS -- */
+.risk-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;color:var(--text2)}
+.risk-row:last-child{border-bottom:none}
+.rd{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.rd-h{background:var(--red)}.rd-m{background:var(--amber)}.rd-g{background:var(--nv-green)}
+
+/* -- STATUS TABLE -- */
+.s-tbl{width:100%;border-collapse:collapse}
+.s-tbl th{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);padding:6px 10px;border-bottom:1px solid var(--border);text-align:left}
+.s-tbl td{padding:9px 10px;font-size:11px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,.04)}
+.s-tbl tr:hover td{background:rgba(255,255,255,.02)}
+.s-tbl tr:last-child td{border-bottom:none}
+
+/* -- CC CHECKLIST -- */
+.cc-phase-bar{display:flex;gap:3px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px;margin-bottom:16px;width:fit-content}
+.cc-ptab{padding:7px 22px;border-radius:var(--r-xs);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted)}
+.cc-ptab:hover{color:var(--text2)}
+.cc-ptab.on{background:var(--nv-green);color:#000;font-weight:800}
+.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.prog-track{flex:1;height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--nv-green-dark),var(--nv-green));border-radius:3px;transition:width .4s ease}
+.prog-pct{font-size:11px;font-weight:700;color:var(--nv-green);white-space:nowrap}
+.cc-sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.12);border-radius:var(--r-xs);margin-bottom:4px}
+.cc-sec-title{font-size:11px;font-weight:700;color:var(--text)}
+.cc-sec-count{font-size:10px;color:var(--nv-green);font-weight:700}
+.cc-row{display:flex;align-items:flex-start;gap:10px;padding:9px 4px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;border-radius:4px;transition:background .1s}
+.cc-row:hover{background:rgba(255,255,255,.03)}
+.cc-row:last-child{border-bottom:none}
+.cc-cb{width:14px;height:14px;accent-color:var(--nv-green);flex-shrink:0;margin-top:2px;cursor:pointer}
+.cc-text{font-size:12px;color:var(--text2);line-height:1.45;flex:1}
+.cc-text.done{text-decoration:line-through;color:var(--muted)}
+.pri-h{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(255,77,77,.15);color:#ff7070}
+.pri-m{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(245,166,35,.15);color:#fbbf24}
+.pri-l{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.08);color:var(--muted)}
+.cc-section-wrap{margin-bottom:14px}
+
+/* -- VIEW SELECTOR PILLS -- */
+.sel-bar{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap}
+.sel-pill{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:rgba(255,255,255,.03);transition:all .15s;white-space:nowrap}
+.sel-pill:hover{color:var(--text2);border-color:rgba(255,255,255,.18)}
+.sel-pill.on{background:rgba(118,185,0,.1);border-color:rgba(118,185,0,.35);color:var(--nv-green);font-weight:600}
+
+/* -- ANNOTATION BAR -- */
+.anno{background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.2);border-radius:var(--r-xs);padding:10px 14px;font-size:11px;color:var(--nv-green);margin-bottom:18px;display:flex;align-items:center;gap:8px}
+
+/* -- HEATMAP -- */
+.hm-cell{display:inline-block;width:44px;height:24px;border-radius:5px;font-size:9px;font-weight:700;text-align:center;line-height:24px;vertical-align:middle}
+.hm-h{background:rgba(255,77,77,.28);color:#ff7070}
+.hm-m{background:rgba(245,166,35,.28);color:#fbbf24}
+.hm-l{background:rgba(118,185,0,.2);color:var(--nv-green)}
+
+/* -- NAV OVERLAY -- */
+#nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99;backdrop-filter:blur(2px)}
+
+/* -- RESPONSIVE -- */
+@media(max-width:1200px){.two-col{grid-template-columns:1fr}}
+@media(max-width:960px){
+  #nav{display:none;position:fixed;top:var(--hdr-h);left:0;bottom:0;width:240px;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,.5)}
+  #nav.open{display:flex;flex-direction:column}
+  #nav-overlay.open{display:block}
+  #nav-btn{display:flex;align-items:center;justify-content:center}
+  .three-col{grid-template-columns:1fr 1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  :root{--hdr-h:48px;--nav-w:260px}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .chips-grid{grid-template-columns:1fr}
+  .three-col{grid-template-columns:1fr}
+  #content{padding:12px}
+  .hdr-badge{display:none}
+  .tab{padding:0 10px}
+}
+@media(max-width:400px){
+  .kpi-grid{grid-template-columns:1fr}
+  .kpi-val{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- === HEADER === -->
+<header id="hdr">
+  <button id="nav-btn" onclick="toggleNav()" aria-label="Menu">☰</button>
+  <div class="nv-brand">
+    <!-- CHIP PILOT LOGO BADGE -->
+    <div class="cp-logo-badge">
+      <!-- NVIDIA eye mark (simplified geometric) -->
+      <svg class="cp-nv-eye" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Outer ring -->
+        <circle cx="11" cy="11" r="10" stroke="currentColor" stroke-width="1.4" fill="none"/>
+        <!-- Eye / lens shape -->
+        <path d="M4 11 C6 6.5 16 6.5 18 11 C16 15.5 6 15.5 4 11Z" stroke="currentColor" stroke-width="1.2" fill="none"/>
+        <!-- Iris circle -->
+        <circle cx="11" cy="11" r="3.2" stroke="currentColor" stroke-width="1.2" fill="none"/>
+        <!-- Pupil dot -->
+        <circle cx="11" cy="11" r="1.2" fill="currentColor"/>
+      </svg>
+      <div class="cp-logo-text">
+        <span class="cp-logo-name">Chip Pilot</span>
+        <span class="cp-logo-sub">PROGRAM CONTROL</span>
+      </div>
+    </div>
+  </div>
+  <div class="hdr-spacer"></div>
+  <div class="hdr-badge bd-danger" onclick="showView('cockpit')">⬟ 3 Critical</div>
+  <div class="hdr-badge bd-info">⬡ 12 Programs</div>
+  <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme" aria-label="Toggle theme">
+    <span id="theme-icon">🌙</span>
+  </button>
+  <div class="hdr-avatar" title="Ranjani V">RV</div>
+</header>
+
+<div id="nav-overlay" onclick="toggleNav()"></div>
+
+<div id="body">
+
+<!-- === SIDENAV === -->
+<nav id="nav">
+  <div class="nav-search-icon">
+    <div class="nav-search-wrap">
+      <input class="nav-search" placeholder="Search chips…" aria-label="Search chips">
+    </div>
+  </div>
+
+  <div class="nav-home on" id="nav-home" onclick="showView('cockpit')">🏠 Command Center</div>
+
+  <div class="nav-sep"></div>
+  <div class="nav-section">Fusion Chips</div>
+
+  <div class="nav-item" onclick="showView('chip','nr10x')">
+    <div class="nav-chip-code"><span>NR10x <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--amber);font-weight:700">FNL RISK</span></div>
+    <div class="nav-chip-sub">NVLink Fusion · Ranjani</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:35%"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','t374')">
+    <div class="nav-chip-code"><span>T374 <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--muted);font-weight:700">POST-SI</span></div>
+    <div class="nav-chip-sub">Beacon · Roopa</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:5%;background:var(--muted)"></div></div>
+  </div>
+
+  <div class="nav-sep"></div>
+  <div class="nav-section">GPU</div>
+
+  <div class="nav-item" onclick="showView('chip','gr10x')">
+    <div class="nav-chip-code"><span>GR10x <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--nv-green);font-weight:700">QS FOCUS</span></div>
+    <div class="nav-chip-sub">Rubin · Ranjani · Madhura</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:95%"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','gr15x')">
+    <div class="nav-chip-code"><span>GR15x <span class="status-dot dot-g"></span></span><span style="font-size:9px;color:var(--nv-green);font-weight:700">PWR-ON</span></div>
+    <div class="nav-chip-sub">Next GPU · Vinay · Anshul</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:20%"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','fn10x')">
+    <div class="nav-chip-code"><span>FN10x <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--amber);font-weight:700">PRE-SI</span></div>
+    <div class="nav-chip-sub">Feynman · Madhura</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:38%;background:var(--amber)"></div></div>
+  </div>
+
+  <div class="nav-sep"></div>
+  <div class="nav-section">CPU</div>
+
+  <div class="nav-item" onclick="showView('chip','thorz')">
+    <div class="nav-chip-code"><span>ThorZ <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--amber);font-weight:700">QS FOCUS</span></div>
+    <div class="nav-chip-sub">Mayank Kapoor</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:78%"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','tb500')">
+    <div class="nav-chip-code"><span>TB500 <span class="status-dot dot-g"></span></span><span style="font-size:9px;color:var(--nv-green);font-weight:700">NEAR DONE</span></div>
+    <div class="nav-chip-sub">Vera · Sowjanya</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:93%"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','tb600')">
+    <div class="nav-chip-code"><span>TB600 <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--blue);font-weight:700">PRE-SI</span></div>
+    <div class="nav-chip-sub">Vera Ultra · Hui Fu</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:40%;background:var(--blue)"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','n2x')">
+    <div class="nav-chip-code"><span>N2x <span class="status-dot dot-r"></span></span><span style="font-size:9px;color:var(--red);font-weight:700">AT RISK</span></div>
+    <div class="nav-chip-sub">Vivek Desikan</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:32%;background:var(--red)"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','tcx10')">
+    <div class="nav-chip-code"><span>TCX10 <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--muted);font-weight:700">SETUP</span></div>
+    <div class="nav-chip-sub">Roopa</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:8%;background:var(--muted)"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','t257')">
+    <div class="nav-chip-code"><span>T257 <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--muted);font-weight:700">SETUP</span></div>
+    <div class="nav-chip-sub">Monet · Vivek Desikan</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:10%;background:var(--muted)"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','t294')">
+    <div class="nav-chip-code"><span>T294 <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--muted);font-weight:700">SETUP</span></div>
+    <div class="nav-chip-sub">Magni · Roopa</div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:8%;background:var(--muted)"></div></div>
+  </div>
+
+  <div class="nav-sep"></div>
+  <div class="nav-section">Tools</div>
+  <div class="nav-home" onclick="showView('pm')">🤖 PM Assistant</div>
+  <div class="nav-home" onclick="showView('cc')">✅ CM Checklist</div>
+</nav>
+
+<!-- === MAIN === -->
+<main id="main">
+
+  <!-- TAB BAR -->
+  <div id="tabbar">
+    <div class="tab on" id="tab-cockpit" onclick="showView('cockpit',this)">⬡ Cockpit</div>
+    <div class="tab" id="tab-cc" onclick="showView('cc',this)">✅ CM Checklist</div>
+    <div class="tab" id="tab-radar" onclick="showView('radar',this)">📡 Risk Radar</div>
+    <div class="tab" id="tab-pm" onclick="showView('pm',this)">🤖 PM Assistant</div>
+    <div class="tab" id="tab-chip" onclick="showView('chip',null,this)">🔬 Chip Detail</div>
+  </div>
+
+  <div id="content">
+  <div class="content-inner">
+
+    <!-- ================ COCKPIT ================ -->
+    <div id="v-cockpit">
+
+      <!-- Attention strip -->
+      <div class="attn">
+        <span class="attn-lbl">⬟ Needs Attention</span>
+        <div class="attn-pill"><span style="color:var(--red)">●</span> NR10x · FNL Jun 29 at risk</div>
+        <div class="attn-pill"><span style="color:var(--red)">●</span> N2x · FDI Jun 30 at risk</div>
+        <div class="attn-pill"><span style="color:var(--amber)">●</span> T294 · Safety plan HIGH risk</div>
+        <div class="attn-pill"><span style="color:var(--amber)">●</span> TB600 · CM OOO Jun 11-16</div>
+        <div class="attn-pill"><span style="color:var(--amber)">●</span> NR10x · NetIR Jun 24 critical path</div>
+        <div class="attn-pill"><span style="color:var(--amber)">●</span> ThorZ · MCU regressions active</div>
+      </div>
+
+
+      <div class="sec-lbl">Program Health — 12 Active Programs</div>
+      <div class="chips-grid">
+        <div class="chip-card cc-amber" onclick="showView('chip','nr10x')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">NR10x</span><span class="pill pill-a">FNL AT RISK</span>
+          </div>
+          <div class="chip-card-sub">NVLink Fusion · Pre-silicon · CM: Ranjani V</div>
+          <div class="chip-prog"><div style="height:100%;width:35%;border-radius:2px" class="cp-a"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>FNL Jun 29 <span style="color:var(--amber)">⚠ QM4 T-Rex long pole</span></span><span>35%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-amber" onclick="showView('chip','t374')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">T374</span><span class="pill pill-a">POST-SI</span>
+          </div>
+          <div class="chip-card-sub">Beacon · Fusion · CM: Roopa</div>
+          <div class="chip-prog"><div style="height:100%;width:5%;border-radius:2px" class="cp-a"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>Schedule Alignment</span><span>5%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-green" onclick="showView('chip','gr10x')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">GR10x</span><span class="pill pill-g">QS FOCUS</span>
+          </div>
+          <div class="chip-card-sub">Rubin GPU · Post-silicon · CM: Ranjani · Madhura</div>
+          <div class="chip-prog"><div style="height:100%;width:95%;border-radius:2px" class="cp-g"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>QS Done &#x2705; · PRel 6/22 · RM sync today 3:15pm</span><span>95%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-green" onclick="showView('chip','gr15x')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">GR15x</span><span class="pill pill-g">POWER ON</span>
+          </div>
+          <div class="chip-card-sub">Next GPU · Post-silicon · CM: Vinay · Anshul</div>
+          <div class="chip-prog"><div style="height:100%;width:20%;border-radius:2px" class="cp-g"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>Tapeout 6/2 &#x2705; · Physical data review today 7pm</span><span>20%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-amber" onclick="showView('chip','fn10x')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">FN10x</span><span class="pill pill-a">PRE-SILICON</span>
+          </div>
+          <div class="chip-card-sub">Feynman GPU · Pre-silicon · CM: Madhura</div>
+          <div class="chip-prog"><div style="height:100%;width:38%;border-radius:2px" class="cp-a"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>Vera Rubin successor · RTL active</span><span>38%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-amber" onclick="showView('chip','thorz')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">ThorZ</span><span class="pill pill-a">QS FOCUS</span>
+          </div>
+          <div class="chip-card-sub">CPU · Post-silicon · CM: Mayank Kapoor</div>
+          <div class="chip-prog"><div style="height:100%;width:78%;border-radius:2px" class="cp-a"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>BNB 5/28 &#x2705; · DTS Released · MCU regression active</span><span>78%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-green" onclick="showView('chip','tb500')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">TB500</span><span class="pill pill-g">NEAR COMPLETE</span>
+          </div>
+          <div class="chip-card-sub">Vera · CPU · Post-silicon · CM: Sowjanya</div>
+          <div class="chip-prog"><div style="height:100%;width:93%;border-radius:2px" class="cp-g"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>NVL72 SW 0.6 release active · BWAT ~6/15</span><span>93%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-blue" onclick="showView('chip','tb600')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">TB600</span><span class="pill pill-b">PRE-SILICON</span>
+          </div>
+          <div class="chip-card-sub">Vera Ultra · CPU · CM: Hui Fu (OOO 6/11-6/16)</div>
+          <div class="chip-prog"><div style="height:100%;width:40%;border-radius:2px" class="cp-b"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>IAS/GFD Reviews Active</span><span>40%</span>
+          </div>
+        </div>
+        <div class="chip-card cc-red" onclick="showView('chip','n2x')" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">N2x</span><span class="pill pill-r">AT RISK</span>
+          </div>
+          <div class="chip-card-sub">CPU · Pre-silicon · CM: Vivek Desikan</div>
+          <div class="chip-prog"><div style="height:100%;width:32%;border-radius:2px" class="cp-r"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>FPGA H2.07 · FDI 6/30</span><span style="color:var(--red)">AT RISK</span>
+          </div>
+        </div>
+        <div class="chip-card" style="border-left:3px solid var(--muted);cursor:pointer" onclick="showView('chip','tcx10')">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">TCX10</span><span class="pill" style="background:rgba(128,128,128,.1);color:var(--muted);border:1px solid rgba(128,128,128,.2)">SETUP</span>
+          </div>
+          <div class="chip-card-sub">CPU · Pre-silicon · CM: Roopa</div>
+          <div class="chip-prog"><div style="height:100%;width:8%;border-radius:2px;background:var(--muted)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>POR Discussions Active</span><span>8%</span>
+          </div>
+        </div>
+        <div class="chip-card" style="border-left:3px solid var(--muted);cursor:pointer" onclick="showView('chip','t257')">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">T257</span><span class="pill" style="background:rgba(128,128,128,.1);color:var(--muted);border:1px solid rgba(128,128,128,.2)">SETUP</span>
+          </div>
+          <div class="chip-card-sub">Monet · CPU · Pre-silicon · CM: Vivek Desikan</div>
+          <div class="chip-prog"><div style="height:100%;width:10%;border-radius:2px;background:var(--muted)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>FPGA Validation Active</span><span>10%</span>
+          </div>
+        </div>
+        <div class="chip-card" style="border-left:3px solid var(--muted);cursor:pointer" onclick="showView('chip','t294')">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+            <span class="chip-card-name">T294</span><span class="pill" style="background:rgba(128,128,128,.1);color:var(--muted);border:1px solid rgba(128,128,128,.2)">SETUP</span>
+          </div>
+          <div class="chip-card-sub">Magni · CPU · Pre-silicon · CM: Roopa</div>
+          <div class="chip-prog"><div style="height:100%;width:8%;border-radius:2px;background:var(--muted)"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+            <span>Arch + Safety Plan Review</span><span>8%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestones + Risks -->
+      <div class="two-col">
+
+        <!-- LEFT: Cross-program Key Dates -->
+        <div>
+          <div class="g-card" style="margin-bottom:14px">
+            <div class="c-hdr">
+              <span class="c-hdr-title">Upcoming Key Dates</span>
+              <span class="pill pill-a">Jun–Sep 2026</span>
+            </div>
+            <div class="c-body" style="padding:0">
+              <table class="s-tbl">
+                <thead><tr><th>Date</th><th>Chip</th><th>Milestone</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Jun 24</td><td>NR10x</td><td>NetIR Release (critical path)</td><td><span class="pill pill-r" style="font-size:9px">AT RISK</span></td></tr>
+                  <tr><td>Jun 29</td><td>NR10x</td><td>FNL RTL Snap</td><td><span class="pill pill-r" style="font-size:9px">AT RISK</span></td></tr>
+                  <tr><td>Jun 30</td><td>N2x</td><td>Feature Delivery Inspection</td><td><span class="pill pill-r" style="font-size:9px">AT RISK</span></td></tr>
+                  <tr><td>Jun 30</td><td>NR10x</td><td>FM PRD (slipped)</td><td><span class="pill pill-a" style="font-size:9px">SLIPPED</span></td></tr>
+                  <tr><td>~Jun 15</td><td>TB500</td><td>BWAT Release</td><td><span class="pill pill-g" style="font-size:9px">ON TRACK</span></td></tr>
+                  <tr><td>Jun 22</td><td>GR10x</td><td>Production Release</td><td><span class="pill pill-g" style="font-size:9px">ON TRACK</span></td></tr>
+                  <tr><td>Jul 30</td><td>NR10x</td><td>FM POR (slipped)</td><td><span class="pill pill-a" style="font-size:9px">SLIPPED</span></td></tr>
+                  <tr><td>Sep 6</td><td>GR15x</td><td>Power-On Target</td><td><span class="pill pill-g" style="font-size:9px">ON TRACK</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Top Risks + Live Signals -->
+        <div>
+          <div class="g-card" style="margin-bottom:14px">
+            <div class="c-hdr"><span class="c-hdr-title">Top Risks Across Programs</span></div>
+            <div class="c-body" style="padding:10px">
+              <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> QM4↔NR10 emulation link not working — FNL Jun 29 at risk</span></div>
+              <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> QM4 T-Rex slipping to August — past FNL RTL snap</span></div>
+              <div class="risk-row"><div class="rd rd-h"></div><span><strong>T294:</strong> Safety design verification HIGH risk — HSR dependency Feb 2028</span></div>
+              <div class="risk-row"><div class="rd rd-m"></div><span><strong>N2x:</strong> FPGA H2.07 validation; FDI Jun 30 at risk</span></div>
+              <div class="risk-row"><div class="rd rd-m"></div><span><strong>NR10x:</strong> NetIR release Jun 24 on critical path for emulator readiness</span></div>
+              <div class="risk-row"><div class="rd rd-m"></div><span><strong>TB600:</strong> CM Hui Fu OOO Jun 11-16 — active IAS/GFD reviews need coverage</span></div>
+            </div>
+          </div>
+
+          <div class="g-card" style="margin-bottom:14px">
+            <div class="c-hdr"><span class="c-hdr-title">📡 Live Signals Today</span></div>
+            <div class="c-body" style="padding:10px;display:flex;flex-direction:column;gap:10px">
+              <div style="border-left:2px solid var(--amber);padding-left:10px">
+                <div style="font-size:10px;color:var(--muted)">📧 NR10 Branching Plan · Ranjani V · 12:39pm</div>
+                <div style="font-size:12px;color:var(--text2)">Starting branching conversations — Hema, Gus, Kunle. Input needed from SW PICs on build/package names for DVS.</div>
+              </div>
+              <div style="border-left:2px solid var(--amber);padding-left:10px">
+                <div style="font-size:10px;color:var(--muted)">💬 #swgpu-chips-nvlink-fusion · Edward Sears · 12:54pm</div>
+                <div style="font-size:12px;color:var(--text2)">Is the question about HW coverage risk if NR10 SW verif is not done by FNL?</div>
+              </div>
+              <div style="border-left:2px solid var(--nv-green);padding-left:10px">
+                <div style="font-size:10px;color:var(--muted)">📧 TB500 KIST Status · sruskamp · 10:35am</div>
+                <div style="font-size:12px;color:var(--text2)">VR NVL72 SW 0.6 release for KIST. PS SBIOS 6/2 done. BWAT target ~6/15.</div>
+              </div>
+              <div style="border-left:2px solid var(--nv-green);padding-left:10px">
+                <div style="font-size:10px;color:var(--muted)">📧 MODS Golden frel_1 · Alan Lee · 1:46pm</div>
+                <div style="font-size:12px;color:var(--text2)">MODS Golden posted for gr100, gr102, gb202 — frel_1_256_2.31.</div>
+              </div>
+              <div style="border-left:2px solid var(--amber);padding-left:10px">
+                <div style="font-size:10px;color:var(--muted)">📧 Branch Approval Pending · sw-cm-notifications · 4:15am</div>
+                <div style="font-size:12px;color:var(--text2)">GR10x RM branch pending &gt;1 day (270087, Nishant Patel). Action required.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div></div><!-- /cockpit -->
+
+
+    <!-- ================ CM CHECKLIST ================ -->
+    <div id="v-cc" style="display:none">
+
+      <div class="sel-bar">
+        <div class="sel-pill on" onclick="setChipFilter(null,this)">All Programs</div>
+        <div class="sel-pill" onclick="setChipFilter('nr10x',this)">NR10x</div>
+        <div class="sel-pill" onclick="setChipFilter('gr10x',this)">GR10x</div>
+        <div class="sel-pill" onclick="setChipFilter('gr15x',this)">GR15x</div>
+        <div class="sel-pill" onclick="setChipFilter('fn10x',this)">FN10x</div>
+        <div class="sel-pill" onclick="setChipFilter('thorz',this)">ThorZ</div>
+        <div class="sel-pill" onclick="setChipFilter('tb500',this)">TB500</div>
+        <div class="sel-pill" onclick="setChipFilter('tb600',this)">TB600</div>
+        <div class="sel-pill" onclick="setChipFilter('n2x',this)">N2x</div>
+        <div class="sel-pill" onclick="setChipFilter('tcx10',this)">TCX10</div>
+        <div class="sel-pill" onclick="setChipFilter('t374',this)">T374</div>
+        <div class="sel-pill" onclick="setChipFilter('t257',this)">T257</div>
+        <div class="sel-pill" onclick="setChipFilter('t294',this)">T294</div>
+      </div>
+
+      <!-- Category sub-tabs -->
+      <div style="display:flex;gap:2px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none;width:fit-content;max-width:100%">
+        <div class="cc-ptab on" onclick="setCCCat('phase',this)">🔄 Pre/Post Silicon</div>
+        <div class="cc-ptab" onclick="setCCCat('daily',this)">🌅 Daily</div>
+        <div class="cc-ptab" onclick="setCCCat('weekly',this)">📅 Weekly</div>
+        <div class="cc-ptab" onclick="setCCCat('gate',this)">🚦 Gate Prep</div>
+        <div class="cc-ptab" onclick="setCCCat('setup',this)">🔧 Program Setup</div>
+      </div>
+
+      <div id="cc-body"></div>
+    </div><!-- /cc -->
+
+
+    <!-- ================ RISK RADAR ================ -->
+    <div id="v-radar" style="display:none">
+
+      <div class="sec-lbl">Portfolio Risk Heatmap — All 12 Programs</div>
+      <div class="g-card" style="margin-bottom:16px">
+        <div class="c-body" style="overflow-x:auto">
+          <table style="border-collapse:separate;border-spacing:4px;min-width:600px;width:100%">
+            <thead><tr>
+              <th style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);padding:4px 8px;text-align:left;min-width:150px">Program</th>
+              <th style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 8px">Schedule</th>
+              <th style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 8px">SW Risk</th>
+              <th style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 8px">HW Risk</th>
+              <th style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 8px">Partner</th>
+              <th style="font-size:9px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 8px">Safety</th>
+            </tr></thead>
+            <tbody id="hm-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--red)">&#x1f534; High Risk</span></div><div class="c-body" style="padding:10px">
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> QM4 T-Rex FNL long pole — slip to Aug</span></div>
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> QM4↔NR10 emulation link not working</span></div>
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>N2x:</strong> FDI Jun 30 at risk — FPGA H2.07 validation</span></div>
+          <div class="risk-row" style="border:none"><div class="rd rd-h"></div><span><strong>T294:</strong> Safety design verification HIGH — HSR dependency Feb 2028</span></div>
+        </div></div>
+        <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--amber)">&#x1f7e1; Medium Risk</span></div><div class="c-body" style="padding:10px">
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>NR10x:</strong> NetIR release Jun 24 on critical path</span></div>
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>TB600:</strong> CM Hui Fu OOO Jun 11-16 — active IAS/GFD reviews</span></div>
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>ThorZ:</strong> MCU regression suite — ASILNA, PwrCtrl, VMON failures</span></div>
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>FN10x:</strong> Multi-dielet RTL — 43 open issues</span></div>
+          <div class="risk-row" style="border:none"><div class="rd rd-m"></div><span><strong>T294:</strong> FI FMEDA timeline — base done Dec-Jan, 3 months to complete</span></div>
+        </div></div>
+        <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--nv-green)">&#x1f7e2; Low / On Track</span></div><div class="c-body" style="padding:10px">
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>GR10x:</strong> QS done — PRel Jun 22, branch approval pending</span></div>
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>TB500:</strong> VR NVL72 SW 0.6 active — BWAT ~Jun 15</span></div>
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>GR15x:</strong> Tapeout Jun 2 done — Power-on active</span></div>
+          <div class="risk-row" style="border:none"><div class="rd rd-g"></div><span><strong>NR10x:</strong> GFD reviews done 6/6, SystemSim model available</span></div>
+        </div></div>
+      </div>
+
+    </div><!-- /radar -->
+<!-- ================ PM ASSISTANT ================ -->
+    <div id="v-pm" style="display:none">
+      <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 11, 2026 · Generated from Slack + Email signals</div>
+      <div class="three-col">
+        <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--red)">🚨 Urgent — This Week</span></div><div class="c-body" style="padding:10px">
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> Resolve QM4↔NR10 emulation link-up — unblocks FNL Jun 29</span></div>
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> Confirm NetIR release Jun 24 — critical path for emulator</span></div>
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> Finalize branching plan — input from SW PICs needed (Aman A, Gus, Kunle)</span></div>
+          <div class="risk-row"><div class="rd rd-h"></div><span><strong>N2x:</strong> FPGA H2.07 validation — FDI Jun 30 at risk, escalate now</span></div>
+          <div class="risk-row" style="border:none"><div class="rd rd-h"></div><span><strong>GR10x:</strong> Approve RM branch request (270087, Nishant Patel) — pending &gt;1 day</span></div>
+        </div></div>
+        <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--amber)">📌 This Sprint</span></div><div class="c-body" style="padding:10px">
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>TB600:</strong> Arrange review coverage while Hui Fu OOO (Jun 11-16) — IAS/GFD active</span></div>
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>ThorZ:</strong> Triage MCU regressions — ASILNA, PwrCtrl (29), VMON (30) failures</span></div>
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>NR10x:</strong> CAGUID init-vector fix for QM4-ready SystemSim release</span></div>
+          <div class="risk-row"><div class="rd rd-m"></div><span><strong>T294:</strong> Review safety plan timeline — HSR and FMEDA critical path</span></div>
+          <div class="risk-row" style="border:none"><div class="rd rd-m"></div><span><strong>GR10x:</strong> Prepare PRel Jun 22 — verify chip schedule alignment (sync tonight 9pm)</span></div>
+        </div></div>
+        <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--blue)">ℹ FYI / Monitoring</span></div><div class="c-body" style="padding:10px">
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>TB500:</strong> VR NVL72 SW 0.6 release active — BWAT ~Jun 15 on track</span></div>
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>GR15x:</strong> Physical data review Jun 11 — post-tapeout power-on phase</span></div>
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>GR10x:</strong> MODS Golden frel_1_256_2.31 posted for gr100/gr102/gb202</span></div>
+          <div class="risk-row"><div class="rd rd-g"></div><span><strong>FN10x:</strong> Multi-dielet RTL active — 43 issues being triaged</span></div>
+          <div class="risk-row" style="border:none"><div class="rd rd-g"></div><span><strong>TCX10/T257/T294:</strong> Early setup — POR and arch discussions active</span></div>
+        </div></div>
+      </div>
+    </div><!-- /pm -->
+
+
+    <!-- ================ CHIP DETAIL (DYNAMIC) ================ -->
+    <div id="v-chip" style="display:none">
+      <div id="chip-header" style="display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap">
+        <div>
+          <div id="chip-title" style="font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--text)">Select a chip</div>
+          <div id="chip-subtitle" style="font-size:12px;color:var(--muted);margin-top:2px">Click any chip card or sidebar entry to view details</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px" id="chip-pills"></div>
+      </div>
+      <div id="chip-anno" class="anno" style="margin-bottom:14px"></div>
+      <div id="chip-body"></div>
+    </div><!-- /chip -->
+
+  </div><!-- /.content-inner -->
+  </div><!-- /#content -->
+</main>
+</div><!-- /#body -->
+</div><!-- /#app -->
+
+
+
+<script>
+const PHASE_DATA={
+  pre:[
+    {sec:'👥 People & Leads',pri:['h','h','m','m'],items:['Identify Chip Manager; communicate to ASIC CM to add to WNF Template','Identify SW leads: Kernel, Bootloader, FSP, GSP, Security, Host1x, Audio, Video','Identify SQA and HWQA leads (Android / Automotive / L4T)','Identify Hardware Lead and Architecture Lead']},
+    {sec:'📬 Communications',pri:['h','m','m','h'],items:['Create T{xxx}SW-Leaders mailing list','Create T{xxx}-sw mailing list for all developers','Archive both mailing lists; sign up CM for HW lists','Create Slack channel #swteg-chips-{chip-name}; add all FW/Arch PICs']},
+    {sec:'📄 Documentation & Tracking',pri:['h','h','m','m','m'],items:['Create SW Confluence page under TCS space','Add new chip to SW_Chips database (before simulation)','Create NVBugs chip keywords (reference previous chip)','Create program schedule XL; add link to wiki','Add POR IDs to TestDB POR Manager; map features 1:1']},
+    {sec:'🎯 POR Process',pri:['h','h','m','h','m'],items:['Review WNF bugs from previous generation; identify bugs to fix','Create POR tracker (copy from HW POR; map to SW modules)','Ask each SW module lead to create POR PowerPoint using template','Create chip-level POR: unsupported HW features, high-level validation plan','Send POR review invite to SW-Leaders + Arch/HW stakeholders']},
+    {sec:'📝 IAS / GFD Reviews',pri:['h','m','m'],items:['Drive review of all IAS and GFD documents by appropriate SW leads','Schedule GPU manual reviews early; include CM and key reviewers','Track IAS/GFD SW reviews in XL']},
+    {sec:'💻 SW Development Planning',pri:['h','m','m','h'],items:['Get every SW group to create, check in, and update SCS using template','Create SCS roll-up XL file; track completion per module','Ask SW leads to create ISS design documents for key features','Define simulation strategy; set up simulation-based sanity testing']},
+    {sec:'🗺️ Bring-up Planning',pri:['h','h','h','m','m'],items:['Define branching strategy (bring-up → release) with release engineering','Set up bring-up wiki with all bring-up information','Hold bring-up kick-off meeting with all SW leads','Identify SW lab stations; coordinate setup prior to bring-up','Plan systems with IT; create farm scratch space for image sharing']},
+    {sec:'🖥️ Emulation & Simulation Readiness',pri:['h','h','h','h'],items:['Define co-emulation goals for multi-die / adapter-die configurations','Define emulation validation scope: co-emulation vs simulation','Confirm FNL long-pole items and owners; track weekly','Confirm NetIR / firmware release readiness for emulator drop']},
+  ],
+  post:[
+    {sec:'🔧 Lab & Environment Setup',pri:['h','m','h','h'],items:['Confirm SW lab stations are physically set up and accessible','Confirm remote access and IT systems ready for remote engineers','Stand up daily SW bring-up sync meetings','Brief all SW leads on bring-up status and initial silicon observations']},
+    {sec:'⚡ ES Bring-up Execution',pri:['h','h','h','h','h','h'],items:['Execute SW bring-up per bring-up wiki plan','Validate boot sequence (FSP → Bootrom → Bootloader → OS)','Confirm power-on / clock / reset sequencing matches POR','Validate PCIe / UCIe endpoint enumeration and link bring-up','Execute first-pass NVLink / fabric bring-up and confirm connectivity','Validate driver load and basic register access (priv sec OFF initially)']},
+    {sec:'🧪 HW Validation & Testing',pri:['h','h','m','m','m','h'],items:['Execute MODS SLT test plan for ES silicon','Execute WAT (Wafer Acceptance Testing)','Execute SHTOL (System-level Hardware Test) testing','Execute IO Characterization testing','Execute Binning and yield analysis','Run Manufacturing Diagnostics including TREX mode validation']},
+    {sec:'🐛 Bug Triage & WNF / WAR',pri:['h','h','m','m','m'],items:['Establish weekly WNF/WAR bug triage meeting with HW/SW/Arch leads','Triage all P1/P2 bugs; ensure owners and ETAs are assigned','Track WNF decisions with documented rationale in NVBugs','Ensure SW WAR bugs have platform variant coverage','Review stale bugs (no update >2 weeks) and escalate']},
+    {sec:'✅ Milestones (ES→CS→QS)',pri:['h','h','h','h','m','m'],items:['Define ES exit criteria checklist; review with CM and program lead','Complete MODS SLT for ES; sign off with SiVal PIC','Complete IO Char, Binning, Memory Char for ES → CS promotion','Define CS exit criteria; execute MODS SLT plan for CS silicon','Validate RAS (error injection) test coverage on silicon','Execute nvldm_cli / nv-bug-report.sh validation on first silicon']},
+    {sec:'🌿 Branching & Release',pri:['h','h','h','h','m','h'],items:['Execute branching strategy: cut bring-up branch from mod* or Rubin release','Confirm all SW components stable on chosen branch before partner drop','Coordinate .fwpkg release with FSP/GSP/MSE/NETIR/PMU firmware owners','Package and validate NVLF Driver Library + NVLDM for partner delivery','Confirm OBE release mechanism for .fwpkg is operational','Deliver SW package to XPU partner by partner drop date']},
+  ]
+};
+
+const DAILY_TASKS=[
+  {t:'Check NVBugs P1/P2 new arrivals across all chips',pri:'h'},
+  {t:'Review Slack #swteg-chips-nr10 for overnight updates',pri:'h'},
+  {t:'Confirm FNL long-pole status with owners (QM4 T-Rex, NetIR)',pri:'h'},
+  {t:'Update bring-up wiki if new silicon observations',pri:'m'},
+  {t:'Check emulation run results and flag blockers',pri:'m'},
+  {t:'Review open AIs from yesterday\'s sync and follow up',pri:'m'},
+  {t:'Scan IAS/GFD review tracker for overdue items',pri:'l'},
+  {t:'Update ChipPilot dashboard with latest status',pri:'l'},
+];
+
+const WEEKLY_TASKS=[
+  {t:'Draft and send weekly CM status email to leadership',pri:'h'},
+  {t:'Run WNF/WAR triage meeting; update NVBugs with decisions',pri:'h'},
+  {t:'Review SCS completion across all SW modules',pri:'h'},
+  {t:'Check FNL schedule — update long-pole tracker',pri:'h'},
+  {t:'Review Risk Radar with leads; escalate new HIGH items',pri:'h'},
+  {t:'Confirm emulation / simulation schedule alignment',pri:'m'},
+  {t:'Sync with release engineering on branching plan status',pri:'m'},
+  {t:'Review ISS/IAS review sign-off tracker',pri:'m'},
+  {t:'Update TestDB POR Manager with new POR IDs',pri:'l'},
+  {t:'Send NR10 Chip SW Sync agenda for coming week',pri:'m'},
+  {t:'Archive meeting notes to Confluence bring-up wiki',pri:'l'},
+];
+
+const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}')};
+function saveS(){localStorage.setItem('cp2_cc',JSON.stringify(S.ccState))}
+
+function priTag(p){return p==='h'?'<span class="pri-h">High</span>':p==='m'?'<span class="pri-m">Med</span>':'<span class="pri-l">Low</span>'}
+
+function renderCC(){
+  const body=document.getElementById('cc-body');
+  const chipKey=S.selChip?':'+S.selChip:'';
+  const chip=S.selChip&&typeof CHIP_DB!=='undefined'?CHIP_DB[S.selChip]:null;
+  const chipBanner=chip?`<div style="border-left:3px solid var(--amber);padding:8px 14px;border-radius:var(--r-sm);background:rgba(255,160,50,.08);margin-bottom:14px;font-size:12px;color:var(--text2)"><strong style="color:var(--text)">${chip.title}</strong> &nbsp;·&nbsp; ${chip.phase} &nbsp;·&nbsp; ${chip.sub.split('·').slice(1).join('·').trim()}</div>`:'';
+  if(S.ccCat==='phase' && chip && chip.checklist && chip.checklist.length){
+    // Chip selected — show its specific open actions
+    const sk='chip-cc:'+S.selChip;
+    if(!S.ccState[sk]){
+      S.ccState[sk]={};
+      chip.checklist.forEach((item,i)=>{S.ccState[sk][i]=item.done;});
+      saveS();
+    }
+    const done=S.ccState[sk];
+    const comp=chip.checklist.filter((_,i)=>done[i]).length,tot=chip.checklist.length,pct=tot?Math.round(comp/tot*100):0;
+    let html=chipBanner+`<div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-pct">${comp}/${tot} (${pct}%)</span></div>`;
+    chip.checklist.forEach((item,i)=>{
+      const chk=!!done[i];
+      html+=`<div class="cc-row" onclick="toggleCC('${sk}',${i})">
+        <input type="checkbox" class="cc-cb" ${chk?'checked':''} onclick="event.stopPropagation()" onchange="toggleCC('${sk}',${i})">
+        <span class="cc-text${chk?' done':''}">${item.t}</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:auto;padding-left:8px">${item.owner||''}</span>
+      </div>`;
+    });
+    body.innerHTML=`<div class="cc-section-wrap"><div class="cc-sec-hdr"><span class="cc-sec-title">Open Actions — ${chip.title}</span><span class="cc-sec-count">${comp}/${tot}</span></div>${html}</div>`;
+  } else if(S.ccCat==='phase'){
+    const secs=PHASE_DATA[S.phase];
+    let allK=[];secs.forEach((s,si)=>s.items.forEach((_,ii)=>allK.push(si+':'+ii)));
+    const sk='phase:'+S.phase+chipKey,done=S.ccState[sk]||{};
+    const comp=allK.filter(k=>done[k]).length,tot=allK.length,pct=tot?Math.round(comp/tot*100):0;
+    let html=chipBanner+`<div class="cc-phase-bar">
+      <div class="cc-ptab${S.phase==='pre'?' on':''}" onclick="setPhase('pre',this)">⚙️ Pre-Silicon</div>
+      <div class="cc-ptab${S.phase==='post'?' on':''}" onclick="setPhase('post',this)">🔬 Post-Silicon</div>
+    </div>
+    <div class="prog-wrap">
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <span class="prog-pct">${comp} / ${tot} (${pct}%)</span>
+    </div>`;
+    secs.forEach((sec,si)=>{
+      const secDone=sec.items.filter((_,ii)=>done[si+':'+ii]).length;
+      html+=`<div class="cc-section-wrap"><div class="cc-sec-hdr"><span class="cc-sec-title">${sec.sec}</span><span class="cc-sec-count">${secDone}/${sec.items.length}</span></div>`;
+      sec.items.forEach((item,ii)=>{
+        const k=si+':'+ii,chk=!!done[k];
+        html+=`<div class="cc-row" onclick="toggleCC('${sk}','${k}')">
+          <input type="checkbox" class="cc-cb" ${chk?'checked':''} onclick="event.stopPropagation()" onchange="toggleCC('${sk}','${k}')">
+          <span class="cc-text${chk?' done':''}">${item}</span>
+          ${priTag(sec.pri[ii]||'l')}
+        </div>`;
+      });
+      html+='</div>';
+    });
+    body.innerHTML=html;
+  } else if(S.ccCat==='gate' || S.ccCat==='setup') {
+    const label = S.ccCat==='gate' ? '🚦 Gate Prep' : '🔧 Program Setup';
+    const desc  = S.ccCat==='gate'
+      ? 'Gate Prep tasks will appear here — define ES/CS/QS exit criteria, sign-off matrix, and gate review readiness checklist per chip.'
+      : 'Program Setup tasks will appear here — Confluence page, mailing lists, Slack channels, NVBugs keywords, branching strategy, and lab environment setup.';
+    body.innerHTML=chipBanner+`<div class="cc-section-wrap"><div class="cc-sec-hdr"><span class="cc-sec-title">${label}</span></div>
+      <div style="padding:20px 16px;color:var(--muted);font-size:13px;line-height:1.6">${desc}</div></div>`;
+  } else {
+    const tasks=S.ccCat==='daily'?DAILY_TASKS:WEEKLY_TASKS;
+    const sk=S.ccCat+chipKey,done=S.ccState[sk]||{};
+    const comp=tasks.filter((_,i)=>done[i]).length,tot=tasks.length,pct=tot?Math.round(comp/tot*100):0;
+    let html=chipBanner+`<div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div><span class="prog-pct">${comp}/${tot} (${pct}%)</span></div>`;
+    tasks.forEach((t,i)=>{
+      const chk=!!done[i];
+      html+=`<div class="cc-row" onclick="toggleCC('${sk}',${i})">
+        <input type="checkbox" class="cc-cb" ${chk?'checked':''} onclick="event.stopPropagation()" onchange="toggleCC('${sk}',${i})">
+        <span class="cc-text${chk?' done':''}">${t.t}</span>
+        ${priTag(t.pri)}
+      </div>`;
+    });
+    body.innerHTML=`<div class="cc-section-wrap"><div class="cc-sec-hdr"><span class="cc-sec-title">${S.ccCat==='daily'?'Daily Tasks':'Weekly Tasks'}</span><span class="cc-sec-count">${comp}/${tot}</span></div>${html}</div>`;
+  }
+}
+
+function toggleCC(sk,k){
+  if(!S.ccState[sk])S.ccState[sk]={};
+  S.ccState[sk][k]=!S.ccState[sk][k];
+  saveS();renderCC();
+}
+function setPhase(p){S.phase=p;localStorage.setItem('cp2_phase',p);renderCC()}
+function setCCCat(c,el){S.ccCat=c;document.querySelectorAll('.cc-ptab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderCC()}
+function setChipFilter(chipId,el){
+  S.selChip=chipId;
+  document.querySelectorAll('.sel-pill').forEach(p=>p.classList.remove('on'));
+  if(el)el.classList.add('on');
+  if(chipId&&typeof CHIP_DB!=='undefined'&&CHIP_DB[chipId]){
+    S.phase=CHIP_DB[chipId].phase==='Post-Silicon'?'post':'pre';
+    localStorage.setItem('cp2_phase',S.phase);
+  }
+  renderCC();
+}
+
+// Risk data: [chip, label, schedule, sw, hw, partner, safety]
+const RISK_DATA = [
+  ['nr10x',  'NR10x · Fusion',     'h','h','m','m','l'],
+  ['t374',   'T374 · Beacon',      'm','m','l','l','l'],
+  ['gr10x',  'GR10x · Rubin GPU',  'l','l','l','l','l'],
+  ['gr15x',  'GR15x · Next GPU',   'l','m','l','l','l'],
+  ['fn10x',  'FN10x · Feynman',    'm','m','m','l','l'],
+  ['thorz',  'ThorZ · CPU',        'm','m','l','l','m'],
+  ['tb500',  'TB500 · Vera',       'l','l','l','l','l'],
+  ['tb600',  'TB600 · Vera Ultra', 'm','m','m','l','l'],
+  ['n2x',    'N2x · CPU',          'h','m','m','l','l'],
+  ['tcx10',  'TCX10 · CPU',        'm','m','l','l','l'],
+  ['t257',   'T257 · Monet',       'm','m','l','l','l'],
+  ['t294',   'T294 · Magni',       'm','m','l','m','h'],
+];
+function buildHeatmap(){
+  const b=document.getElementById('hm-body');if(!b)return;
+  b.innerHTML=RISK_DATA.map(r=>`<tr style="cursor:pointer" onclick="showView('chip','${r[0]}')">
+    <td style="padding:4px 8px;font-weight:600;font-size:11px;color:var(--text2)">${r[1]}</td>
+    ${r.slice(2).map(v=>`<td style="text-align:center;padding:4px"><span class="hm-cell hm-${v}">${v.toUpperCase()}</span></td>`).join('')}
+  </tr>`).join('');
+}
+
+function renderChipView(chipId) {
+  const d = CHIP_DB[chipId];
+  if(!d) return;
+
+  document.getElementById('chip-title').textContent = d.title;
+  // Update tab label
+  var tabEl = document.getElementById('tab-chip');
+  if(tabEl) tabEl.textContent = '🔬 ' + chipId.toUpperCase();
+  document.getElementById('chip-subtitle').textContent = d.sub;
+  document.getElementById('chip-anno').textContent = d.anno;
+
+  // Pills + SW wiki link
+  const pillsEl = document.getElementById('chip-pills');
+  const wikiBtn = d.wikiUrl ? `<a href="${d.wikiUrl}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--nv-green);text-decoration:none;border:1px solid var(--nv-green);border-radius:3px;padding:3px 8px;opacity:.85">SW PAGE ↗</a>` : '';
+  pillsEl.innerHTML = d.pills.map(([cls,lbl]) =>
+    cls === 'pill-m'
+      ? `<span class="pill" style="background:rgba(128,128,128,.1);color:var(--muted);border:1px solid rgba(128,128,128,.2)">${lbl}</span>`
+      : `<span class="pill ${cls}">${lbl}</span>`
+  ).join('') + wikiBtn;
+
+  // Body
+  const pct = d.prog;
+  const pctColor = pct >= 80 ? 'var(--nv-green)' : pct >= 40 ? 'var(--amber)' : 'var(--red)';
+
+  // meetings removed from chip view
+
+  let stackHtml = '';
+  if(d.stack && d.stack.length) {
+    stackHtml = `<div class="g-card" style="margin-bottom:14px">
+      <div class="c-hdr"><span class="c-hdr-title">SW Stack</span></div>
+      <div class="c-body" style="padding:0">
+        <table class="s-tbl"><thead><tr><th>Component</th><th>Delivery</th><th>Repo</th><th>Status</th></tr></thead><tbody>
+        ${d.stack.map(r=>`<tr><td>${r.comp}</td><td>${r.delivery}</td><td>${r.repo}</td><td><span class="pill pill-${r.status}" style="font-size:9px">${r.s}</span></td></tr>`).join('')}
+        </tbody></table>
+      </div></div>`;
+  }
+
+  let risksHtml = '';
+  if(d.risks && d.risks.length) {
+    const rdMap = {h:'rd-h', m:'rd-m', l:'rd-g'};
+    risksHtml = `<div class="g-card" style="margin-bottom:14px">
+      <div class="c-hdr"><span class="c-hdr-title">Risks & Blockers</span></div>
+      <div class="c-body" style="padding:10px">
+        ${d.risks.map(r=>`<div class="risk-row"><div class="rd ${rdMap[r.p]||'rd-m'}"></div><span style="font-size:12px">${r.t}</span></div>`).join('')}
+      </div></div>`;
+  }
+
+  let signalsHtml = '';
+  const allSignals = [...(d.emails||[]).map(e=>({type:'email',icon:'📧',from:e.from,time:e.time,title:e.sub,body:e.body})),
+                     ...(d.slack||[]).map(s=>({type:'slack',icon:'💬',from:s.from,time:s.time,title:s.ch,body:s.msg}))];
+  if(allSignals.length) {
+    signalsHtml = `<div class="g-card" style="margin-bottom:14px">
+      <div class="c-hdr"><span class="c-hdr-title">📡 Live Signals (Slack + Email)</span></div>
+      <div class="c-body" style="padding:10px;display:flex;flex-direction:column;gap:10px">
+        ${allSignals.map(s=>`<div style="border-left:2px solid var(--nv-green);padding-left:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:3px">${s.icon} ${s.title} · ${s.from} · ${s.time}</div>
+          <div style="font-size:12px;color:var(--text2)">${s.body}</div>
+        </div>`).join('')}
+      </div></div>`;
+  }
+
+  document.getElementById('chip-body').innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px">
+        <span>${d.phase}</span><span style="color:${pctColor};font-weight:700">${pct}% complete</span>
+      </div>
+      <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${pctColor};border-radius:4px;transition:width .6s ease"></div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div>${stackHtml||'<div class="g-card" style="margin-bottom:14px"><div class="c-hdr"><span class="c-hdr-title">SW Stack</span></div><div class="c-body" style="padding:14px;color:var(--muted);font-size:12px">Stack details in live dashboard →</div></div>'}</div>
+      <div>${risksHtml}${signalsHtml}</div>
+    </div>`;
+}
+
+window.ACTIVE_CHIP = null;
+function showView(id,chipId,tabEl){
+  if(chipId) window.ACTIVE_CHIP=chipId;
+  ['cockpit','cc','radar','pm','chip'].forEach(v=>{
+    document.getElementById('v-'+v).style.display=v===id?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  const t=tabEl||document.getElementById('tab-'+id);
+  if(t)t.classList.add('on');
+  if(id==='cc')renderCC();
+  if(id==='chip' && window.ACTIVE_CHIP) {
+    // Highlight clicked chip in nav
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+    var activeChipId=window.ACTIVE_CHIP;
+    document.querySelectorAll('.nav-item').forEach(function(n){
+      var oc=n.getAttribute('onclick')||'';
+      if(oc.indexOf("'"+activeChipId+"'")!==-1)n.classList.add('on');
+    });
+    renderChipView(window.ACTIVE_CHIP);
+  }
+  if(id==='radar')buildHeatmap();
+}
+
+function toggleNav(){
+  const n=document.getElementById('nav'),o=document.getElementById('nav-overlay');
+  const open=n.classList.contains('open');
+  n.classList.toggle('open',!open);o.classList.toggle('open',!open);
+}
+
+S.phase=localStorage.getItem('cp2_phase')||'pre';
+const savedTheme=localStorage.getItem('cp2_theme')||'dark';
+if(savedTheme==='light')document.body.classList.add('light');
+updateThemeBtn();
+showView('cockpit');
+renderCC();
+buildHeatmap();
+
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  const isLight=document.body.classList.contains('light');
+  localStorage.setItem('cp2_theme',isLight?'light':'dark');
+  updateThemeBtn();
+}
+function updateThemeBtn(){
+  const btn=document.getElementById('theme-icon');
+  if(btn)btn.textContent=document.body.classList.contains('light')?'☀️':'🌙';
+}
+
+// =========================== CHIP DATA + DYNAMIC RENDERER ===================
+const CHIP_DB = {
+  nr10x: {
+    title: 'NR10x · NVLink Fusion',
+    sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
+    pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
+    anno: 'FNL SW feature-complete at risk. QM4 T-Rex critical long pole -- emulation link bring-up not working. GFD Done 6/6 -- FNL Snap Done 6/8 -- DV All 6/19 On Track -- FNL 6/29 At Risk.',
+    meetings: [
+      {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
+      {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
+    ],
+    stack: [
+      {comp:'core9d',delivery:'Source',repo:'Perforce core9d',status:'g',s:'Stable'},
+      {comp:'MSE FW',delivery:'Binary',repo:'GitLab nvlb-devinit',status:'a',s:'In Review'},
+      {comp:'NVLBridge',delivery:'Source',repo:'GitLab nvlbridge',status:'a',s:'Active'},
+      {comp:'FM Library',delivery:'Binary',repo:'MODS frel_1',status:'r',s:'Timeline TBD'},
+      {comp:'QM4 SW (NVOS)',delivery:'Binary',repo:'NVOS QM4 branch',status:'r',s:'Blocked'},
+      {comp:'TREX Integration',delivery:'Source',repo:'Internal',status:'r',s:'Slip to Aug'},
+    ],
+    risks: [
+      {p:'h',t:'QM4 TREX may slip past FNL RTL snap (Jun 29) -- SW teams reviewing critical path to de-risk'},
+      {p:'h',t:'QM4 <-> NR10 emulation link bring-up blocking FM testing -- MSE/NetIR loopback up but not talking to QM4; In Debug'},
+      {p:'m',t:'Simulation feature gaps -- boot, resets, UCIe init/error handling not exercised; emulation team preparing bare-metal setup'},
+      {p:'m',t:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed before QM4-ready release'},
+      {p:'m',t:'FM PRD / POR dates slipped to 6/30 and 7/30'},
+      {p:'l',t:'Sirius OOB telemetry requirement under revision -- scope impact to POR being assessed'},
+    ],
+    checklist: [
+      {t:'QM4 + NR10 emulation link bring-up unblocked',owner:'Ranjani',done:false},
+      {t:'DV All / FCV All by 6/19',owner:'Ranjani',done:false},
+      {t:'FNL SW feature-complete by 6/29',owner:'Ranjani',done:false},
+      {t:'SystemSim CAGUID fix delivered',owner:'Ranjani',done:false},
+      {t:'Co-emulation scope finalized',owner:'Ranjani',done:false},
+    ],
+    emails: [
+      {sub:'NR10 Branching Plan',from:'ssriranjani@nvidia.com',time:'Today 12:39pm',body:'Starting branching conversations for NR10 (NVLink fusion chip). Spoken to Hema and Gus. Loop in Kunle Sijuwade.'},
+      {sub:'NR10 Chip SW Status Report (06/09)',from:'hedara@nvidia.com',time:'Today 10:23pm',body:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed ahead of QM4-ready release for early NVOS testing.'},
+    ],
+    slack: [
+      {ch:'#swgpu-chips-nvlink-fusion',from:'Edward Sears',time:'Today 12:54pm',msg:'Is the question about determining HW coverage risk if NR10 SW verif is not done by FNL?'},
+      {ch:'DM: David Tsai',from:'Ranjani V',time:'Jun 9',msg:'FNL SW feature-complete AT RISK by 06/29. QM4 TREX is long pole. MSE/NetIR up in loopback but not talking to QM4.'},
+    ],
+    prog: 35, phase:'Pre-Silicon'
+  },
+  gr10x: {
+    title: 'GR10x · Rubin GPU',
+    sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · PS/PRel Active · PRel 6/22',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
+    pills: [['pill-g','QS DONE'],['pill-g','PREL 6/22']],
+    anno: 'QS complete. PS/PRel Active. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. PRel 6/22 at risk. NCCL hang GR100/PDX under investigation.',
+    meetings: [
+      {time:'3:15 PM', title:'Rubin-Compute Execution RM Sync', pill:'pill-g'},
+      {time:'9:00 PM', title:'GR10x chip schedule alignment', pill:'pill-a'},
+    ],
+    stack: [
+      {comp:'RM Driver',delivery:'Source',repo:'chips_a/drivers/resman',status:'g',s:'Stable'},
+      {comp:'MODS frel_1',delivery:'Binary',repo:'CFTT MODS',status:'g',s:'Golden posted'},
+      {comp:'NVOS',delivery:'Binary',repo:'NVOS GR10x branch',status:'g',s:'Stable'},
+      {comp:'FW v3.1',delivery:'Binary',repo:'GR10x FW branch',status:'r',s:'NVLink lane drop'},
+      {comp:'FBPA Partition',delivery:'Source',repo:'mem_sys_partition_gr100.c',status:'a',s:'Branch pending'},
+    ],
+    risks: [
+      {p:'h',t:'PG558 SW QA -- 80% complete, blocked by lack of L6 system (re-escalated Venky Top N 6/7)'},
+      {p:'h',t:'GFW: TOT inforom issues -- blocking MR submissions as of 5/28'},
+      {p:'h',t:'Bug 5116766: No appropriate VBIOS/image for GR102 INT/QS qual -- SHTOL WW30 blocked'},
+      {p:'h',t:'NCCL hang on GR100/PDX (NVBug 6241628/6227189) -- NCCL_NVLS_ENABLE=0 WAR; suspected driver/fabric manager init issue'},
+      {p:'h',t:'Bug 6243309 SWDL_gr10x_BLOCKING -- vr200nvl_hecate HPC-X libcudnn.so.9 not found; Sev 2; ARB Piotr Bialecki & Eddie Yan (6/8)'},
+      {p:'m',t:'SNARC BRF down (6/7) -- Itachi being brought up as BRF replacement; TOT regression check in progress'},
+      {p:'m',t:'FW v3.1 patch -- NVLink lane drop blocks PRel'},
+      {p:'m',t:'C2C ENC error window violations (Bug 6203872) -- SBIOS/VBIOS encryption mismatch; fix validation in progress'},
+      {p:'m',t:'MNNVL CUDA fabric allocation failure (NVBug 6223505) -- fix needed in node MNNVL config or supports_mnnvl() detection'},
+    ],
+    checklist: [
+      {t:'FW v3.1 NVLink lane drop patch merged',owner:'FW team',done:false},
+      {t:'PS validation suite complete',owner:'Ranjani V',done:true},
+      {t:'PRel readiness review',owner:'Madhura',done:false},
+      {t:'L6 system availability for PG558 SW QA',owner:'Madhura',done:false},
+    ],
+    emails: [
+      {sub:'CMD Bug Approval: Branch pending >1 day',from:'sw-cm-notifications',time:'Today 4:20am',body:'Resource Manager - Chips - GR10x (270087, Nishant Patel, frel_1) -- Not Started, 2 days old.'},
+      {sub:'[MODS-GOLDEN] frel_1_256_2.31 Posted (gr100, gr102, gb202)',from:'svccfttapp@nvidia.com',time:'Today 1:46pm',body:'Alan Lee (SW-GPU). MODS Golden for gr100, gr102, gb202 posted successfully.'},
+    ],
+    slack: [
+      {ch:'#swgpu-chips-bringup-gr10x-rm-team',from:'Chris Buris',time:'Jun 10 3:40pm',msg:'Found how RM accesses FB partition registers -- ENG_IDX_RD_REG -> FB_FBPA_UC_REG -> memsysRegAddress_GR100.'},
+    ],
+    prog: 95, phase:'Post-Silicon'
+  },
+  gr15x: {
+    title: 'GR15x · Next GPU',
+    sub: 'Post-Silicon · SW CMs: Vinay Sharma · Anshul Gupta · Tapeout 6/2',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/3529740918/GR15x+SW+Bringup',
+    pills: [['pill-g','POWER-ON'],['pill-g','TAPEOUT DONE']],
+    anno: 'Tapeout completed Jun 2. Physical data review Jun 11 7pm. Power-on target 9/6/2026.',
+    meetings: [
+      {time:'7:00 PM', title:'GR15x Physical Data review', pill:'pill-g'},
+    ],
+    risks: [
+      {p:'m',t:'Transitioning to Power On -- early post-silicon phase; power-on risks emerging (target 9/6/2026)'},
+      {p:'l',t:'Bug 5730588 -- VBIOS TOT health in progress; presilicon execution complete'},
+    ],
+    checklist: [
+      {t:'Silicon tapeout complete (6/2/2026)',owner:'Vinay Sharma',done:true},
+      {t:'Power On preparation kickoff',owner:'Vinay Sharma',done:false},
+      {t:'Milestone schedule defined for post-silicon',owner:'Anshul Gupta',done:false},
+    ],
+    emails: [],
+    slack: [],
+    prog: 20, phase:'Post-Silicon'
+  },
+  tb500: {
+    title: 'TB500 · Vera CPU',
+    sub: 'Post-Silicon · SW CM: Sowjanya · NVL72 SW 0.6 Active · BWAT ~6/15',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
+    pills: [['pill-g','93% COMPLETE'],['pill-g','NVL72 SW 0.6']],
+    anno: 'PS SBIOS Released 6/2. MODS V8.0 RC 6/4. M-pkg FinalCWAT parts arriving 6/11. BWAT target ~6/15. Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz).',
+    meetings: [
+      {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
+    ],
+    risks: [
+      {p:'h',t:'M-pkg SK memory decision: do not build with SK memory -- Hynix 2R/96GB SOCAMM failing at 4800 MHz (Bug 6217453)'},
+      {p:'h',t:'QS blocker bugs: 90 open -- DCPOR Strata 4 features remain (closing by 6/5)'},
+      {p:'h',t:'USB transfers instability in OOBHUB (Bug 6103272 / 6091323) -- HMC FW & OOBHUB FW WARs pending merge'},
+      {p:'m',t:'MSEQ L2 resets on NVL72 CPU yield issue -- CBB MMIO intermittent failures; debug ongoing (Bug 6163858)'},
+      {p:'m',t:'9600MT/s 2R module shortage due to NVL72 allocation -- recovery expected end of June'},
+    ],
+    checklist: [
+      {t:'PS SBIOS release ~6/2',owner:'Sowjanya',done:true},
+      {t:'MODS V8.0 RC cut 6/4; target release 6/11',owner:'Sowjanya',done:false},
+      {t:'M-pkg FinalCWAT parts arriving 6/11; SW cutoff 6/3',owner:'Sowjanya',done:false},
+      {t:'P-boards BWAT Final WAT trending 6/15',owner:'HW team',done:false},
+      {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
+    ],
+    emails: [
+      {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Today 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
+    ],
+    slack: [],
+    prog: 93, phase:'Post-Silicon'
+  },
+  tb600: {
+    title: 'TB600 · Vera Ultra',
+    sub: 'Pre-Silicon · SW CM: Hui Fu (OOO Jun 11-16) · IAS/GFD Reviews Active',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
+    pills: [['pill-b','PRE-SILICON'],['pill-a','OOO 6/11-16']],
+    anno: 'Hui Fu OOO Jun 11-16. Simulation requirements gathering from SW teams. IAS and GFD reviews active. ES target Q4 2026.',
+    meetings: [],
+    risks: [
+      {p:'m',t:'Gathering simulation requirements from SW teams -- IAS and GFD reviews ongoing'},
+      {p:'m',t:'CM Hui Fu OOO Jun 11-16 -- coverage plan needed for active IAS/GFD reviews'},
+      {p:'l',t:'Early stage -- no critical blockers identified'},
+    ],
+    checklist: [
+      {t:'POST self-test pass',owner:'Hui Fu',done:true},
+      {t:'DDR5 training validation',owner:'PHY team',done:true},
+      {t:'PCIe enumeration complete',owner:'FW team',done:true},
+      {t:'IAS/GFD reviews complete',owner:'Hui Fu',done:false},
+      {t:'Simulation requirements finalized',owner:'Hui Fu',done:false},
+    ],
+    emails: [{sub:'Following: Hui ooo (6/11 - 6/16)',from:'Calendar',time:'Today',body:'Hui Fu out of office June 11 through June 16.'}],
+    slack: [],
+    prog: 40, phase:'Pre-Silicon'
+  },
+  thorz: {
+    title: 'ThorZ · CPU',
+    sub: 'Post-Silicon · SW CM: Mayank Kapoor · BNB 5/28 · QS Qual Focus · DTS Released',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
+    pills: [['pill-a','QS FOCUS'],['pill-g','BNB DONE']],
+    anno: 'BNB Declared 5/28. QS Qual Focus. DTS Released (VF v2). MCU regressions: ASILNA, PwrCtrl (29), TMON, VMON (30). MaxP scope added by BU -- new PC cycle required.',
+    meetings: [],
+    risks: [
+      {p:'h',t:'MaxP scope added by BU (Auto) -- new PC cycle required, schedule impact TBD'},
+      {p:'m',t:'CPU Soft Lock up active -- Bug 6124878, root cause TBD'},
+      {p:'l',t:'SCG HSIO debug (PCIe/MGBE) ongoing -- USB LPM final fix CL 341783 submitted, GVS 4261895 triggered 6/7'},
+    ],
+    checklist: [
+      {t:'SCG miniWAT coverage 100%',owner:'Mayank Kapoor',done:true},
+      {t:'DTS released with VF v2 (PC1000Q, TA1050SA, TA1040SA -- ThorZ MaxQ)',owner:'Mayank Kapoor',done:true},
+      {t:'MNB/CS completion by 6/13',owner:'HW team',done:false},
+      {t:'CPU Soft Lock up Bug 6124878 resolved',owner:'SW team',done:false},
+      {t:'MODS/SW release trending 6/16 (RA mode release TBD)',owner:'MODS team',done:false},
+      {t:'QBAA noise -- isolated to wafer lot U6F059.000; replacements ordered 5/29',owner:'PHY team',done:false},
+    ],
+    emails: [],
+    slack: [
+      {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 9 8:35pm',msg:'ThorZ MCU test run: 387/463 passed. ASILNA(1), PwrCtrl(29), TMON(6), VMON(30) regressions flagged for owner triage.'},
+    ],
+    prog: 78, phase:'Post-Silicon'
+  },
+  fn10x: {
+    title: 'FN10x · Feynman',
+    sub: 'Pre-Silicon · SW CM: Madhura · Multi-dielet RTL · Kernel 38% vs 96% target',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/FEYNMANGPUHOST',
+    pills: [['pill-a','PRE-SILICON'],['pill-a','MULTI-DIELET']],
+    anno: 'FN10x (Feynman) multi-dielet RTL active. 43 open issues (37 > 7 days). Kernel Ready 38% vs 96% target. Test Ready 17%. Final NL RTL gate Jul 2026.',
+    meetings: [],
+    risks: [
+      {p:'h',t:'PRI_HUB delays (>1 month) blocking Phase 23/24'},
+      {p:'h',t:'43 open issues (37 >7 days) -- Kernel Ready 38% vs 96% target; Test Ready 17% vs 96% target'},
+      {p:'h',t:'Memory system ordering issues -- FB->L2 out-of-order extended DPCTMA barrier (Bugs 6197993, 6193509, 5995557)'},
+      {p:'h',t:'XBAR response-path out-of-order (Bug 6058384); DPC SP skew after MMU (Bug 6084959)'},
+      {p:'m',t:'Multi-dielet first -- cross-dielet SW integration complexity'},
+    ],
+    checklist: [
+      {t:'Phase 21 IODS SECHUB unblock (May 15)',owner:'Madhura',done:false},
+      {t:'Phase 12 Discovery Flow submission',owner:'SW team',done:false},
+      {t:'IODS Self-boot failure Bug 6052109 resolved',owner:'SW team',done:false},
+      {t:'FN662 0-GPC config support',owner:'EMU team',done:false},
+      {t:'Final Netlist RTL gate (Jul 7)',owner:'Madhura',done:false},
+    ],
+    emails: [],
+    slack: [{ch:'#ai-news',from:'Andy Kim',time:'Jun 9',msg:'NVIDIA Rubin Ultra & Feynman expected to drive TSMC SoIC demand -- Besi, Applied Materials, TEL seen as beneficiaries.'}],
+    prog: 38, phase:'Pre-Silicon'
+  },
+  n2x: {
+    title: 'N2x · CPU',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · FPGA H2.07 Active · FDI 6/30',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
+    pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
+    anno: 'N2x at risk. FPGA H2.07 validation active. FDI 6/30. Display bring-up H2 blocked by Jade HW bug. Windows boot not up on N2x FPGA. D3 discussions ongoing.',
+    meetings: [],
+    risks: [
+      {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
+      {p:'h',t:'Windows boot not up on N2x FPGA platform -- Jade bringing up on p-core only netlist'},
+      {p:'h',t:'D3 discussions ongoing -- may result in chip schedule pushout if approved'},
+      {p:'h',t:'VDK -- Multiple performance bottlenecks across Display, GPU_RISCV, and front door boot'},
+      {p:'m',t:'NV Perf validation not started due to resource unavailability -- expected next week'},
+      {p:'m',t:'Hybrid IPP Bringup delayed due to Jade netlist issues till July'},
+    ],
+    checklist: [
+      {t:'FPGA H3 netlist available (6/5)',owner:'DV team',done:false},
+      {t:'Display H2 Jade HW bug fix resolved',owner:'HW team',done:false},
+      {t:'Testplan L0 to 22% (was 10%) -- maintain progress',owner:'DV team',done:true},
+      {t:'Windows boot FPGA coverage gap closed',owner:'SW team',done:false},
+      {t:'NV Perf validation kickoff (next week)',owner:'Vivek Desikan',done:false},
+    ],
+    emails: [],
+    slack: [],
+    prog: 32, phase:'Pre-Silicon'
+  },
+  tcx10: {
+    title: 'TCX10 · CPU',
+    sub: 'Pre-Silicon · SW CM: Roopa · POR Discussions Active · 8 New Features',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
+    pills: [['pill-m','SETUP']],
+    anno: 'TCX10 in early setup phase. POR discussions ongoing -- 8 new features added to achieve performance targets.',
+    meetings: [],
+    risks: [
+      {p:'m',t:'POR discussions ongoing -- 8 new features added to achieve performance targets; scope expanding'},
+    ],
+    checklist: [
+      {t:'POR kickoff',owner:'Roopa',done:false},
+      {t:'Arch spec with 8 new features',owner:'TBD',done:false},
+    ],
+    emails: [],
+    slack: [],
+    prog: 8, phase:'Pre-Silicon'
+  },
+  t257: {
+    title: 'T257 · Monet CPU',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · FPGA Validation Active',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
+    pills: [['pill-m','SETUP']],
+    anno: 'T257 (Monet) pre-silicon setup. FPGA validation framework active. BMW design award decision pending -- outcome may affect scope/timeline.',
+    meetings: [],
+    risks: [
+      {p:'m',t:'BMW design award decision pending -- outcome may affect program scope/timeline'},
+    ],
+    checklist: [
+      {t:'BMW design award decision',owner:'Vivek Desikan',done:false},
+      {t:'FPGA validation ongoing',owner:'DV team',done:false},
+    ],
+    emails: [],
+    slack: [],
+    prog: 10, phase:'Pre-Silicon'
+  },
+  t294: {
+    title: 'T294 · Magni CPU',
+    sub: 'Pre-Silicon · SW CM: Roopa · Arch Investigations Active · POR 90% by 6/30',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
+    pills: [['pill-m','SETUP']],
+    anno: 'Arch investigations and readouts active. Targeting 90% POR complete by 6/30.',
+    meetings: [],
+    risks: [
+      {p:'h',t:'Safety design verification HIGH risk -- HSR dependency Feb 2028; concept assessment ~1 month before tapeout'},
+      {p:'m',t:'FI FMEDA timeline -- base design done Dec-Jan, 3 months to complete; tight schedule'},
+      {p:'l',t:'Arch investigations and readouts ongoing -- targeting 90% POR complete by 6/30'},
+    ],
+    checklist: [
+      {t:'Arch readouts complete',owner:'Roopa',done:false},
+      {t:'90% POR by 6/30',owner:'Roopa',done:false},
+    ],
+    emails: [],
+    slack: [{ch:'#t294_magni_fsm',from:'zvi_goldshtein',time:'Today 1:58pm',msg:'Safety plan risks: Safety design verification (HIGH), FI FMEDA timing (MEDIUM), Concept assessment ~1 month before T/O (HIGH).'}],
+    prog: 8, phase:'Pre-Silicon'
+  },
+  t374: {
+    title: 'T374 · Beacon',
+    sub: 'Post-Silicon · SW CM: Roopa · NVLink Fusion · QS MODS/Fuse Release Under Review',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
+    pills: [['pill-a','POST-SI']],
+    anno: 'T374 Beacon post-silicon. Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact.',
+    meetings: [],
+    risks: [
+      {p:'m',t:'Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact'},
+    ],
+    checklist: [
+      {t:'Post-Si schedule alignment complete',owner:'Roopa',done:false},
+      {t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false},
+    ],
+    emails: [],
+    slack: [],
+    prog: 5, phase:'Post-Silicon'
+  }
+};
+
+
+</script>
+</body>
+</html>
