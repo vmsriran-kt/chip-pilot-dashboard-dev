@@ -1442,8 +1442,11 @@ function toggleNav(){
 }
 
 S.phase=localStorage.getItem('cp2_phase')||'pre';
-const savedTheme=localStorage.getItem('cp2_theme')||'light';
-if(savedTheme==='light')document.body.classList.add('light');
+// Light is the default — only go dark if user explicitly chose dark
+document.body.classList.add('light');
+const savedTheme=localStorage.getItem('cp2_theme');
+if(savedTheme==='dark') document.body.classList.remove('light');
+if(!savedTheme) localStorage.setItem('cp2_theme','light');
 updateThemeBtn();
 showView('cockpit');
 renderCC();
