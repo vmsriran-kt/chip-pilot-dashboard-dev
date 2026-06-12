@@ -1993,10 +1993,10 @@ const CHIP_DB = {
   },
   gr10x: {
     title: 'GR10x · Rubin GPU',
-    sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · PS/PRel Active · PRel 6/22',
+    sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · QS Done · MNB Active → PS',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
-    pills: [['pill-g','QS DONE'],['pill-g','PREL 6/22']],
-    anno: 'QS complete. PS/PRel Active. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. PRel 6/22 at risk. SHTOL: MR1 boards bad heater rods; T48 burnin WW29; PreQual EVT complete. QS SW 0.6 in progress. P-Board key constraint. NCCL hang GR100/PDX under investigation.',
+    pills: [['pill-g','QS DONE'],['pill-a','MNB ACTIVE']],
+    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. SHTOL: MR1 boards bad heater rods; T48 burnin WW29; PreQual EVT complete. QS SW 0.6 in progress. P-Board key constraint. RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation.',
     meetings: [
       {time:'3:15 PM', title:'Rubin-Compute Execution RM Sync', pill:'pill-g'},
       {time:'9:00 PM', title:'GR10x chip schedule alignment', pill:'pill-a'},
@@ -2022,8 +2022,9 @@ const CHIP_DB = {
     checklist: [
       {t:'FW v3.1 NVLink lane drop patch merged',owner:'FW team',done:false},
       {t:'PS validation suite complete',owner:'Ranjani V',done:true},
-      {t:'PRel readiness review',owner:'Madhura',done:false},
+      {t:'MNB signoff (Bug 5896446) — Metal Not Bad criteria met',owner:'Madhura',done:false},
       {t:'L6 system availability for PG558 SW QA',owner:'Madhura',done:false},
+      {t:'PS chip milestone: RIST feature enablement',owner:'Ranjani V',done:false},
     ],
     emails: [
       {sub:'CMD Bug Approval: Branch pending >1 day',from:'sw-cm-notifications',time:'Today 4:20am',body:'Resource Manager - Chips - GR10x (270087, Nishant Patel, frel_1) -- Not Started, 2 days old.'},
