@@ -344,6 +344,10 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 .nav-search-icon{position:relative}
 .nav-search-icon::before{content:'⌕';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;z-index:1}
 .nav-section{padding:10px 14px 4px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.nav-my-badge{font-size:8px;font-weight:800;padding:1px 5px;border-radius:3px;background:var(--nv-green);color:#000;margin-left:4px;vertical-align:middle;letter-spacing:.3px}
+.nav-my-section{padding:10px 14px 4px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--nv-green)}
+.user-chip-row{display:flex;align-items:center;gap:6px;padding:5px 14px 2px;font-size:11px;color:var(--muted)}
+.user-avatar{width:22px;height:22px;border-radius:50%;background:var(--nv-green);color:#000;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .nav-item{padding:10px 14px;cursor:pointer;border-left:2px solid transparent;transition:all .15s;position:relative}
 .nav-item:hover{background:rgba(255,255,255,.04);border-left-color:rgba(118,185,0,.3)}
 .nav-item.on{background:rgba(118,185,0,.08);border-left-color:var(--nv-green)}
@@ -575,6 +579,23 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
   </div>
 
   <div class="nav-home on" id="nav-home" onclick="showView('cockpit')">🏠 Command Center</div>
+
+  <div class="nav-sep"></div>
+  <div class="nav-my-section">⭐ My Chips</div>
+  <div class="user-chip-row">
+    <div class="user-avatar">RV</div>
+    <span>Ranjani V · SW CM</span>
+  </div>
+  <div class="nav-item" onclick="showView('chip','nr10x')">
+    <div class="nav-chip-code"><span>NR10x <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--amber);font-weight:700">FNL RISK</span></div>
+    <div class="nav-chip-sub">NVLink Fusion <span class="nav-my-badge">MY CHIP</span></div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:35%"></div></div>
+  </div>
+  <div class="nav-item" onclick="showView('chip','gr10x')">
+    <div class="nav-chip-code"><span>GR10x <span class="status-dot dot-g"></span></span><span style="font-size:9px;color:var(--nv-green);font-weight:700">QS FOCUS</span></div>
+    <div class="nav-chip-sub">Rubin GPU <span class="nav-my-badge">MY CHIP</span></div>
+    <div class="nav-prog"><div class="nav-prog-fill" style="width:95%"></div></div>
+  </div>
 
   <div class="nav-sep"></div>
   <div class="nav-section">Fusion Chips</div>
@@ -987,6 +1008,11 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 
     <!-- ════════════════ CHIP DETAIL (DYNAMIC) ════════════════ -->
     <div id="v-chip" style="display:none">
+      <!-- My Chips quick-nav bar -->
+      <div id="my-chips-bar" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.18);border-radius:8px;flex-wrap:wrap">
+        <span style="font-size:10px;font-weight:700;color:var(--nv-green);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap">My Chips</span>
+        <div id="my-chips-pills" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+      </div>
       <div id="chip-header" style="display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap">
         <div>
           <div id="chip-title" style="font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--text)">Select a chip</div>
@@ -1007,6 +1033,17 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 
 
 <script>
+// ── Current user identity ──────────────────────────────────────────
+const CURRENT_USER = {
+  name: 'Ranjani V',
+  email: 'ssriranjani@nvidia.com',
+  initials: 'RV',
+  // Chips are auto-detected from CHIP_DB.sub containing this tag
+  tag: 'Ranjani'
+};
+// Populated after CHIP_DB is defined
+let MY_CHIPS = [];
+
 const PHASE_DATA={
   pre:[
     {sec:'👥 People & Leads',pri:['h','h','m','m'],items:['Identify Chip Manager; communicate to ASIC CM to add to WNF Template','Identify SW leads: Kernel, Bootloader, FSP, GSP, Security, Host1x, Audio, Video','Identify SQA and HWQA leads (Android / Automotive / L4T)','Identify Hardware Lead and Architecture Lead']},
@@ -1052,6 +1089,13 @@ const WEEKLY_TASKS=[
   {t:'Send NR10 Chip SW Sync agenda for coming week',pri:'m'},
   {t:'Archive meeting notes to Confluence bring-up wiki',pri:'l'},
 ];
+
+// Detect chips the current user is CM for
+MY_CHIPS = Object.keys(CHIP_DB).filter(id => {
+  const d = CHIP_DB[id];
+  return (d.sub && d.sub.toLowerCase().includes(CURRENT_USER.tag.toLowerCase())) ||
+         (d.checklist && d.checklist.some(c => c.owner && c.owner.toLowerCase().includes(CURRENT_USER.tag.toLowerCase())));
+});
 
 const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}'),
   newChip:{name:'',codename:'',group:'cpu',cm:'',refId:'nr10x'},ncPreview:false};
@@ -1279,6 +1323,19 @@ function renderChipView(chipId) {
   const d = CHIP_DB[chipId];
   if(!d) return;
 
+  // Render My Chips quick-nav pills
+  const myPillsEl = document.getElementById('my-chips-pills');
+  if(myPillsEl && MY_CHIPS.length) {
+    myPillsEl.innerHTML = MY_CHIPS.map(id => {
+      const cd = CHIP_DB[id];
+      const isActive = id === chipId;
+      const statusColor = cd.prog >= 80 ? 'var(--nv-green)' : cd.prog >= 40 ? 'var(--amber)' : 'var(--red)';
+      return `<button onclick="showView('chip','${id}')" style="padding:4px 10px;border-radius:5px;border:1px solid ${isActive?'var(--nv-green)':'var(--border)'};background:${isActive?'rgba(118,185,0,.15)':'var(--bg2)'};color:${isActive?'var(--nv-green)':'var(--text)'};font-size:11px;font-weight:${isActive?'800':'600'};cursor:pointer;transition:all .15s">
+        ${id.toUpperCase()} <span style="font-size:9px;color:${statusColor}">●</span>
+      </button>`;
+    }).join('');
+  }
+
   document.getElementById('chip-title').textContent = d.title;
   // Update tab label
   var tabEl = document.getElementById('tab-chip');
@@ -1361,8 +1418,12 @@ function showView(id,chipId,tabEl){
   const t=tabEl||document.getElementById('tab-'+id);
   if(t)t.classList.add('on');
   if(id==='cc')renderCC();
-  if(id==='chip' && window.ACTIVE_CHIP) {
-    // Highlight clicked chip in nav
+  if(id==='chip') {
+    // If no chip selected yet, default to user's primary chip
+    if(!window.ACTIVE_CHIP) {
+      window.ACTIVE_CHIP = MY_CHIPS[0] || Object.keys(CHIP_DB)[0];
+    }
+    // Highlight active chip in nav
     document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
     var activeChipId=window.ACTIVE_CHIP;
     document.querySelectorAll('.nav-item').forEach(function(n){
@@ -1381,7 +1442,7 @@ function toggleNav(){
 }
 
 S.phase=localStorage.getItem('cp2_phase')||'pre';
-const savedTheme=localStorage.getItem('cp2_theme')||'dark';
+const savedTheme=localStorage.getItem('cp2_theme')||'light';
 if(savedTheme==='light')document.body.classList.add('light');
 updateThemeBtn();
 showView('cockpit');
