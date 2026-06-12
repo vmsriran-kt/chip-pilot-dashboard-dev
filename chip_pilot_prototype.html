@@ -1191,8 +1191,7 @@ function renderCC(){
     const nc=S.newChip;
     const refChip=CHIP_DB[nc.refId]||CHIP_DB['nr10x'];
     const ps=refChip.pageStructure||[];
-    const chipName=nc.name||'';
-    const displayName=chipName||'{CHIP}';
+    const displayName=nc.name||'{CHIP}';
     const groupOpts=['cpu','gpu','networking','storage','platform'].map(g=>
       `<option value="${g}"${nc.group===g?' selected':''}>${g.toUpperCase()}</option>`).join('');
     const refOpts=Object.keys(CHIP_DB).map(k=>
@@ -1202,63 +1201,74 @@ function renderCC(){
       `<option value="__custom__"${!KNOWN_SPACES.find(s=>s.key===nc.confluenceSpace)?' selected':''}>Custom space key…</option>`;
     const isCustomSpace=!KNOWN_SPACES.find(s=>s.key===nc.confluenceSpace);
     const spaceKey=nc.confluenceSpace||USER_PERSONAL_SPACE;
-    const parentPath=nc.confluenceParent ? nc.confluenceParent : '(root of space)';
+    const parentPath=nc.confluenceParent||'(root of space)';
     const confBaseUrl='https://nvidia.atlassian.net/wiki/spaces/';
 
     // Build tree HTML
     let treeHtml='';
     if(ps.length){
       treeHtml='<div class="pg-tree">';
-      ps.forEach((p,i)=>{
+      ps.forEach(p=>{
         const indent=p.level===0?'root':p.level===1?'pg-l1':'pg-l2';
         const title=p.title.replace(/\{CHIP\}/g,displayName);
         const isHome=p.level===0;
-        const pageUrl=isHome
-          ? `${confBaseUrl}${spaceKey}/overview`
-          : `${confBaseUrl}${spaceKey}/pages/new`;
         treeHtml+=`<div class="pg-node ${indent}">
           <span style="flex:1">${title}</span>
-          ${isHome?`<a href="${pageUrl}" target="_blank" style="font-size:9px;color:var(--nv-green);text-decoration:none;opacity:.7">${spaceKey} ↗</a>`:''}
+          ${isHome?`<a href="${confBaseUrl}${spaceKey}/overview" target="_blank" style="font-size:9px;color:var(--nv-green);text-decoration:none;opacity:.7">${spaceKey} ↗</a>`:''}
           <span class="pg-pill">${isHome?'HOME':'PAGE'}</span>
         </div>`;
       });
       treeHtml+='</div>';
     }
 
-    // Readiness check
     const missing=[];
     if(!nc.name) missing.push('Chip Name');
     if(!nc.cm)   missing.push('SW CM');
     const canGenerate=missing.length===0 && ps.length>0;
 
+    // ── KEY FIX: text inputs use oninput (state only) + onchange (re-render on blur/Enter)
+    // This prevents the re-render from destroying the focused element mid-typing
     body.innerHTML=`<div class="cc-section-wrap">
       <div class="cc-sec-hdr"><span class="cc-sec-title">🆕 New Chip Setup</span>
         <span class="cc-sec-count" style="font-size:10px;color:var(--muted)">${ps.length} pages · ${spaceKey}</span>
       </div>
       <div style="padding:14px 16px">
+        <form class="nc-form" onsubmit="return false" autocomplete="off">
 
-        <form class="nc-form" onsubmit="return false">
           <div class="nc-field">
             <label class="nc-label">Chip Name <span style="color:#e53e3e">*</span></label>
-            <input class="nc-input" placeholder="e.g. GR20x" value="${nc.name}"
-              oninput="S.newChip.name=this.value;renderCC()"
+            <input class="nc-input" id="nc-f-name" placeholder="e.g. GR20x" value="${nc.name}"
+              oninput="S.newChip.name=this.value;ncLiveUpdate()"
+              onchange="renderCC()"
               style="${!nc.name?'border-color:rgba(229,62,62,.5)':''}">
           </div>
+
           <div class="nc-field">
             <label class="nc-label">Codename</label>
-            <input class="nc-input" placeholder="e.g. RubinNext" value="${nc.codename||''}"
-              oninput="S.newChip.codename=this.value;renderCC()">
+            <input class="nc-input" id="nc-f-code" placeholder="e.g. RubinNext" value="${nc.codename||''}"
+              oninput="S.newChip.codename=this.value"
+              onchange="renderCC()">
           </div>
+
           <div class="nc-field">
             <label class="nc-label">Group / Domain</label>
             <select class="nc-select" onchange="S.newChip.group=this.value;renderCC()">${groupOpts}</select>
           </div>
-          <div class="nc-field">
-            <label class="nc-label">SW CM <span style="color:#e53e3e">*</span></label>
-            <input class="nc-input" placeholder="name or email" value="${nc.cm}"
-              oninput="S.newChip.cm=this.value;renderCC()"
+
+          <div class="nc-field" style="position:relative">
+            <label class="nc-label">SW CM <span style="color:#e53e3e">*</span>
+              <span style="font-weight:400;color:var(--nv-green);font-size:8px;margin-left:4px">from directory</span>
+            </label>
+            <input class="nc-input" id="nc-f-cm" placeholder="Type name to search directory…" value="${nc.cm}"
+              oninput="S.newChip.cm=this.value;ncCMSearch(this.value);ncLiveUpdate()"
+              onchange="renderCC()"
+              onblur="setTimeout(()=>ncHideCMPicker(),150)"
+              onfocus="ncCMSearch(this.value)"
+              autocomplete="off"
               style="${!nc.cm?'border-color:rgba(229,62,62,.5)':''}">
+            <div id="nc-cm-picker" style="display:none;position:absolute;top:100%;left:0;right:0;z-index:100;background:var(--bg2);border:1px solid var(--border);border-radius:7px;box-shadow:0 4px 16px rgba(0,0,0,.18);max-height:200px;overflow-y:auto;margin-top:2px"></div>
           </div>
+
           <div class="nc-field full">
             <label class="nc-label">Reference Chip (page structure template)</label>
             <select class="nc-select" onchange="S.newChip.refId=this.value;renderCC()">${refOpts}</select>
@@ -1267,51 +1277,56 @@ function renderCC(){
           <div class="nc-field" style="grid-column:1/-1;margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">
             <label class="nc-label" style="color:var(--nv-green)">📍 Confluence Destination</label>
           </div>
+
           <div class="nc-field">
             <label class="nc-label">Space</label>
             <select class="nc-select" onchange="
               if(this.value==='__custom__'){S.newChip.confluenceSpace='';renderCC();}
               else{S.newChip.confluenceSpace=this.value;renderCC();}">${spaceOpts}</select>
           </div>
+
           <div class="nc-field">
-            <label class="nc-label">Parent Page <span style="color:var(--muted)">(optional)</span></label>
-            <input class="nc-input" placeholder="Leave blank = root of space" value="${nc.confluenceParent||''}"
-              oninput="S.newChip.confluenceParent=this.value;renderCC()">
+            <label class="nc-label">Parent Page <span style="color:var(--muted)">(optional — blank = root)</span></label>
+            <input class="nc-input" id="nc-f-parent" placeholder="Leave blank = root of space" value="${nc.confluenceParent||''}"
+              oninput="S.newChip.confluenceParent=this.value"
+              onchange="renderCC()">
           </div>
+
           ${isCustomSpace?`<div class="nc-field full">
             <label class="nc-label">Custom Space Key</label>
             <input class="nc-input" placeholder="e.g. MYSPC" value="${nc.confluenceSpace||''}"
-              oninput="S.newChip.confluenceSpace=this.value;renderCC()">
+              oninput="S.newChip.confluenceSpace=this.value"
+              onchange="renderCC()">
           </div>`:''}
         </form>
 
-        <!-- Space path pill -->
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:var(--muted)">
-          <span style="font-size:10px">📂</span>
+        <!-- Path breadcrumb -->
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;font-size:11px;color:var(--muted);flex-wrap:wrap">
+          <span>📂</span>
           <span style="font-family:monospace;background:var(--bg2);border:1px solid var(--border);padding:2px 8px;border-radius:4px;color:var(--text2)">${spaceKey}</span>
-          <span>›</span>
-          <span style="color:var(--muted)">${parentPath}</span>
-          <span>›</span>
-          <span style="color:var(--text2);font-weight:600">${displayName} SW Program Home</span>
+          <span>›</span><span>${parentPath}</span>
+          <span>›</span><span id="nc-path-end" style="color:var(--text2);font-weight:600">${displayName} SW Program Home</span>
         </div>
 
-        ${ps.length ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
-          Page Tree Preview — ${ps.length} pages based on ${refChip.title.split('·')[0].trim()}
-        </div>${treeHtml}` : '<div style="color:var(--muted);font-size:12px;padding:12px 0">Select a reference chip above to preview the page tree.</div>'}
+        ${ps.length
+          ? `<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px">
+              Page Tree — ${ps.length} pages · based on ${refChip.title.split('·')[0].trim()}
+             </div>${treeHtml}`
+          : '<div style="color:var(--muted);font-size:12px;padding:12px 0">Select a reference chip above to preview the page tree.</div>'}
 
-        ${!canGenerate?`<div style="font-size:11px;color:var(--amber);margin-bottom:10px">⚠ Fill in: ${missing.join(', ')}</div>`:''}
+        <div id="nc-missing" style="${!canGenerate?'':'display:none'};font-size:11px;color:var(--amber);margin-bottom:10px">
+          ${missing.length?'⚠ Fill in: '+missing.join(', '):''}
+        </div>
 
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-          <button class="act-btn" onclick="copySetupPrompt()"
-            style="background:${canGenerate?'var(--nv-green)':'var(--border)'};color:${canGenerate?'#000':'var(--muted)'};font-weight:700;cursor:${canGenerate?'pointer':'default'}">
+          <button id="nc-copy-btn" class="act-btn" onclick="copySetupPrompt()"
+            style="background:${canGenerate?'var(--nv-green)':'var(--border)'};color:${canGenerate?'#000':'var(--muted)'};font-weight:700">
             📋 Copy Agent Prompt
           </button>
-          <button class="act-btn" onclick="previewPrompt()"
-            style="background:var(--bg2);border:1px solid var(--border)">
+          <button class="act-btn" onclick="previewPrompt()" style="background:var(--bg2);border:1px solid var(--border)">
             👁 Preview Prompt
           </button>
-          <button class="act-btn" onclick="clearNewChipForm()"
-            style="background:var(--bg2);border:1px solid var(--border)">
+          <button class="act-btn" onclick="clearNewChipForm()" style="background:var(--bg2);border:1px solid var(--border)">
             🗑 Clear
           </button>
         </div>
@@ -1454,6 +1469,99 @@ function clearNewChipForm(){
   const el=document.getElementById('nc-prompt-preview');
   if(el)el.style.display='none';
   renderCC();
+}
+
+// ── New Chip live update (no full re-render — just patches the DOM) ──
+function ncLiveUpdate(){
+  const name=S.newChip.name||'{CHIP}';
+  const pathEnd=document.getElementById('nc-path-end');
+  if(pathEnd)pathEnd.textContent=name+' SW Program Home';
+  // update copy button state
+  const btn=document.getElementById('nc-copy-btn');
+  const warn=document.getElementById('nc-missing');
+  const ok=S.newChip.name&&S.newChip.cm;
+  if(btn){btn.style.background=ok?'var(--nv-green)':'var(--border)';btn.style.color=ok?'#000':'var(--muted)';}
+  if(warn){
+    const missing=[];
+    if(!S.newChip.name)missing.push('Chip Name');
+    if(!S.newChip.cm)missing.push('SW CM');
+    warn.textContent=missing.length?'⚠ Fill in: '+missing.join(', '):'';
+    warn.style.display=missing.length?'':'none';
+  }
+  // highlight required inputs
+  const nameInp=document.getElementById('nc-f-name');
+  const cmInp=document.getElementById('nc-f-cm');
+  if(nameInp)nameInp.style.borderColor=S.newChip.name?'':'rgba(229,62,62,.5)';
+  if(cmInp)cmInp.style.borderColor=S.newChip.cm?'':'rgba(229,62,62,.5)';
+}
+
+// ── Active Directory people picker ─────────────────────────────────
+// Extracted from CHIP_DB + known team (populated after CHIP_DB defined)
+let AD_PEOPLE=[];
+
+function buildADPeople(){
+  const seen={};
+  // Pull CMs from CHIP_DB sub fields
+  Object.entries(CHIP_DB).forEach(([id,d])=>{
+    const m=d.sub?d.sub.match(/SW\s*CM[s]?:\s*([^·\n]+)/i):null;
+    if(m){
+      m[1].split(/[,·]/).map(s=>s.trim()).filter(Boolean).forEach(name=>{
+        if(!seen[name.toLowerCase()]){
+          seen[name.toLowerCase()]=true;
+          const chips=Object.entries(CHIP_DB)
+            .filter(([,dd])=>dd.sub&&dd.sub.toLowerCase().includes(name.toLowerCase()))
+            .map(([cid])=>cid.toUpperCase());
+          AD_PEOPLE.push({name,chips,role:'SW CM'});
+        }
+      });
+    }
+  });
+  // Add current user if not already in list
+  if(!seen[CURRENT_USER.name.toLowerCase()]){
+    AD_PEOPLE.unshift({name:CURRENT_USER.name,email:CURRENT_USER.email,chips:MY_CHIPS.map(c=>c.toUpperCase()),role:'SW CM'});
+  }
+}
+
+function ncCMSearch(q){
+  const picker=document.getElementById('nc-cm-picker');
+  if(!picker)return;
+  if(!AD_PEOPLE.length)buildADPeople();
+  const ql=(q||'').toLowerCase().trim();
+  const matches=ql
+    ?AD_PEOPLE.filter(p=>p.name.toLowerCase().includes(ql)||(p.email&&p.email.toLowerCase().includes(ql)))
+    :AD_PEOPLE;
+  if(!matches.length){picker.style.display='none';return;}
+  function hl(str){
+    if(!str||!ql)return str;
+    const re=new RegExp('('+ql.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    return str.replace(re,'<mark>$1</mark>');
+  }
+  picker.innerHTML=matches.slice(0,8).map(p=>`
+    <div onclick="ncPickCM('${p.name.replace(/'/g,"\\'")}','${(p.email||'').replace(/'/g,"\\'")}');event.preventDefault()"
+      style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s"
+      onmouseover="this.style.background='rgba(118,185,0,.08)'" onmouseout="this.style.background=''">
+      <div style="width:26px;height:26px;border-radius:50%;background:var(--nv-green);color:#000;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        ${p.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text)">${hl(p.name)}</div>
+        <div style="font-size:9px;color:var(--muted)">${p.role}${p.chips&&p.chips.length?' · '+p.chips.join(', '):''}${p.email?' · '+hl(p.email):''}</div>
+      </div>
+    </div>`).join('');
+  picker.style.display='block';
+}
+
+function ncPickCM(name,email){
+  S.newChip.cm=name;
+  const inp=document.getElementById('nc-f-cm');
+  if(inp)inp.value=name;
+  ncHideCMPicker();
+  ncLiveUpdate();
+}
+
+function ncHideCMPicker(){
+  const picker=document.getElementById('nc-cm-picker');
+  if(picker)picker.style.display='none';
 }
 // ── Sidebar Search ────────────────────────────────────────────────
 let _srFocus = -1;
