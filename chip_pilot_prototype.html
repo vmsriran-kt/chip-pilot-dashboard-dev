@@ -1941,7 +1941,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: 'FNL SW feature-complete at risk. QM4 T-Rex critical long pole -- emulation link bring-up not working. GFD Done 6/6 -- FNL Snap Done 6/8 -- DV All 6/19 On Track -- FNL 6/29 At Risk. First NVLink Fusion SystemSim model available (nvl_fusion_xnq, XNQ Release 2.0.0). PON slipped to Apr-2027.',
+    anno: 'FNL SW feature-complete at risk; QM4 T-Rex long pole -- NR10+QM4 emulation link bring-up still blocked (MSE/NetIR loopback up but not talking to QM4). Sim milestones: Sim 1 Delivered, Sim 2 EFD Passing, Sim 2.5/3 In Planning -- MSE L0 at 100% pass. NetIR release Jun 24 is critical gate for emulator readiness; co-emu scope discussion still open. Tapeout: Aug 31 planning, Nov 30 real. Mitch Luban (Jun 12): asking for test breakdown + MSE VR silicon pass counts.',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
@@ -1957,9 +1957,15 @@ const CHIP_DB = {
     risks: [
       {p:'h',t:'QM4 TREX may slip past FNL RTL snap (Jun 29) -- SW teams reviewing critical path to de-risk'},
       {p:'h',t:'QM4 <-> NR10 emulation link bring-up blocking FM testing -- MSE/NetIR loopback up but not talking to QM4; In Debug'},
+      {p:'h',t:'DFP 0.5 (SWPOR) overdue ~7 months -- catch-up plan under review; risk of DFP 0.7/0.9 schedule cascade'},
+      {p:'h',t:'DFP 0.7 (PFNL) actively slipping from Apr 2026 target -- impacts DFP 0.9 FNL milestone (Aug 2026)'},
       {p:'m',t:'Simulation feature gaps -- boot, resets, UCIe init/error handling not exercised; emulation team preparing bare-metal setup'},
       {p:'m',t:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed before QM4-ready release'},
       {p:'m',t:'FM PRD / POR dates slipped to 6/30 and 7/30'},
+      {p:'m',t:'IAS Top v1.0 sign-off open -- tracking NVBug 6222048; v0.5 done for most modules but v1.0 completion varies by component'},
+      {p:'m',t:'NetIR release Jun 24 is critical for emulator readiness -- miss = emulation bring-up further delayed'},
+      {p:'m',t:'SPI boot emulation validation outstanding -- at risk for FNL scope'},
+      {p:'m',t:'Thermal solution for NR10x dielet unspecified -- flagged high risk in DFP progress; no thermal sync cadence established'},
       {p:'l',t:'Sirius OOB telemetry requirement under revision -- scope impact to POR being assessed'},
     ],
     checklist: [
@@ -1968,10 +1974,16 @@ const CHIP_DB = {
       {t:'FNL SW feature-complete by 6/29',owner:'Ranjani',done:false},
       {t:'SystemSim CAGUID fix delivered',owner:'Ranjani',done:false},
       {t:'Co-emulation scope finalized',owner:'Ranjani',done:false},
+      {t:'IAS Top v1.0 sign-off (NVBug 6222048)',owner:'Hao Liu',done:false},
+      {t:'NetIR release by Jun 24 (emulator readiness gate)',owner:'Team',done:false},
+      {t:'Finalize co-emu scope + ~2-wk FNL slip option',owner:'Ranjani',done:false},
     ],
     emails: [
-      {sub:'NR10 Branching Plan',from:'ssriranjani@nvidia.com',time:'Today 12:39pm',body:'Starting branching conversations for NR10 (NVLink fusion chip). Spoken to Hema and Gus. Loop in Kunle Sijuwade.'},
-      {sub:'NR10 Chip SW Status Report (06/09)',from:'hedara@nvidia.com',time:'Today 10:23pm',body:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed ahead of QM4-ready release for early NVOS testing.'},
+      {sub:'NR10 Chip SW Status Report (06/09/2026)',from:'ssriranjani@nvidia.com',time:'Jun 10',body:'FNL SW feature-complete AT RISK by 06/29. QM4 TREX is long pole. MSE L0 100% pass on emulation. Sim 1 Delivered, Sim 2 EFD Passing. TO Aug 31 planning, Nov 30 real.'},
+      {sub:'NR10 Chip SW Sync -- Meeting Mins 06/10',from:'ssriranjani@nvidia.com',time:'Jun 11',body:'FNL = P0. FNL 06/29 at risk given co-emu strategies still in discussion. NetIR release Jun 24 critical for emulator readiness. SPI boot emulation validation at risk.'},
+      {sub:'Re: NR10 Chip SW Status Report (06/09)',from:'hedara@nvidia.com',time:'Jun 11',body:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed ahead of QM4-ready release for early NVOS testing.'},
+      {sub:'Re: NR10 Chip SW Status Report (06/09)',from:'ssriranjani@nvidia.com',time:'Jun 12',body:'Formatting fix for testdb noted.'},
+      {sub:'Re: NR10 Chip SW Status Report (06/09)',from:'mluban@nvidia.com',time:'Jun 12',body:'What is our breakdown of tests and tests passing on simulation? How many MSE tests do we have running on VR silicon?'},
     ],
     slack: [
       {ch:'#swgpu-chips-nvlink-fusion',from:'Edward Sears',time:'Today 12:54pm',msg:'Is the question about determining HW coverage risk if NR10 SW verif is not done by FNL?'},
