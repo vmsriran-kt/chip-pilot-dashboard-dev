@@ -2009,7 +2009,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · QS Done · MNB Active → PS',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
     pills: [['pill-g','QS DONE'],['pill-a','MNB ACTIVE']],
-    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. SHTOL: MR1 boards bad heater rods; T48 burnin WW29; PreQual EVT complete. QS SW 0.6 in progress. P-Board key constraint. RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation.',
+    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. DVS P-Board count at 21% of planned capacity (600-board target) -- key test coverage risk. VBIOS 99.00.1B.00.00 released 6/10; intermittent driver install fails reproducing (Bug 6283549). SHTOL: MR1 boards bad heater rods; T48 burnin WW29. RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation.',
     meetings: [
       {time:'3:15 PM', title:'Rubin-Compute Execution RM Sync', pill:'pill-g'},
       {time:'9:00 PM', title:'GR10x chip schedule alignment', pill:'pill-a'},
@@ -2040,6 +2040,7 @@ const CHIP_DB = {
       {t:'PS chip milestone: RIST feature enablement',owner:'Ranjani V',done:false},
     ],
     emails: [
+            {sub:'GR10x DVS Bring-up Status - 06-12-2026',from:'mailpage@nvidia.com',time:'Jun 13',body:'DVS P-Board count at 21% of planned capacity (600-board target). VBIOS 99.00.1B.00.00 released. Intermittent driver install fails (Bug 6283549) reproducing after VBIOS update.'},
       {sub:'CMD Bug Approval: Branch pending >1 day',from:'sw-cm-notifications',time:'Today 4:20am',body:'Resource Manager - Chips - GR10x (270087, Nishant Patel, frel_1) -- Not Started, 2 days old.'},
       {sub:'[MODS-GOLDEN] frel_1_256_2.31 Posted (gr100, gr102, gb202)',from:'svccfttapp@nvidia.com',time:'Today 1:46pm',body:'Alan Lee (SW-GPU). MODS Golden for gr100, gr102, gb202 posted successfully.'},
     ],
@@ -2084,8 +2085,8 @@ const CHIP_DB = {
     title: 'TB500 · Vera CPU',
     sub: 'Post-Silicon · SW CM: Sowjanya · NVL72 SW 0.6 Build 4 in QA · M-pkg Rel ~6/24',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
-    pills: [['pill-g','93% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. SCG Final WAT trending 6/15. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz).',
+    pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
+    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. P-pkg NVL72 Prel at 98%; SCG Final WAT trending 6/15. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system (more data pending). Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz).',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2104,11 +2105,12 @@ const CHIP_DB = {
       {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
     ],
     emails: [
-      {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Jun 11 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
+      {sub:'TB500 SCG WW33 Status -- 6/12/2026',from:'VTee@nvidia.com',time:'Jun 13',body:'M-pkg PS A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system; P2P no improvement at HV/LV, variation at MV (800-900mV). More data pending with new parts.'},
       {sub:'[CRITICAL PATH] Vera Rubin NVL72 0.6 SW/FW Release',from:'Sowjanya',time:'Jun 12',body:'0.6 Build 4 In QA. Release target 7/9. Dev Drop 1: 6/29. P-rel/PS-FGI for TB500-M moved to 7/31.'},
+      {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Jun 11 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
     ],
     slack: [],
-    prog: 93, phase:'Post-Silicon',
+    prog: 98, phase:'Post-Silicon',
     pageStructure: [
       {title:'TB500 SW Program Home',level:0},
       {title:'Schedule & Milestones',level:1},
