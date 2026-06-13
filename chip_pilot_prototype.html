@@ -1938,7 +1938,7 @@ function updateThemeBtn(){
 const CHIP_DB = {
   nr10x: {
     title: 'NR10x · NVLink Fusion',
-    sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026',
+    sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026 · PON Apr 2027',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
     anno: 'FNL SW feature-complete at risk; QM4 T-Rex long pole -- NR10+QM4 emulation link bring-up still blocked (MSE/NetIR loopback up but not talking to QM4). Sim milestones: Sim 1 Delivered, Sim 2 EFD Passing, Sim 2.5/3 In Planning -- MSE L0 at 100% pass. NetIR release Jun 24 is critical gate for emulator readiness; co-emu scope discussion still open. Tapeout: Aug 31 planning, Nov 30 real. Mitch Luban (Jun 12): asking for test breakdown + MSE VR silicon pass counts.',
@@ -1955,6 +1955,7 @@ const CHIP_DB = {
       {comp:'TREX Integration',delivery:'Source',repo:'Internal',status:'r',s:'Slip to Aug'},
     ],
     risks: [
+      {p:'h',t:'PON slipped Jan-2027 → Apr 2027 per DFP Progress tracker (Confluence, Jun 11) -- schedule cascade risk under review'},
       {p:'h',t:'QM4 TREX may slip past FNL RTL snap (Jun 29) -- SW teams reviewing critical path to de-risk'},
       {p:'h',t:'QM4 <-> NR10 emulation link bring-up blocking FM testing -- MSE/NetIR loopback up but not talking to QM4; In Debug'},
       {p:'h',t:'DFP 0.5 (SWPOR) overdue ~7 months -- catch-up plan under review; risk of DFP 0.7/0.9 schedule cascade'},
@@ -2086,7 +2087,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Sowjanya · NVL72 SW 0.6 Build 4 in QA · M-pkg Rel ~6/24',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. P-pkg NVL72 Prel at 98%; SCG Final WAT trending 6/15. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system (more data pending). Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz).',
+    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. P-pkg NVL72 Prel at 98%; SCG Final WAT trending 6/15. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system (more data pending). Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz). LP5 POR change (768GB 2R) BCT released; good across all vendors. New memory strategy: TS4 Samsung 7500 4R (unblocked); QS pivots to Micron 9600 2R. M-pkg Final CWAT QA trending 6/17.',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2125,14 +2126,13 @@ const CHIP_DB = {
   },
   tb600: {
     title: 'TB600 · Vera Ultra',
-    sub: 'Pre-Silicon · SW CM: Hui Fu (OOO Jun 11-16) · IAS/GFD Reviews Active',
+    sub: 'Pre-Silicon · SW CM: Hui Fu · IAS/GFD Reviews Active · SCSIM vs System SIM Eval',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
-    pills: [['pill-b','PRE-SILICON'],['pill-a','OOO 6/11-16']],
-    anno: 'Hui Fu OOO Jun 11-16. Simulation requirements gathering from SW teams. IAS and GFD reviews active. ES target Q4 2026.',
+    pills: [['pill-b','PRE-SILICON'],['pill-a','SCSIM/SYS-SIM EVAL']],
+    anno: 'Simulation environment under evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026.',
     meetings: [],
     risks: [
       {p:'m',t:'Gathering simulation requirements from SW teams -- IAS and GFD reviews ongoing'},
-      {p:'m',t:'CM Hui Fu OOO Jun 11-16 -- coverage plan needed for active IAS/GFD reviews'},
       {p:'l',t:'Early stage -- no critical blockers identified'},
     ],
     checklist: [
@@ -2142,7 +2142,7 @@ const CHIP_DB = {
       {t:'IAS/GFD reviews complete',owner:'Hui Fu',done:false},
       {t:'Simulation requirements finalized',owner:'Hui Fu',done:false},
     ],
-    emails: [{sub:'Following: Hui ooo (6/11 - 6/16)',from:'Calendar',time:'Today',body:'Hui Fu out of office June 11 through June 16.'}],
+    emails: [{sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SCSIM vs System SIM evaluation for presi underway. IAS and GFD reviews active.'}],
     slack: [],
     prog: 40, phase:'Pre-Silicon'
   },
@@ -2220,7 +2220,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Vivek Desikan · H3 Netlist to Emulation · SOC FDI 6/30 At Risk',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'SOC FDI 6/30 at risk. H3 netlist released to emulation. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. NVPOR: 474 total; Testplan L0: 27%, L1: 12%. D3 discussions ongoing.',
+    anno: 'SOC FDI 6/30 at risk. H3 netlist released to emulation; H3.05-5 DP/HDMI fixes pending from Jade. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 – CPU not receiving IRQ (HW issue suspected; WAR available). C2C low-power fix and DLA MSI-X fix landed in H3/H2 -- pending H3 validate. N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; Testplan L0: 27%, L1: 12%. IAS/GFD 0.7+1.0 pending reviews: 26. D3 Cold on iGPU -- POR unconfirmed; chip schedule push-out possible.',
     meetings: [],
     risks: [
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
@@ -2233,11 +2233,13 @@ const CHIP_DB = {
     checklist: [
       {t:'FPGA H3 netlist released to emulation',owner:'DV team',done:true},
       {t:'Display H2 Jade HW bug fix resolved',owner:'HW team',done:false},
-      {t:'Testplan L0 to 22% (was 10%) -- maintain progress',owner:'DV team',done:true},
+      {t:'Testplan L0 at 27% (was 22%), L1 at 12% -- continue progress',owner:'DV team',done:true},
       {t:'Windows boot FPGA coverage gap closed',owner:'SW team',done:false},
       {t:'NV Perf validation kickoff (next week)',owner:'Vivek Desikan',done:false},
     ],
-    emails: [],
+    emails: [
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SOC FDI at risk. H3 NL to emulation; H3.05-5 DP/HDMI coming from Jade. Display/Windows blocked on FPGA -- daily debug ongoing. Dev branching to dev-main by 7/6. NVPOR 474 total; L0: 27%, L1: 12%. IAS/GFD pending reviews: 26.'},
+    ],
     slack: [],
     prog: 32, phase:'Pre-Silicon'
   },
