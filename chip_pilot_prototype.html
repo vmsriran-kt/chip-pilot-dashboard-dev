@@ -2166,7 +2166,9 @@ const CHIP_DB = {
       {t:'MODS/SW release trending 6/16 (RA mode release TBD)',owner:'MODS team',done:false},
       {t:'QBAA noise -- isolated to wafer lot U6F059.000; replacements ordered 5/29',owner:'PHY team',done:false},
     ],
-    emails: [],
+    emails: [
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'ThorZ POR updated 360→420 TOPS (+11W, 73.3W→84.3W). Dual RAM assist modes required: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. QS Qual targeting 6/16. HWQA MNB: Coverage 95.66%, Pass 85.23%. MODS IFT SLT release in progress. MNB schedule under review.'},
+    ],
     slack: [
       {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 9 8:35pm',msg:'ThorZ MCU test run: 387/463 passed. ASILNA(1), PwrCtrl(29), TMON(6), VMON(30) regressions flagged for owner triage.'},
     ],
@@ -2275,7 +2277,9 @@ const CHIP_DB = {
       {t:'BMW design award decision',owner:'Vivek Desikan',done:false},
       {t:'FPGA validation ongoing',owner:'DV team',done:false},
     ],
-    emails: [],
+    emails: [
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T257 Monet: BMW design award decision pending. T257 FPGA validation ongoing.'},
+    ],
     slack: [],
     prog: 10, phase:'Pre-Silicon'
   },
@@ -2295,7 +2299,9 @@ const CHIP_DB = {
       {t:'Arch readouts complete',owner:'Roopa',done:false},
       {t:'90% POR by 6/30',owner:'Roopa',done:false},
     ],
-    emails: [],
+    emails: [
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T294 Magni: Arch investigations and readouts ongoing. Targeting POR complete by 6/30.'},
+    ],
     slack: [{ch:'#t294_magni_fsm',from:'zvi_goldshtein',time:'Today 1:58pm',msg:'Safety plan risks: Safety design verification (HIGH), FI FMEDA timing (MEDIUM), Concept assessment ~1 month before T/O (HIGH).'}],
     prog: 8, phase:'Pre-Silicon'
   },
@@ -2304,7 +2310,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Roopa · NVLink Fusion · QS MODS/Fuse Release Under Review',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-a','POST-SI']],
-    anno: 'T374 Beacon post-silicon. Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact.',
+    anno: 'T374 Beacon post-silicon. First FPGA to GPU teams Feb 2027 post SOC FNL -- risks SW validation timelines/purpose; escalation ack but no change to release dates. Focus on post-si schedule. Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact.',
     meetings: [],
     risks: [
       {p:'m',t:'Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact'},
@@ -2313,7 +2319,9 @@ const CHIP_DB = {
       {t:'Post-Si schedule alignment complete',owner:'Roopa',done:false},
       {t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false},
     ],
-    emails: [],
+    emails: [
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T374 Beacon: First FPGA to GPU teams Feb 2027 post SOC FNL -- risks SW validation timelines/purpose. Escalation ack but no change to release dates. Focus on post-si schedule.'},
+    ],
     slack: [],
     prog: 5, phase:'Post-Silicon'
   }
