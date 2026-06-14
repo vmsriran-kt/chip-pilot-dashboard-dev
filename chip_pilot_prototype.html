@@ -2010,7 +2010,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · QS Done · MNB Active → PS',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
     pills: [['pill-g','QS DONE'],['pill-a','MNB ACTIVE']],
-    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. DVS P-Board count at 21% of planned capacity (600-board target) -- key test coverage risk. VBIOS 99.00.1B.00.00 released 6/10; intermittent driver install fails reproducing (Bug 6283549). SHTOL: MR1 boards bad heater rods; T48 burnin WW29. RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation.',
+    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. DVS P-Board count at 21% of planned capacity (600-board target) -- key test coverage risk. VBIOS 99.00.1B.00.00 released 6/10; intermittent driver install fails reproducing (Bug 6283549). SHTOL: MR1 boards bad heater rods; T48 burnin WW29. RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation. Fractal TS2 FAI (6/13): no passing RIN run on FAI#14/#15/#16 -- timeout root cause Bug 6294710 → PRI Level violation Bug 6288193 (FBIO IEEE1500); debug VBIOS WAR available but security sign-off pending; BMC missing NVSwitch telemetry on FAI#14 under investigation.',
     meetings: [
       {time:'3:15 PM', title:'Rubin-Compute Execution RM Sync', pill:'pill-g'},
       {time:'9:00 PM', title:'GR10x chip schedule alignment', pill:'pill-a'},
@@ -2046,6 +2046,7 @@ const CHIP_DB = {
       {sub:'[MODS-GOLDEN] frel_1_256_2.31 Posted (gr100, gr102, gb202)',from:'svccfttapp@nvidia.com',time:'Today 1:46pm',body:'Alan Lee (SW-GPU). MODS Golden for gr100, gr102, gb202 posted successfully.'},
     ],
     slack: [
+      {ch:'#spt-fractal-rubin-l8-all',from:'vasudevr',time:'Jun 13 7:53pm',msg:'Fractal TS2 FAI: no passing RIN on FAI#14/#15/#16. Timeouts root-caused to Bug 6294710 → Bug 6288193 (PRI violation FBIO IEEE1500). Debug VBIOS WAR ready; security sign-off blocking release. BMC missing NVSwitch telemetry on FAI#14 under investigation.'},
       {ch:'#swgpu-chips-bringup-gr10x-rm-team',from:'Chris Buris',time:'Jun 10 3:40pm',msg:'Found how RM accesses FB partition registers -- ENG_IDX_RD_REG -> FB_FBPA_UC_REG -> memsysRegAddress_GR100.'},
     ],
     prog: 95, phase:'Post-Silicon'
@@ -2247,19 +2248,22 @@ const CHIP_DB = {
   },
   tcx10: {
     title: 'TCX10 · CPU',
-    sub: 'Pre-Silicon · SW CM: Roopa · POR Discussions Active · 8 New Features',
+    sub: 'Pre-Silicon · SW CM: Roopa · Emulation Config Active · Testplan Alignment',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-m','SETUP']],
-    anno: 'TCX10 in early setup phase. POR discussions ongoing -- 8 new features added to achieve performance targets.',
+    anno: 'Emulation configuration underway. SOC/GPU/TCX10 testplan alignment discussions active. FN100 CodeComplete targeted 06/18/26; TCX10 Chip Unit targeted 12/31/26 per latest DV milestones.',
     meetings: [],
     risks: [
-      {p:'m',t:'POR discussions ongoing -- 8 new features added to achieve performance targets; scope expanding'},
+      {p:'m',t:'Emulation configuration alignment ongoing between SOC/GPU/TCX10 teams -- testplan dependencies not yet fully resolved'},
+      {p:'m',t:'FN100 CodeComplete target 06/18/26 -- tight timeline for dependent teams'},
     ],
     checklist: [
       {t:'POR kickoff',owner:'Roopa',done:false},
       {t:'Arch spec with 8 new features',owner:'TBD',done:false},
     ],
-    emails: [],
+    emails: [
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'TCX10: Emulation configuration and SOC/GPU/TCX10 testplan alignment discussions active. PIC - Roopa Ranganathan.'},
+    ],
     slack: [],
     prog: 8, phase:'Pre-Silicon'
   },
