@@ -2086,10 +2086,10 @@ const CHIP_DB = {
   },
   tb500: {
     title: 'TB500 · Vera CPU',
-    sub: 'Post-Silicon · SW CM: Sowjanya · Prel 98% · WAT ~6/15 · M-pkg ~6/24',
+    sub: 'Post-Silicon · SW CM: Sowjanya · Prel 98% · WAT Ph1 Done 6/15 · M-pkg ~6/24',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. P-pkg NVL72 Prel at 98%; SCG Final WAT trending 6/15. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system (more data pending). Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz). LP5 POR change (768GB 2R) BCT released; good across all vendors. New memory strategy: TS4 Samsung 7500 4R (unblocked); QS pivots to Micron 9600 2R. M-pkg Final CWAT QA trending 6/17.',
+    anno: 'PS SBIOS Released 6/2. P-pkg PS SLT done; M-pkg release trending 6/24. P-pkg NVL72 Prel at 98%; SCG Final WAT Phase-1 completed 6/15; Phase-2 (thermal swaps) trending 6/30. CR SLT Diag released 6/12 on schedule. NVL72 SW 0.6 Build 4 in QA; Release target 7/9 (Dev Drop 1: 6/29). TB500-M P-rel/PS-FGI moved to 7/31. A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system (more data pending). Do not build with SK memory (Hynix 2R/96GB failing at 4800 MHz). LP5 POR change (768GB 2R) BCT released; good across all vendors. New memory strategy: TS4 Samsung 7500 4R (unblocked); QS pivots to Micron 9600 2R. M-pkg Final CWAT QA trending 6/17.',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2110,7 +2110,7 @@ const CHIP_DB = {
     emails: [
       {sub:'TB500 SCG WW33 Status -- 6/12/2026',from:'VTee@nvidia.com',time:'Jun 13',body:'M-pkg PS A01Z TSMC Fix: No measurable Fmax improvement at Vmax vs A01Y on system; P2P no improvement at HV/LV, variation at MV (800-900mV). More data pending with new parts.'},
       {sub:'[CRITICAL PATH] Vera Rubin NVL72 0.6 SW/FW Release',from:'Sowjanya',time:'Jun 12',body:'0.6 Build 4 In QA. Release target 7/9. Dev Drop 1: 6/29. P-rel/PS-FGI for TB500-M moved to 7/31.'},
-      {sub:'TB500 SW Bring-up Status - KIST - 2026-06-11',from:'sruskamp@nvidia.com',time:'Jun 11 10:35am',body:'VR NVL72 SW 0.6 release (KIST first and main customer). PS SBIOS 6/2 done. BWAT ~6/15.'},
+      {sub:'[Notes] TB500 Bringup Meeting - 06/15/2026',from:'asdash@nvidia.com',time:'Jun 15',body:'Chip P-rel 98% completion across teams. Phase-1 WAT completing 6/15 on schedule; Phase-2 (thermal swaps) trending 6/30. LP5 768GB 2R BCT good across all vendors. CR SLT Diag released 6/12 on schedule.'},
     ],
     slack: [
       {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 15 2:17am',msg:'VR-NVL72 NVBugs Monitor: NEW 0.6_Blocker #6323884 (Vera MSC as CXLMEM from UEFI Option). Updated 0.6_Blocker #5646362 (GR mismatch tracking bug). Total: 547 bugs (0.6_Blocker: 345, 0.5_Blocker: 49, QS_Factory_Start: 37, QS_Factory_End: 20).'},
@@ -2172,6 +2172,7 @@ const CHIP_DB = {
       {t:'QBAA noise -- isolated to wafer lot U6F059.000; replacements ordered 5/29',owner:'PHY team',done:false},
     ],
     emails: [
+      {sub:'T268 Bring-up Status SCG - 6/14/2026',from:'bbakhru@nvidia.com',time:'Jun 14',body:'ThorZ MaxP (RA/Liquid cooled) is primary MNB/QS schedule driver. CP rev0.7 trending 6/29 with new VNM ISINK patterns. NVCAL DTS releasing 6/16 (Fmax w/o VNM ISINK); DTS with VNM ISINK for RA trending 7/10. HSIO MNB blocked on CPrev0.4 unfused OPT_PHY_PLL fuses (USB/MGBE failures). Mitigation: ~30 locally fused units being used.'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'ThorZ POR updated 360→420 TOPS (+11W, 73.3W→84.3W). Dual RAM assist modes required: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. QS Qual targeting 6/16. HWQA MNB: Coverage 95.66%, Pass 85.23%. MODS IFT SLT release in progress. MNB schedule under review.'},
     ],
     slack: [
