@@ -2046,6 +2046,7 @@ const CHIP_DB = {
       {sub:'[MODS-GOLDEN] frel_1_256_2.31 Posted (gr100, gr102, gb202)',from:'svccfttapp@nvidia.com',time:'Today 1:46pm',body:'Alan Lee (SW-GPU). MODS Golden for gr100, gr102, gb202 posted successfully.'},
     ],
     slack: [
+      {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 16 7:48am',msg:'GR100 and GR150 release pipelines triggered. FSP/FSP-RT components submitted: GR10x v0300.0097.0160.0000. BAR0 Decoupler fix (cherry-picked to r7/v3) queued — QS dev drop 1 candidate targeting noon.'},
       {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 14 11:16pm',msg:'VR-NVL72 NVBugs Monitor: 343 active bugs (0.6_Blocker: 340, 0.5_Blocker: 49, QS_Factory_Start: 37, QS_Factory_End: 20). Updated 6/14: #6194458 DVS CUDA acos fail, #6067727 CoRIM generation, #6317189 EDPc MSVDD DrMOS Temps >120°C. One bug removed from 0.6_Blocker (#6177036).'},
       {ch:'#spt-fractal-rubin-l8-all',from:'vasudevr',time:'Jun 13 7:53pm',msg:'Fractal TS2 FAI: no passing RIN on FAI#14/#15/#16. Timeouts root-caused to Bug 6294710 → Bug 6288193 (PRI violation FBIO IEEE1500). Debug VBIOS WAR ready; security sign-off blocking release. BMC missing NVSwitch telemetry on FAI#14 under investigation.'},
       {ch:'#swgpu-chips-gfw-rubin',from:'Conrad Turlik',time:'Jun 15 8:39pm',msg:'VR-NVL72 0.6 QS VBIOS: still high bug count; Dev Drop 1 candidate creation 6/16, drop date 6/29. Engineers with Strata QS blockers -- please keep project fix dates current and flag risks ASAP.'},
@@ -2071,7 +2072,9 @@ const CHIP_DB = {
       {t:'Milestone schedule defined for post-silicon',owner:'Anshul Gupta',done:false},
     ],
     emails: [],
-    slack: [],
+    slack: [
+      {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 16 7:48am',msg:'GR150 release pipeline triggered. FSP/FSP-RT component submitted: v0600.0008.0018.0000.'},
+    ],
     prog: 20, phase:'Post-Silicon',
     pageStructure: [
       {title:'GR15x SW Program Home',level:0},
