@@ -629,8 +629,8 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
   <div class="nav-sep"></div>
   <div class="nav-my-section">⭐ My Chips</div>
   <div class="user-chip-row">
-    <div class="user-avatar">RV</div>
-    <span>Ranjani V · SW CM</span>
+    <div class="user-avatar" id="nav-user-avatar">◈</div>
+    <span id="nav-user-name">ChipPilot</span>
   </div>
   <div class="nav-item" onclick="showView('chip','nr10x')">
     <div class="nav-chip-code"><span>NR10x <span class="status-dot dot-a"></span></span><span style="font-size:9px;color:var(--amber);font-weight:700">FNL RISK</span></div>
@@ -1109,8 +1109,24 @@ function applyIdentity(cm) {
   window.ACTIVE_CHIP = MY_CHIPS[0] || Object.keys(CHIP_DB)[0];
   const av = document.getElementById('hdr-avatar');
   if(av){ av.textContent = CURRENT_USER.initials; av.title = CURRENT_USER.name + ' (click to switch)'; }
-  const navAv = document.querySelector('.user-avatar');
+  const navAv = document.getElementById('nav-user-avatar');
   if(navAv) navAv.textContent = CURRENT_USER.initials;
+  const navName = document.getElementById('nav-user-name');
+  if(navName) navName.textContent = CURRENT_USER.name + ' · ' + (CURRENT_USER.role === 'cm' ? 'SW CM' : 'Portfolio');
+  // Refresh cockpit chip-card CM labels from CHIP_DB
+  document.querySelectorAll('[onclick*="showView(\'chip\'"]').forEach(card => {
+    const m = card.getAttribute('onclick').match(/showView\('chip','(\w+)'\)/);
+    if(!m) return;
+    const sub = card.querySelector('.chip-card-sub');
+    if(sub && CHIP_DB[m[1]]) {
+      const d = CHIP_DB[m[1]];
+      const cmMatch = d.sub && d.sub.match(/SW CM[s]?:\s*([^·]+)/);
+      const cmLabel = cmMatch ? cmMatch[1].trim() : '';
+      const phase = d.phase || '';
+      const title2 = d.title ? d.title.split('·')[1]?.trim() : '';
+      sub.textContent = [title2, phase, cmLabel ? 'CM: '+cmLabel : ''].filter(Boolean).join(' · ');
+    }
+  });
   // Refresh MY CHIP badges in nav
   document.querySelectorAll('.nav-my-badge').forEach(b => b.remove());
   MY_CHIPS.forEach(id => {
