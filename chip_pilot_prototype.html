@@ -2042,13 +2042,13 @@ const CHIP_DB = {
     ],
     emails: [
             {sub:'GR10x DVS Bring-up Status - 06-12-2026',from:'mailpage@nvidia.com',time:'Jun 13',body:'DVS P-Board count at 21% of planned capacity (600-board target). VBIOS 99.00.1B.00.00 released. Intermittent driver install fails (Bug 6283549) reproducing after VBIOS update.'},
-      {sub:'CMD Bug Approval: Branch pending >1 day',from:'sw-cm-notifications',time:'Today 4:20am',body:'Resource Manager - Chips - GR10x (270087, Nishant Patel, frel_1) -- Not Started, 2 days old.'},
+      {sub:'Top 5 Things - DC GPU Perf & Power Mgmt SW',from:'apoorvg@nvidia.com',time:'Jun 15',body:'GR100 QS Closed Out: All committed VR DC features complete. Rubin validation timeline de-risked via Blackwell left-shift approved by SWQA. APPM deployed on Rubin mini-rack; IPP6 GB300 rack access regained.'},
       {sub:'[MODS-GOLDEN] frel_1_256_2.31 Posted (gr100, gr102, gb202)',from:'svccfttapp@nvidia.com',time:'Today 1:46pm',body:'Alan Lee (SW-GPU). MODS Golden for gr100, gr102, gb202 posted successfully.'},
     ],
     slack: [
       {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 14 11:16pm',msg:'VR-NVL72 NVBugs Monitor: 343 active bugs (0.6_Blocker: 340, 0.5_Blocker: 49, QS_Factory_Start: 37, QS_Factory_End: 20). Updated 6/14: #6194458 DVS CUDA acos fail, #6067727 CoRIM generation, #6317189 EDPc MSVDD DrMOS Temps >120°C. One bug removed from 0.6_Blocker (#6177036).'},
       {ch:'#spt-fractal-rubin-l8-all',from:'vasudevr',time:'Jun 13 7:53pm',msg:'Fractal TS2 FAI: no passing RIN on FAI#14/#15/#16. Timeouts root-caused to Bug 6294710 → Bug 6288193 (PRI violation FBIO IEEE1500). Debug VBIOS WAR ready; security sign-off blocking release. BMC missing NVSwitch telemetry on FAI#14 under investigation.'},
-      {ch:'#swgpu-chips-bringup-gr10x-rm-team',from:'Chris Buris',time:'Jun 10 3:40pm',msg:'Found how RM accesses FB partition registers -- ENG_IDX_RD_REG -> FB_FBPA_UC_REG -> memsysRegAddress_GR100.'},
+      {ch:'#swgpu-chips-gfw-rubin',from:'Conrad Turlik',time:'Jun 15 8:39pm',msg:'VR-NVL72 0.6 QS VBIOS: still high bug count; Dev Drop 1 candidate creation 6/16, drop date 6/29. Engineers with Strata QS blockers -- please keep project fix dates current and flag risks ASAP.'},
     ],
     prog: 95, phase:'Post-Silicon'
   },
@@ -2134,7 +2134,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Hui Fu · IAS/GFD Reviews Active · SCSIM vs System SIM Eval',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-b','PRE-SILICON'],['pill-a','SCSIM/SYS-SIM EVAL']],
-    anno: 'Simulation environment under evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026.',
+    anno: 'Simulation environment under evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026. SCSIM R1 milestone: TB600/T414 + FN10x SCSIM R1 simulator Buildroot now boots to console in Backdoor boot -- RM team enabled for GPU bring-up (PSET 6/15). T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429).',
     meetings: [],
     risks: [
       {p:'m',t:'Gathering simulation requirements from SW teams -- IAS and GFD reviews ongoing'},
@@ -2147,7 +2147,10 @@ const CHIP_DB = {
       {t:'IAS/GFD reviews complete',owner:'Hui Fu',done:false},
       {t:'Simulation requirements finalized',owner:'Hui Fu',done:false},
     ],
-    emails: [{sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SCSIM vs System SIM evaluation for presi underway. IAS and GFD reviews active.'}],
+    emails: [
+      {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'TB600/T414 + FN10x SCSIM R1 simulator: Buildroot boots to console in Backdoor boot -- RM team enabled for GPU bring-up. T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429).'},
+      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SCSIM vs System SIM evaluation for presi underway. IAS and GFD reviews active.'},
+    ],
     slack: [],
     prog: 40, phase:'Pre-Silicon'
   },
@@ -2172,8 +2175,8 @@ const CHIP_DB = {
       {t:'QBAA noise -- isolated to wafer lot U6F059.000; replacements ordered 5/29',owner:'PHY team',done:false},
     ],
     emails: [
+      {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'ThorZ QS Qual L4T image created, validated, and released to MODS/SCG teams. dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases.'},
       {sub:'T268 Bring-up Status SCG - 6/14/2026',from:'bbakhru@nvidia.com',time:'Jun 14',body:'ThorZ MaxP (RA/Liquid cooled) is primary MNB/QS schedule driver. CP rev0.7 trending 6/29 with new VNM ISINK patterns. NVCAL DTS releasing 6/16 (Fmax w/o VNM ISINK); DTS with VNM ISINK for RA trending 7/10. HSIO MNB blocked on CPrev0.4 unfused OPT_PHY_PLL fuses (USB/MGBE failures). Mitigation: ~30 locally fused units being used.'},
-      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'ThorZ POR updated 360→420 TOPS (+11W, 73.3W→84.3W). Dual RAM assist modes required: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. QS Qual targeting 6/16. HWQA MNB: Coverage 95.66%, Pass 85.23%. MODS IFT SLT release in progress. MNB schedule under review.'},
     ],
     slack: [
       {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 14 9:56pm',msg:'ThorZ ATS Nightly 6/14 (Build #1038): p3960-thor_x ITS_PWRDWN linux_dev_nsr -- 378/454 passed. PwrCtrl(28), VMON(30), TMON(6), ASILNA(1), LCM(1) escalated for owner triage.'},
@@ -2229,7 +2232,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Vivek Desikan · H3 Netlist to Emulation · SOC FDI 6/30 At Risk',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'SOC FDI 6/30 at risk. H3 netlist released to emulation; H3.05-5 DP/HDMI fixes pending from Jade. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 – CPU not receiving IRQ (HW issue suspected; WAR available). C2C low-power fix and DLA MSI-X fix landed in H3/H2 -- pending H3 validate. N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; Testplan L0: 27%, L1: 12%. IAS/GFD 0.7+1.0 pending reviews: 26. D3 Cold on iGPU -- POR unconfirmed; chip schedule push-out possible.',
+    anno: 'SOC FDI 6/30 at risk. H3 netlist released to emulation; H3.05-5 DP/HDMI fixes pending from Jade. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 – CPU not receiving IRQ (HW issue suspected; WAR available). C2C low-power fix and DLA MSI-X fix landed in H3/H2 -- pending H3 validate. N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; Testplan L0: 27%, L1: 12%. IAS/GFD 0.7+1.0 pending reviews: 26. D3 Cold on iGPU -- POR unconfirmed; chip schedule push-out possible. Kernel strategy aligned (PSET 6/15): Manufacturing SMT/SLT/MODS = Linux 6.18 LTS TinyLinux; Pre-si/Productization = Canonical BaseOS 7.0. Sim V6.5 is TOT default; Sim V7 released from Jade, GPU fmodel integration WIP.',
     meetings: [],
     risks: [
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
@@ -2247,6 +2250,7 @@ const CHIP_DB = {
       {t:'NV Perf validation kickoff (next week)',owner:'Vivek Desikan',done:false},
     ],
     emails: [
+      {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'N2x Kernel strategy aligned: Manufacturing uses Linux 6.18 LTS TinyLinux; Pre-si/Productization uses Canonical BaseOS 7.0. Sim V6.5 TOT default; Sim V7 from Jade, GPU fmodel WIP. BaseOS GVS enablement changes approved and in promotions.'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SOC FDI at risk. H3 NL to emulation; H3.05-5 DP/HDMI coming from Jade. Display/Windows blocked on FPGA -- daily debug ongoing. Dev branching to dev-main by 7/6. NVPOR 474 total; L0: 27%, L1: 12%. IAS/GFD pending reviews: 26.'},
     ],
     slack: [],
@@ -2320,7 +2324,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Roopa · NVLink Fusion · QS MODS/Fuse Release Under Review',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-a','POST-SI']],
-    anno: 'T374 Beacon post-silicon. First FPGA to GPU teams Feb 2027 post SOC FNL -- risks SW validation timelines/purpose; escalation ack but no change to release dates. Focus on post-si schedule. Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact.',
+    anno: 'T374 Beacon post-silicon. First FPGA to GPU teams Feb 2027 post SOC FNL -- risks SW validation timelines/purpose; escalation ack but no change to release dates. Focus on post-si schedule. Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact. PSET bringup (6/15): Buildroot up on Intel CRB + PTL+GB207 platforms; running RMTest L0, debugging SRT teardown/CUDA extraction issues. PXE boot for remote flashing next. Intel CRB systems procurement requested for CI/CD enablement (Bug 6269597).',
     meetings: [],
     risks: [
       {p:'m',t:'Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact'},
@@ -2330,6 +2334,7 @@ const CHIP_DB = {
       {t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false},
     ],
     emails: [
+      {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'T374 PSET bringup: Buildroot up on Intel CRB + PTL+GB207 platforms; running RMTest L0, debugging SRT teardown/CUDA extraction issues. PXE boot for remote flashing next. Intel CRB systems procurement requested for CI/CD (Bug 6269597).'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T374 Beacon: First FPGA to GPU teams Feb 2027 post SOC FNL -- risks SW validation timelines/purpose. Escalation ack but no change to release dates. Focus on post-si schedule.'},
     ],
     slack: [],
