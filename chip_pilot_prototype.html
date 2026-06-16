@@ -2121,7 +2121,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Ranjani V · Madhura · QS Done · MNB Active → PS',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/overview?homepageId=2598141954',
     pills: [['pill-g','QS DONE'],['pill-a','MNB ACTIVE']],
-    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. DVS P-Board count at 21% of planned capacity (600-board target) -- key test coverage risk. VBIOS 99.00.1B.00.00 released 6/10; intermittent driver install fails reproducing (Bug 6283549). SHTOL: MR1 boards bad heater rods; T48 burnin WW29. RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation. Fractal TS2 FAI (6/13): no passing RIN run on FAI#14/#15/#16 -- timeout root cause Bug 6294710 → PRI Level violation Bug 6288193 (FBIO IEEE1500); debug VBIOS WAR available but security sign-off pending; BMC missing NVSwitch telemetry on FAI#14 under investigation.',
+    anno: 'Chip milestone: QS Done (SLT diag released 4/21) → MNB active (Bug 5896446) → PS. DD Chips Delivered 6/5-6/6. DRAM BW ~17.8 TB/s. DVS P-Board count at 21% of planned capacity (600-board target) -- key test coverage risk. VBIOS 99.00.1B.00.00 released 6/10; intermittent driver install fails reproducing (Bug 6283549). SHTOL: MR1 boards bad heater rods; T48 burnin WW29. WW33 aging analysis (1xT BTI+HCI) active -- Fmax degradation data across 11 systems being tracked (Confluence 6/17). RIST feature exception deferred to PS. NCCL hang GR100/PDX under investigation. Fractal TS2 FAI (6/13): no passing RIN run on FAI#14/#15/#16 -- timeout root cause Bug 6294710 → PRI Level violation Bug 6288193 (FBIO IEEE1500); debug VBIOS WAR available but security sign-off pending; BMC missing NVSwitch telemetry on FAI#14 under investigation.',
     meetings: [
       {time:'3:15 PM', title:'Rubin-Compute Execution RM Sync', pill:'pill-g'},
       {time:'9:00 PM', title:'GR10x chip schedule alignment', pill:'pill-a'},
@@ -2169,7 +2169,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Vinay Sharma · Anshul Gupta · A01 Power-On Early Aug 2026',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/3529740918/GR15x+SW+Bringup',
     pills: [['pill-g','POWER-ON'],['pill-g','TAPEOUT DONE']],
-    anno: 'Tapeout completed Jun 2. Physical data review Jun 11 (complete). A01 power-on early Aug 2026 (TV bringup only). A01P power-on Jan 2027 (QM5 + self-hosted).',
+    anno: 'Tapeout completed Jun 2. Physical data review Jun 11 (complete). A01 power-on early Aug 2026 (TV bringup only). A01P power-on Jan 2027 (QM5 + self-hosted). PowerOn approaching: SW awaiting SCG clarification on NICs MODS requirements (NVBugs 5985577, 5984800, 5984797) before planning can proceed (Slack 6/16).',
     meetings: [
       {time:'7:00 PM', title:'GR15x Physical Data review', pill:'pill-g'},
     ],
@@ -2185,6 +2185,7 @@ const CHIP_DB = {
     emails: [],
     slack: [
       {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 16 7:48am',msg:'GR150 release pipeline triggered. FSP/FSP-RT component submitted: v0600.0008.0018.0000.'},
+      {ch:'#gr15x-nics-rm-mods-ssg',from:'Julian Luo',time:'Jun 16 1:59pm',msg:'SW really needs SCG to clarify requirements (NVBugs 5985577, 5984800, 5984797 GR15x NICs MODS REQ1), otherwise we cannot plan for our work and PowerOn is approaching.'},
     ],
     prog: 20, phase:'Post-Silicon',
     pageStructure: [
@@ -2273,7 +2274,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · QS Qual 6/16',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
-    anno: 'BNB Declared 5/28. QS Qual targeting 6/16. POR updated: 360→420 TOPS (73.3W→84.3W +11W). Dual RAM assist modes: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. MNB schedule under review. HWQA MNB: Coverage 95.66%, Pass 85.23%. MODS IFT SLT release in progress. CP rev0.7 trending 6/29 (new VNM patterns for higher ISINK RA range). NVCAL DTS releasing 6/16 (Fmax w/o VNM ISINK); updated DTS with VNM ISINK for RA trending 7/10. HSIO MNB coverage blocked on CPrev0.4 (USB/MGBE failures -- fuses in CPrev0.7). Mitigation: ~30 locally fused CPrev0.5/FTrev0.6 units to unblock Circuit/Noise/ATE2SYS checkouts. (Confluence T268 SCG 6/14)',
+    anno: 'BNB Declared 5/28. QS Qual target date: 6/16 (today -- status TBD pending SCG report). POR updated: 360→420 TOPS (73.3W→84.3W +11W). Dual RAM assist modes: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. MNB schedule under review. HWQA MNB: Coverage 95.66%, Pass 85.23%. MODS IFT SLT release in progress. CP rev0.7 trending 6/29 (new VNM patterns for higher ISINK RA range). NVCAL DTS releasing 6/16 (Fmax w/o VNM ISINK); updated DTS with VNM ISINK for RA trending 7/10. HSIO MNB coverage blocked on CPrev0.4 (USB/MGBE failures -- fuses in CPrev0.7). Mitigation: ~30 locally fused CPrev0.5/FTrev0.6 units to unblock Circuit/Noise/ATE2SYS checkouts. (Confluence T268 SCG 6/14)',
     meetings: [],
     risks: [
       {p:'h',t:'POR updated 360→420 TOPS (+11W: 73.3W→84.3W) -- dual RAM assist modes required; MNB schedule under review pending Liquid-Cool/Read-Assist mode timelines'},
