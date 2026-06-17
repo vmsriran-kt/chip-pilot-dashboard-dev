@@ -2170,10 +2170,10 @@ const CHIP_DB = {
   },
   tb500: {
     title: 'TB500 · Vera CPU',
-    sub: 'Post-Silicon · SW CM: Sowjanya · Prel 98% · WAT Ph1 Done 6/15 · M-pkg ~6/24',
+    sub: 'Post-Silicon · SW CM: Hui Fu · Prel 98% · WAT Ph1 Done 6/15 · CM Transition 6/12',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'P-rel 98% across teams. SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. LP5 POR change confirmed: 1.5TB (7500MT/s 4R) → 768GB (7500MT/s 2R); BCT settings good across all three memory vendors; SW changes to emulate 4R behavior on 2R in progress. M-pkg Final CWAT QA trending 6/17 (today). NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. TB500-M P-rel/PS-FGI moved to 7/31. UEFI AAR Team Readout draft due 6/24 (Confluence, Jun 16). Strata TS3 SWQA LKG sanity (06/15): 0.6 Build 4 + SBIOS TOT passing.',
+    anno: 'CM TRANSITION (6/12): Hui Fu takes over from Sowjanya Komatineni (Sowjanya moved to Rack Scale SW under Mitch Luban). P-rel 98% across teams. SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. LP5 POR change confirmed: 1.5TB (7500MT/s 4R) → 768GB (7500MT/s 2R); BCT settings good across all three memory vendors; SW changes to emulate 4R behavior on 2R in progress. M-pkg Final CWAT QA trending 6/17 (today). NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. TB500-M P-rel/PS-FGI moved to 7/31. UEFI AAR Team Readout draft due 6/24 (Confluence, Jun 16). Strata TS3 SWQA LKG sanity (06/15): 0.6 Build 4 + SBIOS TOT passing.',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2192,6 +2192,7 @@ const CHIP_DB = {
       {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
     ],
     emails: [
+      {sub:'TB500 SW Chip Management Update',from:'rranganathan@nvidia.com',time:'Jun 12',body:'Hui Fu takes over as TB500 SW CM from Sowjanya Komatineni, who has moved to Rack Scale Software under Mitch Luban. Reach out to Hui wherever you would have contacted Sowjanya.'},
       {sub:'[Notes] TB500 Bringup Meeting - 06/16/2026',from:'asdash@nvidia.com',time:'Jun 16',body:'P-Rel 98%. SCG WAT Phase-1 complete 6/15; Phase-2 trending 6/30. LP5 memory POR changed to 768GB 2R (7500MT/s); BCT good across all vendors. SW emulating 4R behavior on 2R in progress.'},
       {sub:'[PG558][Strata][C2G4] SWQA TB500 06/15 SBIOS LKG Sanity Report',from:'yuanhengw@nvidia.com',time:'Jun 16',body:'0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug packages passing LKG sanity.'},
       {sub:'[Notes] TB500 Bringup Meeting - 06/15/2026',from:'asdash@nvidia.com',time:'Jun 15',body:'98% Prel completion. Phase-1 WAT completing 6/15 on schedule. LP5 768GB 2R BCT good across all vendors. CR SLT Diag released 6/12 on schedule.'},
@@ -2247,7 +2248,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · QS Qual 6/16',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
-    anno: 'QS Qual target 6/16 (L4T image released 6/15 per PSET; SCG WAT Qual in progress). POR: 360→420 TOPS (73.3W→84.3W +11W). Dual RAM assist modes: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. CP rev0.7 trending 6/29 (new VNM patterns for higher ISINK RA range). NVCAL DTS RELEASED 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. HSIO MNB blocked on CPrev0.4 unfused OPT_PHY_PLL (USB/MGBE failures) -- mitigation: ~30 locally fused CPrev0.5/FTrev0.6 units in use. PDE Update 6/12: functional tests passing at room temp; additional tuning needed for high-volume yield. BNB Declared 5/28.',
+    anno: 'QS Qual L4T image created, validated, released to MODS/SCG teams (PSET 6/15). dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases. NVSpec updates COMPLETE — PAT approvals/CS sign-off for TA1040SA and TA1050SA (Confluence 6/14). POR: 360→420 TOPS (73.3W→84.3W +11W). Dual RAM assist modes: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. CP rev0.7 trending 6/29 (new VNM patterns for higher ISINK RA range). NVCAL DTS RELEASED 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. HSIO MNB blocked on CPrev0.4 unfused OPT_PHY_PLL (USB/MGBE failures) -- mitigation: ~30 locally fused CPrev0.5/FTrev0.6 units in use. LPWR features for T268 Embedded SKU reviewed by PAF — no gaps identified in superset qualification bringup (Confluence 6/14). BNB Declared 5/28.',
     meetings: [],
     risks: [
       {p:'h',t:'POR updated 360→420 TOPS (+11W: 73.3W→84.3W) -- dual RAM assist modes required; MNB schedule under review pending Liquid-Cool/Read-Assist mode timelines'},
@@ -2322,7 +2323,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Vivek Desikan · H3 Netlist to Emulation · SOC FDI 6/30 At Risk',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'Marching towards T354 S-Die RDI (S-Die FNL netlist milestone) on 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk for S-Die tapeout -- regression cleanup in progress. SOC FDI 6/30 at risk. H3 netlist released to emulation; H3.05-5 DP/HDMI fixes pending from Jade. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 (CPU not receiving IRQ, WAR available). C2C low-power fix and DLA MSI-X fix landed H3/H2 -- pending H3 validate. N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; L0: 27%, L1: 12%.',
+    anno: 'Kernel strategy ALIGNED (PSET 6/15): Mfg SMT/SLT/MODS → Linux 6.18 LTS TinyLinux; Pre-Si/Productization → Canonical BaseOS 7.0 (locked for Power-on). BaseOS GVS enablement changes approved, in promotions. Sim V6.5 default on TOT; Frontdoor Boot blocked on IPIC SW (V5→V6 not updated, Jade resolving in V7). Sim V7 WIP: GPU fmodel integration pending; NVMe model fix awaited from Synopsys. Marching towards T354 S-Die RDI on 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk -- regression cleanup in progress. SOC FDI 6/30 at risk. H3 netlist released to emulation. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 (WAR available). N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; L0: 27%, L1: 12%.',
     meetings: [],
     risks: [
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
