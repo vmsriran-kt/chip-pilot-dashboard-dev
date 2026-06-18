@@ -2107,7 +2107,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Hema Kumar · QS Active · r615 94 uCLs',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/2598145065',
     pills: [['pill-a','r615 uCL CLEANUP'],['pill-g','QS ACTIVE']],
-    anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/12). NVDEC Bug 5881444 (HEVC GPTimer silent timeout root-caused): SW WAR with 1s-delay approved for FREL_1 (SCG WAT) and r615 (customer releases); chips_a submission pending. GR10x DVS bringup status (6/12): active debug and validation. GR100 NVLink bidir POR 328Gbps (QM4 POR confirmed); GR10x bidir POR alignment check in progress. RM GR10x Bringup Shifts page updated 6/16 -- June NV Free Day schedule active.',
+    anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/12). NVDEC Bug 5881444 (HEVC GPTimer silent timeout root-caused): SW WAR with 1s-delay approved for FREL_1 (SCG WAT) and r615 (customer releases); chips_a submission pending. GR10x DVS bringup status (6/12): active debug and validation. GR100 NVLink bidir POR 328Gbps (QM4 POR confirmed); GR10x bidir POR alignment check in progress. RM GR10x Bringup Shifts page updated 6/16 -- June NV Free Day schedule active. CTCHBI HBI link failures seen during PG558 QS1 L6 Testing (NVBug 6335312, Jun 17): failures not blocking secureboot; FW_STATUS register checks in progress to identify link training failures; debug ongoing.',
     meetings: [],
     stack: [],
     risks: [
@@ -2129,6 +2129,7 @@ const CHIP_DB = {
       {ch:'#ghw-bringup-gr10x-sit-debug-nvdec-conc-5881444',from:'Hemant/Sainath',time:'Jun 16',msg:'NVDEC Bug 5881444: HEVC GPTimer SW WAR (1s delay) approved for FREL_1. Root cause: ISR handler clears error code before reporting. Fix also needed in chips_a→r615 for customer release.'},
       {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 16 7:48am',msg:'GR100 and GR150 release pipelines triggered. FSP/FSP-RT components submitted: GR10x v0300.0097.0160.0000. BAR0 Decoupler fix queued — QS dev drop 1 candidate targeting noon.'},
       {ch:'#spt-fractal-rubin-l8-all',from:'vasudevr',time:'Jun 13 7:53pm',msg:'Fractal TS2 FAI: no passing RIN on FAI#14/#15/#16. Timeouts root-caused to Bug 6294710 → Bug 6288193 (PRI violation FBIO IEEE1500). Debug VBIOS WAR ready; security sign-off blocking release.'},
+      {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 17 10:10am',msg:'CTCHBI HBI link failures during PG558 QS1 L6 Testing (NVBug 6335312): failures not failing secureboot. Check NV_PCTCHBI_ZB_CTCHBIRISCV_FW_STATUS and FW_MAILBOX(13) for HS_INIT completion. HBI team investigating whether link training failures surface in FW_STATUS.'},
     ],
     prog: 88, phase:'Post-Silicon'
   },
@@ -2173,7 +2174,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Hui Fu · Prel 98% · WAT Ph1 Done 6/15 · CM Transition 6/12',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'CM TRANSITION (6/12): Hui Fu takes over from Sowjanya Komatineni (Sowjanya moved to Rack Scale SW under Mitch Luban). P-rel 98% across teams. SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. LP5 POR change confirmed: 1.5TB (7500MT/s 4R) → 768GB (7500MT/s 2R); BCT settings good across all three memory vendors; SW changes to emulate 4R behavior on 2R in progress. M-pkg Final CWAT QA trending 6/17 (today). NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. TB500-M P-rel/PS-FGI moved to 7/31. UEFI AAR Team Readout draft due 6/24 (Confluence, Jun 16). Strata TS3 SWQA LKG sanity (06/15): 0.6 Build 4 + SBIOS TOT passing.',
+    anno: 'CM TRANSITION (6/12): Hui Fu takes over from Sowjanya Komatineni (Sowjanya moved to Rack Scale SW under Mitch Luban). P-rel 98% across teams. SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. LP5 POR change confirmed: 1.5TB (7500MT/s 4R) → 768GB (7500MT/s 2R); BCT settings good across all three memory vendors; SW changes to emulate 4R behavior on 2R in progress. M-pkg Final CWAT QA trending 6/17 (today). NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. TB500-M P-rel/PS-FGI moved to 7/31. UEFI AAR Team Readout draft due 6/24 (Confluence, Jun 16). Strata TS3 SWQA LKG sanity (06/15): 0.6 Build 4 + SBIOS TOT passing. VR NVL72 0.5.1 Release staged Jun 17 (PIDs: 1157692-1157704 generic; partner diags 1157682-1157683). BWAT bug 6293872: IST run 0 fails with mis-compares on test 9 (2 targets in WAT, suspected HW issue with voltage regulators). JIRA burndown: 963/1041 (93%).',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2323,7 +2324,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Vivek Desikan · H3 Netlist to Emulation · SOC FDI 6/30 At Risk',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'Kernel strategy ALIGNED (PSET 6/15): Mfg SMT/SLT/MODS → Linux 6.18 LTS TinyLinux; Pre-Si/Productization → Canonical BaseOS 7.0 (locked for Power-on). BaseOS GVS enablement changes approved, in promotions. Sim V6.5 default on TOT; Frontdoor Boot blocked on IPIC SW (V5→V6 not updated, Jade resolving in V7). Sim V7 WIP: GPU fmodel integration pending; NVMe model fix awaited from Synopsys. Marching towards T354 S-Die RDI on 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk -- regression cleanup in progress. SOC FDI 6/30 at risk. H3 netlist released to emulation. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 (WAR available). N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; L0: 27%, L1: 12%.',
+    anno: 'Kernel strategy ALIGNED (PSET 6/15): Mfg SMT/SLT/MODS → Linux 6.18 LTS TinyLinux; Pre-Si/Productization → Canonical BaseOS 7.0 (locked for Power-on). BaseOS GVS enablement changes approved, in promotions. Sim V6.5 default on TOT; Frontdoor Boot blocked on IPIC SW (V5→V6 not updated, Jade resolving in V7). Sim V7 WIP: GPU fmodel integration pending; NVMe model fix awaited from Synopsys. Marching towards T354 S-Die RDI on 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk -- regression cleanup in progress. SOC FDI 6/30 at risk. H3 netlist released to emulation. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 (WAR available). N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; L0: 27%, L1: 12%. NEW (Jun 17): RM init/sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. RM Linux driver validated in QT with sanity testing. FPGA RM test plan execution underway: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed, 2960 not run, total 4408).',
     meetings: [],
     risks: [
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
@@ -2344,6 +2345,7 @@ const CHIP_DB = {
       {sub:'T35X Top N and Details - 6/16/2026',from:'CKiris@nvidia.com',time:'Jun 17',body:'T354 S-Die RDI (FNL netlist) marching to 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk for S-Die tapeout. Regression cleanup ongoing.'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'N2x: Kernel strategy aligned -- Manufacturing uses Linux 6.18 LTS TinyLinux; Pre-si/Productization uses Canonical BaseOS 7.0. Sim V6.5 TOT default; Sim V7 from Jade, GPU fmodel WIP.'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SOC FDI at risk. H3 NL to emulation; H3.05-5 DP/HDMI from Jade. Display/Windows blocked on FPGA. Dev branching to dev-main 7/6. NVPOR 474 total; L0: 27%, L1: 12%. IAS/GFD pending: 26.'},
+      {sub:'N2x RM Linux Status : 17 Jun 2026',from:'abhsahu@nvidia.com',time:'Jun 17',body:'RM init and sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. RM Linux driver validated in QT. FPGA test plan: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed, 2960 not run of 4408 total). RM test plan execution tracked at chips-testplan.nvidia.com/t354-baseos-resman/.'},
     ],
     slack: [],
     prog: 32, phase:'Pre-Silicon'
