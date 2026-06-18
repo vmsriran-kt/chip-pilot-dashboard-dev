@@ -2052,7 +2052,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026 · PON Apr 2027',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: 'NR10 Program Weekly Status (Jun 17): DV All 6/19 target -- blocker bugs being resolved (mostly toggle coverage); FNL SW feature-complete 6/29 remains target. NCISOC SHIM risk to FNL scope confirmed (arch top 5, Jun 15). NR10 revP4.0 NVISM ISM reviews active (Hao Peng, Jun 17/18). QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. Regression failures down 16→9 RTL bugs. L0/L1 canonical definition alignment needed in TestDB (mluban, Jun 15). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027.',
+    anno: 'NR10 Program Weekly Status (Jun 17): DV All 6/19 target -- blocker bugs being resolved (mostly toggle coverage); FNL SW feature-complete 6/29 remains target. NCISOC SHIM risk to FNL scope confirmed (arch top 5, Jun 15). NR10 revP4.0 NVISM ISM reviews active (Hao Peng, Jun 17/18). QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. Regression failures down 16→9 RTL bugs. L0/L1 canonical definition alignment needed in TestDB (mluban, Jun 15). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027. DFP 0.7 (PFNL) active & slipping (catch-up mode); domain scope evaluations underway this week (IO-NVLINK, IO-UCIE/HSIO due 6/24; Qual/WAT, IO-Electrical due 6/25).',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
@@ -2107,7 +2107,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Hema Kumar · QS Active · r615 94 uCLs',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/2598145065',
     pills: [['pill-a','r615 uCL CLEANUP'],['pill-g','QS ACTIVE']],
-    anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). NVDEC Bug 5881444 (HEVC GPTimer silent timeout): CMD #269183 FREL_1 fix approved; R615 fix also needed (separate integration if misses cutoff); chips_a submission pending. WAR validation: 6-hr 1s-delay driver test promising; decision on GPTIMER error-reporting approach still open. CTCHBI HBI link failures during PG558 QS1 L6 Testing (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR10x DVS bringup debug ongoing. GR100 NVLink bidir POR 328Gbps confirmed.',
+    anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). NVDEC Bug 5881444 (HEVC GPTimer silent timeout): CMD #269183 FREL_1 fix approved; R615 fix also needed (separate integration if misses cutoff); chips_a submission pending. WAR validation: 6-hr 1s-delay driver test promising; decision on GPTIMER error-reporting approach still open. CTCHBI HBI link failures during PG558 QS1 L6 Testing (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR10x DVS bringup debug ongoing. GR100 NVLink bidir POR 328Gbps confirmed. RubinCtcHbi::GetLineRateMbps RISCV failure (GetNDiv error 0x900077) in #spt-fractal-rubin-l8-all 6/18 -- potential frel_tot regression under investigation (mdespotovic). Fractal GR100 TS3/CR HW boards at-risk (high demand/low supply) per RAPIDS weekly 6/16.',
     meetings: [],
     stack: [],
     risks: [
@@ -2132,6 +2132,7 @@ const CHIP_DB = {
       {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 16 7:48am',msg:'GR100 and GR150 release pipelines triggered. FSP/FSP-RT components submitted: GR10x v0300.0097.0160.0000. BAR0 Decoupler fix queued — QS dev drop 1 candidate targeting noon.'},
       {ch:'#spt-fractal-rubin-l8-all',from:'vasudevr',time:'Jun 13 7:53pm',msg:'Fractal TS2 FAI: no passing RIN on FAI#14/#15/#16. Timeouts root-caused to Bug 6294710 → Bug 6288193 (PRI violation FBIO IEEE1500). Debug VBIOS WAR ready; security sign-off blocking release.'},
       {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 17 10:10am',msg:'CTCHBI HBI link failures during PG558 QS1 L6 Testing (NVBug 6335312): failures not failing secureboot. Check NV_PCTCHBI_ZB_CTCHBIRISCV_FW_STATUS and FW_MAILBOX(13) for HS_INIT completion. HBI team investigating whether link training failures surface in FW_STATUS.'},
+      {ch:'#spt-fractal-rubin-l8-all',from:'mdespotovic',time:'Jun 18 9:26am',msg:'RubinCtcHbi::GetLineRateMbps RISCV failure: GetNDiv error 0x900077 for part 7 -- possible frel_tot regression. Investigating with Avisha Dhisle.'},
     ],
     prog: 88, phase:'Post-Silicon'
   },
@@ -2249,7 +2250,7 @@ const CHIP_DB = {
   },
   thorz: {
     title: 'ThorZ · CPU',
-    sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · QS Qual 6/16',
+    sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · MNB 7/29 (Tent)',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
     anno: 'QS Qual L4T image released to MODS/SCG teams (PSET 6/15). ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA -- owners assigned for triage. T268 BL Weekly Sync (Jun 17): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28.',
