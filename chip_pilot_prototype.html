@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-/* ── DARK THEME (default) ── */
+/* -- DARK THEME (default) -- */
 :root{
   --nv-green:#76b900;--nv-green-lite:#9fd931;--nv-green-dark:#4d7a00;
   --nv-glow:rgba(118,185,0,.18);--nv-glow-sm:rgba(118,185,0,.1);
@@ -30,7 +30,7 @@
   --chip-hover:rgba(255,255,255,.07);
   --theme-icon:"🌙";
 }
-/* ── LIGHT THEME — NVIDIA website faithful ── */
+/* -- LIGHT THEME — NVIDIA website faithful -- */
 /* nvidia.com: black header · white surfaces · #1a1a1a text · #76b900 green accent */
 body.light{
   --nv-green:#76b900;--nv-green-lite:#90d400;--nv-green-dark:#5a8c00;
@@ -59,11 +59,11 @@ body.light{
 }
 html,body{height:100%;font-family:'Inter',system-ui,sans-serif;font-size:13px;background:var(--bg);color:var(--text);line-height:1.5;overflow:hidden;transition:background .3s,color .3s}
 
-/* ── AMBIENT GLOW ── */
+/* -- AMBIENT GLOW -- */
 body::before{content:'';position:fixed;top:-300px;left:-200px;width:700px;height:700px;background:radial-gradient(circle,var(--glow-top) 0%,transparent 65%);pointer-events:none;z-index:0;transition:background .3s}
 body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;height:500px;background:radial-gradient(circle,var(--glow-bot) 0%,transparent 65%);pointer-events:none;z-index:0;transition:background .3s}
 
-/* ── LAYOUT ── */
+/* -- LAYOUT -- */
 #app{display:flex;flex-direction:column;height:100vh;overflow:hidden;position:relative;z-index:1}
 #body{display:flex;flex:1;overflow:hidden}
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
@@ -73,7 +73,7 @@ body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;hei
 #content::-webkit-scrollbar-track{background:transparent}
 #content::-webkit-scrollbar-thumb{background:rgba(128,128,128,.18);border-radius:2px}
 
-/* ── SMOOTH TRANSITIONS (both themes) ── */
+/* -- SMOOTH TRANSITIONS (both themes) -- */
 #hdr,#nav,#tabbar,.g-card,.g-card-e,.kpi,.chip-card,.attn,
 .cc-sec-hdr,.cc-row,.ms-row,.risk-row,.s-tbl td,.s-tbl th,
 .anno,.attn-pill,.sel-pill,.cc-ptab,.tab,.nav-item,.nav-home,
@@ -82,14 +82,14 @@ body::after{content:'';position:fixed;bottom:-200px;right:-100px;width:500px;hei
 .sec-lbl,.ms-name,.ms-date,.chip-card-sub,.rd,.status-dot,
 .cp-logo-name,.cp-logo-sub,.cp-nv-eye{transition:background .28s,border-color .28s,color .28s,box-shadow .28s}
 
-/* ════ LIGHT MODE — NVIDIA.COM FAITHFUL ════
+/* ==== LIGHT MODE — NVIDIA.COM FAITHFUL ====
    nvidia.com design DNA:
    • Black nav bar (#1a1a1a)  → authority, brand consistency
    • White content (#fff)     → clean, readable
    • Near-black text          → maximum contrast
    • Green ONLY for accents   → not backgrounds
    • Flat cards, clean borders, no blur wash
-════════════════════════════════════════════ */
+============================================ */
 
 /* PAGE BACKGROUND — neutral light gray like nvidia.com */
 body.light{ background:#f2f2f2 }
@@ -267,7 +267,7 @@ body.light .status-dot.dot-r{ background:#c00000;box-shadow:none }
 /* NAV OVERLAY in light mode */
 body.light #nav-overlay{ background:rgba(0,0,0,.45) }
 
-/* ── HEADER ── */
+/* -- HEADER -- */
 #hdr{
   height:var(--hdr-h);
   background:var(--hdr-bg);
@@ -326,7 +326,7 @@ body.light .theme-toggle{background:rgba(0,0,0,.07)}
 #nav-btn{display:none;background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;padding:2px 6px;line-height:1;border-radius:var(--r-xs);transition:background .15s}
 #nav-btn:hover{background:rgba(255,255,255,.07)}
 
-/* ── SIDENAV ── */
+/* -- SIDENAV -- */
 #nav{
   width:var(--nav-w);
   background:var(--nav-bg);
@@ -377,14 +377,14 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .nav-home:hover{color:var(--text);background:rgba(255,255,255,.04);border-left-color:rgba(118,185,0,.3)}
 .nav-home.on{color:var(--nv-green);background:rgba(118,185,0,.07);border-left-color:var(--nv-green)}
 
-/* ── TABS ── */
+/* -- TABS -- */
 #tabbar{height:var(--tab-h);background:var(--tab-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:2px;flex-shrink:0;overflow-x:auto}
 #tabbar::-webkit-scrollbar{display:none}
 .tab{padding:0 14px;height:var(--tab-h);display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;border-radius:var(--r-xs) var(--r-xs) 0 0}
 .tab:hover{color:var(--text2);background:rgba(255,255,255,.04)}
 .tab.on{color:var(--nv-green);border-bottom-color:var(--nv-green);background:rgba(118,185,0,.07);font-weight:600}
 
-/* ── GLASS CARDS ── */
+/* -- GLASS CARDS -- */
 .g-card{background:var(--glass);backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:border-color .2s}
 .g-card:hover{border-color:rgba(118,185,0,.22)}
 .g-card-e{background:var(--glass-e);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);box-shadow:var(--shadow)}
@@ -392,11 +392,11 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .c-hdr-title{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted)}
 .c-body{padding:16px}
 
-/* ── SECTION LABEL ── */
+/* -- SECTION LABEL -- */
 .sec-lbl{display:flex;align-items:center;gap:8px;font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:14px}
 .sec-lbl::before{content:'';width:3px;height:14px;background:var(--nv-green);border-radius:2px;flex-shrink:0}
 
-/* ── KPI GRID ── */
+/* -- KPI GRID -- */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
 .kpi{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;position:relative;overflow:hidden;transition:all .2s;cursor:default}
 .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--nv-green),transparent);opacity:0;transition:opacity .2s}
@@ -410,7 +410,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .tr-r{background:rgba(255,77,77,.12);color:#ff7070}
 .tr-a{background:rgba(245,166,35,.12);color:#fbbf24}
 
-/* ── CHIP CARDS ── */
+/* -- CHIP CARDS -- */
 .chips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-bottom:20px}
 .chip-card{background:var(--glass);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
 .chip-card:hover{border-color:rgba(118,185,0,.3);background:var(--chip-hover);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
@@ -431,18 +431,18 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .cp-r{background:linear-gradient(90deg,#c02020,var(--red))}
 .cp-b{background:linear-gradient(90deg,#1a60c0,var(--blue))}
 
-/* ── ATTN STRIP ── */
+/* -- ATTN STRIP -- */
 .attn{display:flex;align-items:center;gap:10px;background:rgba(255,77,77,.06);border:1px solid rgba(255,77,77,.18);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:18px;overflow-x:auto;scrollbar-width:none}
 .attn::-webkit-scrollbar{display:none}
 .attn-lbl{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#ff7070;white-space:nowrap;flex-shrink:0}
 .attn-pill{display:flex;align-items:center;gap:6px;background:var(--search-bg);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;white-space:nowrap;transition:all .15s;color:var(--text2)}
 .attn-pill:hover{background:rgba(255,77,77,.1);border-color:rgba(255,77,77,.3)}
 
-/* ── TWO/THREE COLUMN ── */
+/* -- TWO/THREE COLUMN -- */
 .two-col{display:grid;grid-template-columns:2fr 1fr;gap:14px;align-items:start}
 .three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 
-/* ── MILESTONE ── */
+/* -- MILESTONE -- */
 .ms-list{display:flex;flex-direction:column;gap:9px}
 .ms-row{display:flex;align-items:center;gap:10px;font-size:11px}
 .ms-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
@@ -452,20 +452,20 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .ms-name{font-weight:600;color:var(--text);flex:1}
 .ms-date{font-size:10px;color:var(--muted);white-space:nowrap}
 
-/* ── RISK ROWS ── */
+/* -- RISK ROWS -- */
 .risk-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px;color:var(--text2)}
 .risk-row:last-child{border-bottom:none}
 .rd{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .rd-h{background:var(--red)}.rd-m{background:var(--amber)}.rd-g{background:var(--nv-green)}
 
-/* ── STATUS TABLE ── */
+/* -- STATUS TABLE -- */
 .s-tbl{width:100%;border-collapse:collapse}
 .s-tbl th{font-size:9px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);padding:6px 10px;border-bottom:1px solid var(--border);text-align:left}
 .s-tbl td{padding:9px 10px;font-size:11px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,.04)}
 .s-tbl tr:hover td{background:rgba(255,255,255,.02)}
 .s-tbl tr:last-child td{border-bottom:none}
 
-/* ── CC CHECKLIST ── */
+/* -- CC CHECKLIST -- */
 .cc-phase-bar{display:flex;gap:3px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:var(--r-sm);padding:4px;margin-bottom:16px;width:fit-content}
 .cc-ptab{padding:7px 22px;border-radius:var(--r-xs);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted)}
 .cc-ptab:hover{color:var(--text2)}
@@ -488,25 +488,25 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .pri-l{font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,.08);color:var(--muted)}
 .cc-section-wrap{margin-bottom:14px}
 
-/* ── VIEW SELECTOR PILLS ── */
+/* -- VIEW SELECTOR PILLS -- */
 .sel-bar{display:flex;gap:5px;margin-bottom:18px;flex-wrap:wrap}
 .sel-pill{padding:5px 14px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:rgba(255,255,255,.03);transition:all .15s;white-space:nowrap}
 .sel-pill:hover{color:var(--text2);border-color:rgba(255,255,255,.18)}
 .sel-pill.on{background:rgba(118,185,0,.1);border-color:rgba(118,185,0,.35);color:var(--nv-green);font-weight:600}
 
-/* ── ANNOTATION BAR ── */
+/* -- ANNOTATION BAR -- */
 .anno{background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.2);border-radius:var(--r-xs);padding:10px 14px;font-size:11px;color:var(--nv-green);margin-bottom:18px;display:flex;align-items:center;gap:8px}
 
-/* ── HEATMAP ── */
+/* -- HEATMAP -- */
 .hm-cell{display:inline-block;width:44px;height:24px;border-radius:5px;font-size:9px;font-weight:700;text-align:center;line-height:24px;vertical-align:middle}
 .hm-h{background:rgba(255,77,77,.28);color:#ff7070}
 .hm-m{background:rgba(245,166,35,.28);color:#fbbf24}
 .hm-l{background:rgba(118,185,0,.2);color:var(--nv-green)}
 
-/* ── NAV OVERLAY ── */
+/* -- NAV OVERLAY -- */
 #nav-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99;backdrop-filter:blur(2px)}
 
-/* ── RESPONSIVE ── */
+/* -- RESPONSIVE -- */
 @media(max-width:1200px){.two-col{grid-template-columns:1fr}}
 @media(max-width:960px){
   #nav{display:none;position:fixed;top:var(--hdr-h);left:0;bottom:0;width:240px;z-index:100;box-shadow:4px 0 24px rgba(0,0,0,.5)}
@@ -529,7 +529,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
   .kpi-grid{grid-template-columns:1fr}
   .kpi-val{font-size:24px}
 }
-/* ── New Chip Setup ── */
+/* -- New Chip Setup -- */
 .nc-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .nc-field{display:flex;flex-direction:column;gap:4px}
 .nc-field.full{grid-column:1/-1}
@@ -542,7 +542,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 .pg-node.root{font-weight:800;color:var(--text);font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:4px}
 .pg-l1{padding-left:20px}.pg-l2{padding-left:40px}
 .pg-pill{font-size:9px;font-weight:700;padding:1px 7px;border-radius:10px;margin-left:auto;background:rgba(118,185,0,.12);color:var(--nv-green)}
-/* ── Identity Picker Modal ─────────────────────────────────────── */
+/* -- Identity Picker Modal --------------------------------------- */
 #identity-modal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;display:none}
 #identity-modal.show{opacity:1}
 .id-card{background:var(--bg,#1a1a1a);border:1px solid var(--border,#333);border-radius:16px;padding:36px 40px;max-width:580px;width:95%;box-shadow:0 24px 64px rgba(0,0,0,.7)}
@@ -566,7 +566,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 <body>
 <div id="app">
 
-<!-- ═══ HEADER ═══ -->
+<!-- === HEADER === -->
 <header id="hdr">
   <button id="nav-btn" onclick="toggleNav()" aria-label="Menu">☰</button>
   <div class="nv-brand">
@@ -611,7 +611,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 
 <div id="body">
 
-<!-- ═══ SIDENAV ═══ -->
+<!-- === SIDENAV === -->
 <nav id="nav">
   <div class="nav-search-icon">
     <div class="nav-search-wrap" style="position:relative">
@@ -721,7 +721,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
   <div class="nav-home" onclick="showView('cc')">✅ CM Checklist</div>
 </nav>
 
-<!-- ═══ MAIN ═══ -->
+<!-- === MAIN === -->
 <main id="main">
 
   <!-- TAB BAR -->
@@ -736,7 +736,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
   <div id="content">
   <div class="content-inner">
 
-    <!-- ════════════════ COCKPIT ════════════════ -->
+    <!-- ================ COCKPIT ================ -->
     <div id="v-cockpit">
 
       <!-- Attention strip -->
@@ -947,7 +947,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
       </div></div><!-- /cockpit -->
 
 
-    <!-- ════════════════ CM CHECKLIST ════════════════ -->
+    <!-- ================ CM CHECKLIST ================ -->
     <div id="v-cc" style="display:none">
 
       <div class="sel-bar">
@@ -980,7 +980,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
     </div><!-- /cc -->
 
 
-    <!-- ════════════════ RISK RADAR ════════════════ -->
+    <!-- ================ RISK RADAR ================ -->
     <div id="v-radar" style="display:none">
 
       <div class="sec-lbl">Portfolio Risk Heatmap — All 12 Programs</div>
@@ -1023,7 +1023,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
       </div>
 
     </div><!-- /radar -->
-<!-- ════════════════ PM ASSISTANT ════════════════ -->
+<!-- ================ PM ASSISTANT ================ -->
     <div id="v-pm" style="display:none">
       <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 14, 2026 · Generated from Slack + Email signals</div>
       <div class="three-col">
@@ -1052,7 +1052,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
     </div><!-- /pm -->
 
 
-    <!-- ════════════════ CHIP DETAIL (DYNAMIC) ════════════════ -->
+    <!-- ================ CHIP DETAIL (DYNAMIC) ================ -->
     <div id="v-chip" style="display:none">
       <!-- My Chips quick-nav bar -->
       <div id="my-chips-bar" style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:rgba(118,185,0,.07);border:1px solid rgba(118,185,0,.18);border-radius:8px;flex-wrap:wrap">
@@ -1079,7 +1079,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
 
 
 <script>
-// ── Current user identity (set by identity picker, stored in localStorage) ──
+// -- Current user identity (set by identity picker, stored in localStorage) --
 let CURRENT_USER = {name:'Portfolio View',email:'',initials:'◈',tag:'',role:'mgmt'};
 let MY_CHIPS = [];
 
@@ -1337,7 +1337,7 @@ function renderCC(){
     if(!nc.cm)   missing.push('SW CM');
     const canGenerate=missing.length===0 && ps.length>0;
 
-    // ── KEY FIX: text inputs use oninput (state only) + onchange (re-render on blur/Enter)
+    // -- KEY FIX: text inputs use oninput (state only) + onchange (re-render on blur/Enter)
     // This prevents the re-render from destroying the focused element mid-typing
     body.innerHTML=`<div class="cc-section-wrap">
       <div class="cc-sec-hdr"><span class="cc-sec-title">🆕 New Chip Setup</span>
@@ -1575,7 +1575,7 @@ function clearNewChipForm(){
   renderCC();
 }
 
-// ── ncLiveUpdate: text-only DOM patch, ZERO re-render, ZERO layout shift ──
+// -- ncLiveUpdate: text-only DOM patch, ZERO re-render, ZERO layout shift --
 // Called on every oninput — never touches the form HTML, never loses focus
 function ncLiveUpdate(){
   const name = S.newChip.name || '{CHIP}';
@@ -1602,7 +1602,7 @@ function ncLiveUpdate(){
   if(cmInp)   cmInp.style.borderColor   = S.newChip.cm   ? '' : 'rgba(229,62,62,.5)';
 }
 
-// ── ncRebuildPreview: rebuilds only tree + path when dropdowns change ──
+// -- ncRebuildPreview: rebuilds only tree + path when dropdowns change --
 // Dropdowns can't lose focus, so a full rebuild of the preview zone is safe here
 function ncRebuildPreview(){
   const nc = S.newChip;
@@ -1647,7 +1647,7 @@ function ncRebuildPreview(){
   ncLiveUpdate();
 }
 
-// ── Active Directory people picker ─────────────────────────────────
+// -- Active Directory people picker ---------------------------------
 // Extracted from CHIP_DB + known team (populated after CHIP_DB defined)
 let AD_PEOPLE=[];
 
@@ -1715,7 +1715,7 @@ function ncHideCMPicker(){
   const picker=document.getElementById('nc-cm-picker');
   if(picker)picker.style.display='none';
 }
-// ── Sidebar Search ────────────────────────────────────────────────
+// -- Sidebar Search ------------------------------------------------
 let _srFocus = -1;
 
 function navSearch(q) {
@@ -1866,7 +1866,7 @@ function renderChipView(chipId) {
   // Determine effective view mode based on role
   const mode = window.CHIP_VIEW_MODE || (CURRENT_USER.role === 'mgmt' ? 'collage' : 'single');
 
-  // ── My Chips quick-nav bar ──────────────────────────────────────
+  // -- My Chips quick-nav bar --------------------------------------
   const myPillsEl = document.getElementById('my-chips-pills');
   if(myPillsEl) {
     if(MY_CHIPS.length > 0) {
@@ -1885,7 +1885,7 @@ function renderChipView(chipId) {
     }
   }
 
-  // ── COLLAGE VIEW — all chips grid ───────────────────────────────
+  // -- COLLAGE VIEW — all chips grid -------------------------------
   if(mode === 'collage') {
     document.getElementById('chip-title').textContent = 'Portfolio Overview';
     document.getElementById('chip-subtitle').textContent = `All 12 programs · ${CURRENT_USER.name}`;
@@ -1919,7 +1919,7 @@ function renderChipView(chipId) {
     return;
   }
 
-  // ── SINGLE CHIP VIEW ────────────────────────────────────────────
+  // -- SINGLE CHIP VIEW --------------------------------------------
   document.getElementById('chip-title').textContent = d.title;
   // Update tab label
   var tabEl = document.getElementById('tab-chip');
@@ -2045,14 +2045,14 @@ function updateThemeBtn(){
   if(btn)btn.textContent=document.body.classList.contains('light')?'☀️':'🌙';
 }
 
-// ═══════════════════════════ CHIP DATA + DYNAMIC RENDERER ═══════════════════
+// =========================== CHIP DATA + DYNAMIC RENDERER ===================
 const CHIP_DB = {
   nr10x: {
     title: 'NR10x · NVLink Fusion',
     sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026 · PON Apr 2027',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: 'FNL SW feature-complete at risk (6/29); NEW: NCISOC SHIM identified as risk to miss FNL scope (Jun 16 weekly). Regression failures down from 16→9 RTL bugs. DV All target 6/19 still on track. QM4+NR10 emulation link bring-up still blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. PFNL NR10 revP4.0 ISM reviews active (Hao Peng, Jun 17). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027.',
+    anno: 'NR10 Program Weekly Status (Jun 17): DV All 6/19 target -- blocker bugs being resolved (mostly toggle coverage); FNL SW feature-complete 6/29 remains target. NCISOC SHIM risk to FNL scope confirmed (arch top 5, Jun 15). NR10 revP4.0 NVISM ISM reviews active (Hao Peng, Jun 17/18). QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. Regression failures down 16→9 RTL bugs. L0/L1 canonical definition alignment needed in TestDB (mluban, Jun 15). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027.',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
@@ -2091,11 +2091,11 @@ const CHIP_DB = {
       {t:'Finalize co-emu scope + ~2-wk FNL slip option',owner:'Ranjani',done:false},
     ],
     emails: [
-      {sub:'Top 5 | NVL Fusion | NR10 & NR20 | Project Weekly Status - 06/15/2026',from:'glu@nvidia.com',time:'Jun 16',body:'DV All (6/19) and FNL (6/29) readiness under review. NCISOC SHIM has risk to miss FNL. Regression failure buckets cut from 16→9 RTL bugs. MSE L0 passing.'},
+      {sub:'Top 5 | NVL-Fusion | NR10 | Program Weekly Status 6/16/2026',from:'dachiang@nvidia.com',time:'Jun 17',body:'DV All 6/19 target -- blocker bugs being resolved, mostly toggle coverage. FNL SW feature-complete 6/29. NCISOC SHIM risk to FNL confirmed. Regression failure buckets down 16->9 RTL bugs.'},
       {sub:'IST NR10 Weekly Sync - 06/17/2026',from:'mdeshmukh@nvidia.com',time:'Jun 17',body:'FNL date 6/29 confirmed. Emulation checkout NVBug 6331386 open -- NET04 does not allow register forces; NET05 may. Co-emulation checkout ideal for handshake test.'},
-      {sub:'NR10 Chip SW Status Report (06/09/2026)',from:'ssriranjani@nvidia.com',time:'Jun 10',body:'FNL SW feature-complete AT RISK by 06/29. QM4 TREX is long pole. MSE L0 100% pass on emulation. Sim 1 Delivered, Sim 2 EFD Passing.'},
-      {sub:'Re: NR10 Chip SW Status Report (06/09/2026)',from:'hedara@nvidia.com',time:'Jun 11',body:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed ahead of QM4-ready release for early NVOS testing.'},
-      {sub:'Re: NR10 Chip SW Status Report (06/09/2026)',from:'arthir@nvidia.com',time:'Jun 15',body:'MSE L0 only 4 tests in scope for first NR10 customer drop; broader coverage in L1/L2. Plan to land CAGUID fix before QM4-ready release confirmed.'},
+      {sub:'Top5 | NVLink Fusion | NR10,NR20,NF10 | Arch',from:'aaingaran@nvidia.com',time:'Jun 15',body:'Datasheet v0.5 updates in progress; SPI interface open issues being clarified. NCISOC shim activation FSM interaction identified as new FNL risk.'},
+      {sub:'Re: NR10 Chip SW Status Report (06/09/2026)',from:'mluban@nvidia.com',time:'Jun 15',body:'L0/L1 canonical definition alignment needed in TestDB -- na.chen and mark.rowland added to thread for coordination.'},
+      {sub:'Top 5 | NVL Fusion | NR10 & NR20 | Project Weekly status - 06/15/2026',from:'glu@nvidia.com',time:'Jun 16',body:'DV all (6/19) and FNL (6/29) readiness under review. NCISOC SHIM has risk to miss FNL. Regression failure buckets cut from 16->9 RTL bugs. MSE L0 passing.'},
     ],
     slack: [
       {ch:'#nvlink-fusion-sw',from:'Team',time:'Jun 17',msg:'NR10 FNL 6/29 remains target. NCISOC SHIM is new FNL risk -- team assessing scope. Regression failures down to 9 open RTL bugs (was 16 last week). Co-emu checkout strategy being finalized.'},
@@ -2107,11 +2107,11 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Hema Kumar · QS Active · r615 94 uCLs',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/2598145065',
     pills: [['pill-a','r615 uCL CLEANUP'],['pill-g','QS ACTIVE']],
-    anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/12). NVDEC Bug 5881444 (HEVC GPTimer silent timeout root-caused): SW WAR with 1s-delay approved for FREL_1 (SCG WAT) and r615 (customer releases); chips_a submission pending. GR10x DVS bringup status (6/12): active debug and validation. GR100 NVLink bidir POR 328Gbps (QM4 POR confirmed); GR10x bidir POR alignment check in progress. RM GR10x Bringup Shifts page updated 6/16 -- June NV Free Day schedule active. CTCHBI HBI link failures seen during PG558 QS1 L6 Testing (NVBug 6335312, Jun 17): failures not blocking secureboot; FW_STATUS register checks in progress to identify link training failures; debug ongoing.',
+    anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). NVDEC Bug 5881444 (HEVC GPTimer silent timeout): CMD #269183 FREL_1 fix approved; R615 fix also needed (separate integration if misses cutoff); chips_a submission pending. WAR validation: 6-hr 1s-delay driver test promising; decision on GPTIMER error-reporting approach still open. CTCHBI HBI link failures during PG558 QS1 L6 Testing (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR10x DVS bringup debug ongoing. GR100 NVLink bidir POR 328Gbps confirmed.',
     meetings: [],
     stack: [],
     risks: [
-      {p:'h',t:'r615 uCL cleanup still in progress -- 94 uCLs remaining (was 131 on 6/12); Dev Drop 1 target 6/29, release target 7/9'},
+      {p:'h',t:'r615 uCL cleanup still in progress -- 94 uCLs remaining (was 131 on 6/15); Dev Drop 1 target 6/29, release target 7/9; GPTIMER error-reporting fix approach still open'},
       {p:'h',t:'NVDEC Bug 5881444 HEVC GPTimer silent timeout -- SW WAR approved for FREL_1; chips_a → r615 submission pending for customer release'},
       {p:'m',t:'GR10x DVS bringup debug ongoing -- validation coverage gaps being tracked'},
     ],
@@ -2121,7 +2121,9 @@ const CHIP_DB = {
       {t:'r615 release target (7/9)',owner:'Hema Kumar',done:false},
     ],
     emails: [
-      {sub:'[Action Required] r615 uCLs - 6/17/2026',from:'greddy@nvidia.com',time:'Jun 17',body:'94 uCLs remaining in r615 (was 131 on 6/12). Developers in To: field have unintegrated CLs to merge before release deadline.'},
+      {sub:'[Action Required] r615 uCLs - 6/17/2026',from:'greddy@nvidia.com',time:'Jun 17',body:'94 uCLs remaining in r615 (was 131 on 6/15). Developers in To: field have unintegrated CLs to merge before release deadline.'},
+      {sub:'Re: [ACTION REQUIRED] Bug 58814449 NVDEC workload failure',from:'hagrawal@nvidia.com',time:'Jun 17',body:'SCG SIT timeout bypass discussion: RM regkey to raise timeout locally vs production lower timeout value being evaluated as interim approach.'},
+      {sub:'Re: [ACTION REQUIRED] Bug 58814449 NVDEC workload failure',from:'tienhaog@nvidia.com',time:'Jun 17',body:'SCG SIT checkout requirement -- bypass via extended timeout in use. Need convergence on final PoR for GPTIMER error reporting in HEVC.'},
       {sub:'GR10x DVS Bring-up Status - 06-12-2026',from:'mailpage@nvidia.com',time:'Jun 13',body:'DVS bringup status report for GR10x as of 06-12-2026. Created by Minoti Kundargi, sent by Siraj Ismail.'},
       {sub:'RE: GR100 NVLink POR Updates',from:'jungtsungy@nvidia.com',time:'Jun 15',body:'QM4 NVLink POR is 328Gbps. Checking GR10x (Rubin) bidir test POR alignment with QM4 specification.'},
     ],
@@ -2174,7 +2176,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Hui Fu · Prel 98% · WAT Ph1 Done 6/15 · CM Transition 6/12',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'CM TRANSITION (6/12): Hui Fu takes over from Sowjanya Komatineni (Sowjanya moved to Rack Scale SW under Mitch Luban). P-rel 98% across teams. SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. LP5 POR change confirmed: 1.5TB (7500MT/s 4R) → 768GB (7500MT/s 2R); BCT settings good across all three memory vendors; SW changes to emulate 4R behavior on 2R in progress. M-pkg Final CWAT QA trending 6/17 (today). NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. TB500-M P-rel/PS-FGI moved to 7/31. UEFI AAR Team Readout draft due 6/24 (Confluence, Jun 16). Strata TS3 SWQA LKG sanity (06/15): 0.6 Build 4 + SBIOS TOT passing. VR NVL72 0.5.1 Release staged Jun 17 (PIDs: 1157692-1157704 generic; partner diags 1157682-1157683). BWAT bug 6293872: IST run 0 fails with mis-compares on test 9 (2 targets in WAT, suspected HW issue with voltage regulators). JIRA burndown: 963/1041 (93%).',
+    anno: 'CM TRANSITION (6/12): Hui Fu is now TB500 SW CM. P-rel 98% across teams. SCG Final WAT Phase-1 COMPLETE 6/15 (confirmed Jun 16 bringup notes); Phase-2 (thermal swaps) trending 6/30. LP5 POR change confirmed: 1.5TB 4R -> 768GB 2R (7500MT/s); BCT good across all vendors; SW emulating 4R on 2R in progress. M-pkg A01Z TSMC fix: no measurable Fmax improvement vs A01Y at Vmax (SCG WW33 finding, Jun 12). UEFI AAR Team Readout draft due 6/24 (Confluence, Jun 16). NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. TB500-M P-rel/PS-FGI moved to 7/31. JIRA burndown: 963/1041 (93%).',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2184,6 +2186,7 @@ const CHIP_DB = {
       {p:'h',t:'USB transfers instability in OOBHUB (Bug 6103272 / 6091323) -- HMC FW & OOBHUB FW WARs pending merge'},
       {p:'m',t:'MSEQ L2 resets on NVL72 CPU yield issue -- CBB MMIO intermittent failures; debug ongoing (Bug 6163858)'},
       {p:'m',t:'9600MT/s 2R module shortage due to NVL72 allocation -- recovery expected end of June'},
+      {p:'m',t:'M-pkg A01Z TSMC fix shows no measurable Fmax improvement vs A01Y at Vmax (SCG WW33, Jun 12) -- schedule impact under review'},
     ],
     checklist: [
       {t:'PS SBIOS release ~6/2',owner:'Sowjanya',done:true},
@@ -2193,12 +2196,11 @@ const CHIP_DB = {
       {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
     ],
     emails: [
-      {sub:'TB500 SW Chip Management Update',from:'rranganathan@nvidia.com',time:'Jun 12',body:'Hui Fu takes over as TB500 SW CM from Sowjanya Komatineni, who has moved to Rack Scale Software under Mitch Luban. Reach out to Hui wherever you would have contacted Sowjanya.'},
       {sub:'[Notes] TB500 Bringup Meeting - 06/16/2026',from:'asdash@nvidia.com',time:'Jun 16',body:'P-Rel 98%. SCG WAT Phase-1 complete 6/15; Phase-2 trending 6/30. LP5 memory POR changed to 768GB 2R (7500MT/s); BCT good across all vendors. SW emulating 4R behavior on 2R in progress.'},
-      {sub:'[PG558][Strata][C2G4] SWQA TB500 06/15 SBIOS LKG Sanity Report',from:'yuanhengw@nvidia.com',time:'Jun 16',body:'0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug packages passing LKG sanity.'},
       {sub:'[Notes] TB500 Bringup Meeting - 06/15/2026',from:'asdash@nvidia.com',time:'Jun 15',body:'98% Prel completion. Phase-1 WAT completing 6/15 on schedule. LP5 768GB 2R BCT good across all vendors. CR SLT Diag released 6/12 on schedule.'},
-      {sub:'[CRITICAL PATH] Vera Rubin NVL72 0.6 SW/FW Release',from:'Sowjanya',time:'Jun 12',body:'0.6 Build 4 in QA. Release target 7/9. Dev Drop 1: 6/29. P-rel/PS-FGI for TB500-M moved to 7/31.'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'TB500: Prel at 98%. SCG WAT Phase-1 completing 6/15. LP5 POR change underway. T374 PSET bringup and T268 QS Qual L4T image released.'},
+      {sub:'TB500 - MBx-Top-N - 06/12/2026',from:'kprabhu@nvidia.com',time:'Jun 15',body:'QS release and feature completion (BDAT/PPR) top focus. QS blockers: Golden Registers, 96GB SOCAMM/Memory, MBx code coverage.'},
+      {sub:'TB500 SCG WW33 Status -- 6/12/2026',from:'VTee@nvidia.com',time:'Jun 13',body:'M-pkg PS A01Z TSMC Fix: no measurable Fmax improvement at Vmax vs A01Y; P2P showed no improvement at HV/LV, variation at MV (800-900mV).'},
     ],
     slack: [
       {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 15 2:17am',msg:'VR-NVL72 NVBugs Monitor: NEW 0.6_Blocker #6323884 (Vera MSC as CXLMEM from UEFI Option). Updated 0.6_Blocker #5646362 (GR mismatch tracking bug). Total: 547 bugs (0.6_Blocker: 345, 0.5_Blocker: 49, QS_Factory_Start: 37, QS_Factory_End: 20).'},
@@ -2249,7 +2251,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · QS Qual 6/16',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
-    anno: 'QS Qual L4T image created, validated, released to MODS/SCG teams (PSET 6/15). dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases. NVSpec updates COMPLETE — PAT approvals/CS sign-off for TA1040SA and TA1050SA (Confluence 6/14). POR: 360→420 TOPS (73.3W→84.3W +11W). Dual RAM assist modes: RA liquid-cool 1.6GHz; WA air-cool low-Vmin. CP rev0.7 trending 6/29 (new VNM patterns for higher ISINK RA range). NVCAL DTS RELEASED 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. HSIO MNB blocked on CPrev0.4 unfused OPT_PHY_PLL (USB/MGBE failures) -- mitigation: ~30 locally fused CPrev0.5/FTrev0.6 units in use. LPWR features for T268 Embedded SKU reviewed by PAF — no gaps identified in superset qualification bringup (Confluence 6/14). BNB Declared 5/28.',
+    anno: 'QS Qual L4T image released to MODS/SCG teams (PSET 6/15). ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA -- owners assigned for triage. T268 BL Weekly Sync (Jun 17): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28.',
     meetings: [],
     risks: [
       {p:'h',t:'POR updated 360→420 TOPS (+11W: 73.3W→84.3W) -- dual RAM assist modes required; MNB schedule under review pending Liquid-Cool/Read-Assist mode timelines'},
@@ -2270,8 +2272,9 @@ const CHIP_DB = {
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'ThorZ QS Qual L4T image created, validated, and released to MODS/SCG teams. dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases.'},
     ],
     slack: [
-      {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 14 9:56pm',msg:'ThorZ ATS Nightly 6/14 (Build #1038): p3960-thor_x ITS_PWRDWN linux_dev_nsr -- 378/454 passed. PwrCtrl(28), VMON(30), TMON(6), ASILNA(1), LCM(1) escalated for owner triage.'},
-      {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 9 8:35pm',msg:'ThorZ MCU test run: 387/463 passed. ASILNA(1), PwrCtrl(29), TMON(6), VMON(30) regressions flagged for owner triage.'},
+      {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 17 8:36pm',msg:'ThorZ ATS Nightly 6/17 (Build #1090) linux_dev_nsr: 488/510 passed. Escalated: PwrCtrl(1 - 13 consecutive fails), TMON(1 regressed), VMON(1 - 9 consecutive fails). Owners assigned for triage.'},
+      {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 17 8:36pm',msg:'ThorZ ATS Nightly 6/17 (Build #1090) qnx_debug_sr: 470/486 passed. Escalated: ASILNA(4 - 55% fail rate), NFW flash(1), OTA(2 - 9 consecutive fails), PwrCtrl(2), TMON(1), VMON(4 - 19-20 consecutive fails).'},
+      {ch:'#test_sandepatil',from:'sandepatil',time:'Jun 14 9:56pm',msg:'ThorZ ATS Nightly 6/14 (Build #1038): p3960-thor_x linux_dev_nsr -- 378/454 passed. PwrCtrl(28), VMON(30), TMON(6), ASILNA(1), LCM(1) escalated for owner triage.'},
     ],
     prog: 78, phase:'Post-Silicon',
     pageStructure: [
@@ -2324,7 +2327,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Vivek Desikan · H3 Netlist to Emulation · SOC FDI 6/30 At Risk',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
     pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'Kernel strategy ALIGNED (PSET 6/15): Mfg SMT/SLT/MODS → Linux 6.18 LTS TinyLinux; Pre-Si/Productization → Canonical BaseOS 7.0 (locked for Power-on). BaseOS GVS enablement changes approved, in promotions. Sim V6.5 default on TOT; Frontdoor Boot blocked on IPIC SW (V5→V6 not updated, Jade resolving in V7). Sim V7 WIP: GPU fmodel integration pending; NVMe model fix awaited from Synopsys. Marching towards T354 S-Die RDI on 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk -- regression cleanup in progress. SOC FDI 6/30 at risk. H3 netlist released to emulation. Display FDI blocked (Jade HW Bug 6187150). Windows boot EL2 abort ongoing -- not yet up on N2x FPGA. VIC Bug 6281029 (WAR available). N2x branching: all dev migrating to dev-main by 7/6. NVPOR: 474 total; L0: 27%, L1: 12%. NEW (Jun 17): RM init/sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. RM Linux driver validated in QT with sanity testing. FPGA RM test plan execution underway: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed, 2960 not run, total 4408).',
+    anno: 'Marching towards T354 S-Die RDI 6/30 (confirmed T35X Top N, Jun 17). H3.05-7 netlist with Display Support released to SW Jun 17 (SOC Standalone + SOC+NET05 GPU). HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk for S-Die tapeout -- regression cleanup in progress. SOC FDI 6/30 at risk. RM init/sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. FPGA RM test plan: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed of 4408). N2x SOR_IF_CLK SW implementation guide published (Jun 16). Windows boot EL2 abort ongoing on FPGA. N2x branching: dev migrating to dev-main by 7/6. NVPOR: 474 total; L0: 27%, L1: 12%.',
     meetings: [],
     risks: [
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
@@ -2336,6 +2339,7 @@ const CHIP_DB = {
     ],
     checklist: [
       {t:'FPGA H3 netlist released to emulation',owner:'DV team',done:true},
+      {t:'H3.05-7 netlist with Display Support released to SW (Jun 17)',owner:'vdesikan',done:true},
       {t:'Display H2 Jade HW bug fix resolved',owner:'HW team',done:false},
       {t:'Testplan L0 at 27% (was 22%), L1 at 12% -- continue progress',owner:'DV team',done:true},
       {t:'Windows boot FPGA coverage gap closed',owner:'SW team',done:false},
@@ -2343,9 +2347,10 @@ const CHIP_DB = {
     ],
     emails: [
       {sub:'T35X Top N and Details - 6/16/2026',from:'CKiris@nvidia.com',time:'Jun 17',body:'T354 S-Die RDI (FNL netlist) marching to 6/30. HSIO (DPIN, USB3, HSIO SS, USB4) carries most risk for S-Die tapeout. Regression cleanup ongoing.'},
+      {sub:'H3.05-7 with Display Support available to SW',from:'vdesikan@nvidia.com',time:'Jun 17',body:'H3.05-7 netlist (SOC Standalone and SOC + NET05 GPU) released to SW. Includes display support. Release notes from Jade and NV Emulation team attached.'},
+      {sub:'N2x RM Linux Status : 17 Jun 2026',from:'abhsahu@nvidia.com',time:'Jun 17',body:'RM init and sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. FPGA test plan: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed, 2960 not run of 4408 total).'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'N2x: Kernel strategy aligned -- Manufacturing uses Linux 6.18 LTS TinyLinux; Pre-si/Productization uses Canonical BaseOS 7.0. Sim V6.5 TOT default; Sim V7 from Jade, GPU fmodel WIP.'},
-      {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SOC FDI at risk. H3 NL to emulation; H3.05-5 DP/HDMI from Jade. Display/Windows blocked on FPGA. Dev branching to dev-main 7/6. NVPOR 474 total; L0: 27%, L1: 12%. IAS/GFD pending: 26.'},
-      {sub:'N2x RM Linux Status : 17 Jun 2026',from:'abhsahu@nvidia.com',time:'Jun 17',body:'RM init and sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. RM Linux driver validated in QT. FPGA test plan: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed, 2960 not run of 4408 total). RM test plan execution tracked at chips-testplan.nvidia.com/t354-baseos-resman/.'},
+      {sub:'T354: H3 netlist available to SW',from:'vdesikan@nvidia.com',time:'Jun 13',body:'H3 netlist (SOC Standalone and SOC + NET05 GPU) released to SW. General-purpose emulation netlist now available for N2x/T354 team validation.'},
     ],
     slack: [],
     prog: 32, phase:'Pre-Silicon'
@@ -2411,7 +2416,7 @@ const CHIP_DB = {
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'T294 Magni: Arch targeting chip POR 90% complete by June-end. C2C was pushed out of TB600; team requesting prioritization for Magni inclusion.'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T294 Magni: Arch investigations and readouts ongoing. Targeting POR complete by 6/30.'},
     ],
-    slack: [{ch:'#t294_magni_fsm',from:'zvi_goldshtein',time:'Today 1:58pm',msg:'Safety plan risks: Safety design verification (HIGH), FI FMEDA timing (MEDIUM), Concept assessment ~1 month before T/O (HIGH).'}],
+    slack: [{ch:'#t294_magni_fsm',from:'zvi_goldshtein',time:'Jun 15',msg:'Safety plan risks: Safety design verification (HIGH), FI FMEDA timing (MEDIUM), Concept assessment ~1 month before T/O (HIGH).'},{ch:'#t294_magni_fsm',from:'cavalosgonza',time:'Jun 12',msg:'T294S Safety Plan (MPP #9) submitted with all changes from T294 Safety Plan #2 synced. Dates aligned. Dead rows cleaned up from row 191.'}],
     prog: 8, phase:'Pre-Silicon'
   },
   t374: {
@@ -2437,8 +2442,8 @@ const CHIP_DB = {
   }
 };
 
-// ── User chip detection (runs after CHIP_DB is defined) ───────────
-// ── Identity bootstrap ──────────────────────────────────────────────
+// -- User chip detection (runs after CHIP_DB is defined) -----------
+// -- Identity bootstrap ----------------------------------------------
 (function(){
   const saved = localStorage.getItem('cp2_identity');
   if(saved){
