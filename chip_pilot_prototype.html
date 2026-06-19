@@ -2133,6 +2133,7 @@ const CHIP_DB = {
       {ch:'#spt-fractal-rubin-l8-all',from:'vasudevr',time:'Jun 13 7:53pm',msg:'Fractal TS2 FAI: no passing RIN on FAI#14/#15/#16. Timeouts root-caused to Bug 6294710 → Bug 6288193 (PRI violation FBIO IEEE1500). Debug VBIOS WAR ready; security sign-off blocking release.'},
       {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 17 10:10am',msg:'CTCHBI HBI link failures during PG558 QS1 L6 Testing (NVBug 6335312): failures not failing secureboot. Check NV_PCTCHBI_ZB_CTCHBIRISCV_FW_STATUS and FW_MAILBOX(13) for HS_INIT completion. HBI team investigating whether link training failures surface in FW_STATUS.'},
       {ch:'#spt-fractal-rubin-l8-all',from:'mdespotovic',time:'Jun 18 9:26am',msg:'RubinCtcHbi::GetLineRateMbps RISCV failure: GetNDiv error 0x900077 for part 7 -- possible frel_tot regression. Investigating with Avisha Dhisle.'},
+      {ch:'#swgpu-chips-gfw-rubin',from:'cturlik',time:'Jun 18 9:33pm',msg:'Confirmed: CTCHBI ucode + 71903 was not requested for Strata QS release -- presumed OK per Ssuyung Yeh. Strata QS proceeding without this ucode pull.'},
     ],
     prog: 88, phase:'Post-Silicon'
   },
@@ -2207,6 +2208,7 @@ const CHIP_DB = {
     slack: [
       {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 15 2:17am',msg:'VR-NVL72 NVBugs Monitor: NEW 0.6_Blocker #6323884 (Vera MSC as CXLMEM from UEFI Option). Updated 0.6_Blocker #5646362 (GR mismatch tracking bug). Total: 547 bugs (0.6_Blocker: 345, 0.5_Blocker: 49, QS_Factory_Start: 37, QS_Factory_End: 20).'},
       {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 15 7:16am',msg:'VR-NVL72 NVBugs Monitor: UPDATED 0.6_Blocker #6306425 (DVS cuda r615 intermittent assertion). REMOVED 0.6_Blocker #6323884 (MSC as CXLMEM from UEFI -- not a blocker). Total: 547 bugs (0.6_Blocker: 345).'},
+      {ch:'Confluence: MGX Vera C2 Partner Mfg Diag',from:'jchen (SW-TEGRA)',time:'Jun 19',msg:'Vera C2 Partner Mfg Diag updated: SKU200 L10 r10.187_1.6.0 (Not QA\'d yet), SKU200 L6 r10.187_1.5.0 (latest QA\'d). SKU201 192GB variants in mixed QA state. Multiple SKU/L-level matrix active.'},
     ],
     prog: 98, phase:'Post-Silicon',
     pageStructure: [
@@ -2250,7 +2252,7 @@ const CHIP_DB = {
   },
   thorz: {
     title: 'ThorZ · CPU',
-    sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · MNB 7/29 (Tent)',
+    sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · MNB 7/29 · QS 8/5 (Tent)',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
     anno: 'QS Qual L4T image released to MODS/SCG teams (PSET 6/15). ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA -- owners assigned for triage. T268 BL Weekly Sync (Jun 17): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28.',
