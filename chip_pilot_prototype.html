@@ -2052,7 +2052,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026 · PON Apr 2027',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: 'NR10 Program Weekly Status (Jun 17): DV All 6/19 target -- blocker bugs being resolved (mostly toggle coverage); FNL SW feature-complete 6/29 remains target. NCISOC SHIM risk to FNL scope confirmed (arch top 5, Jun 15). NR10 revP4.0 NVISM ISM reviews active (Hao Peng, Jun 17/18). QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. Regression failures down 16→9 RTL bugs. L0/L1 canonical definition alignment needed in TestDB (mluban, Jun 15). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027. DFP 0.7 (PFNL) active & slipping (catch-up mode); domain scope evaluations underway this week (IO-NVLINK, IO-UCIE/HSIO due 6/24; Qual/WAT, IO-Electrical due 6/25).',
+    anno: 'NR10 Program Weekly Status (Jun 17): DV All 6/19 target -- blocker bugs being resolved (mostly toggle coverage); FNL SW feature-complete 6/29 remains target. NCISOC SHIM risk to FNL scope confirmed (arch top 5, Jun 15). NR10 revP4.0 NVISM ISM reviews active (Hao Peng, Jun 17/18). QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. Regression failures down 16→9 RTL bugs. L0/L1 canonical definition alignment needed in TestDB (mluban, Jun 15). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027. DFP 0.7 (PFNL) active & slipping (catch-up mode); domain scope evaluations underway this week (IO-NVLINK, IO-UCIE/HSIO due 6/24; Qual/WAT, IO-Electrical due 6/25). ERD Board Design engagement started WW24 -- SPT conversation initiated (Satish Prathaban/Alvin Ng; NR10x ERD Requests page updated Jun 17).',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
@@ -2256,12 +2256,13 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Mayank Kapoor · 420 TOPS · CP rev0.7 6/29 · MNB 7/29 · QS 8/5 (Tent)',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-a','QS FOCUS'],['pill-a','420 TOPS UPDATE']],
-    anno: 'QS Qual L4T image released to MODS/SCG teams (PSET 6/15). ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA -- owners assigned for triage. T268 BL Weekly Sync (Jun 17): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28.',
+    anno: 'QS Qual L4T image released to MODS/SCG teams (PSET 6/15). ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA -- owners assigned for triage. T268 BL Weekly Sync (Jun 17): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK). DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28. NVSpec updates enabling PAT approvals/CS sign-off for TA1040SA and TA1050SA completed (SCG, Jun 14). LPWR T268 Embedded SKU features reviewed by PAF -- no gaps identified in superset qualification bringup. HSIO MNB electrical coverage blocked on CPrev0.4 (unfused OPT_PHY_PLL_SPEEDO_TRIM_NVHS causing USB/MGBE failures at temp shmoo); fuses planned for CPrev0.7; ~30 locally fused CPrev0.5/FTrev0.6 units as MNB mitigation (T268 SCG Confluence, Jun 14).',
     meetings: [],
     risks: [
       {p:'h',t:'POR updated 360→420 TOPS (+11W: 73.3W→84.3W) -- dual RAM assist modes required; MNB schedule under review pending Liquid-Cool/Read-Assist mode timelines'},
       {p:'m',t:'CPU Soft Lock up active -- Bug 6124878, root cause TBD'},
       {p:'l',t:'SCG HSIO debug (PCIe/MGBE) ongoing -- USB LPM final fix CL 341783 submitted, GVS 4261895 triggered 6/7'},
+      {p:'h',t:'Embedded SKU (TE1040M Nx/Nano) risk to SCG schedule -- merged rail (VDD SOC/MSS/CPU) scoping open; IST impact and noise char/margin alignment with SPT pending (T268 SCG Confluence, Jun 14)'},
     ],
     checklist: [
       {t:'SCG miniWAT coverage 100%',owner:'Mayank Kapoor',done:true},
