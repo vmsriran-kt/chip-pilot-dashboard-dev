@@ -1025,7 +1025,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
     </div><!-- /radar -->
 <!-- ════════════════ PM ASSISTANT ════════════════ -->
     <div id="v-pm" style="display:none">
-      <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 19, 2026 · Generated from Slack + Email signals</div>
+      <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 21, 2026 · Generated from Slack + Email signals</div>
       <div class="three-col">
         <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--red)">🚨 Urgent — This Week</span></div><div class="c-body" style="padding:10px">
           <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> Resolve QM4↔NR10 emulation link-up — unblocks FNL Jun 29</span></div>
@@ -2055,7 +2055,8 @@ const CHIP_DB = {
     anno: 'NR10 Program Weekly Status (Jun 17): DV All 6/19 target -- blocker bugs being resolved (mostly toggle coverage); FNL SW feature-complete 6/29 remains target. NCISOC SHIM risk to FNL scope confirmed (arch top 5, Jun 15). NR10 revP4.0 NVISM ISM reviews active (Hao Peng, Jun 17/18). QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). MSE L0 100% pass; co-emu checkout ideal path. Regression failures down 16→9 RTL bugs. L0/L1 canonical definition alignment needed in TestDB (mluban, Jun 15). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027. DFP 0.7 (PFNL) active & slipping (catch-up mode); domain scope evaluations underway this week (IO-NVLINK, IO-UCIE/HSIO due 6/24; Qual/WAT, IO-Electrical due 6/25). ERD Board Design engagement started WW24 -- SPT conversation initiated (Satish Prathaban/Alvin Ng; NR10x ERD Requests page updated Jun 17).',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
-      {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},
+      {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},,
+      {ch:'Confluence: RubinSW/GR15x Resets',from:'Akanksha Periwal',time:'Jun 21',msg:'MODS GR15x Resets Pre-Silicon Coverage Plan updated (Jun 21). Emulation-only checkout scope: reset entry/exit sequencing, cold/warm/functional resets. Netlist not yet available.'}
     ],
     stack: [
       {comp:'core9d',delivery:'Source',repo:'Perforce core9d',status:'g',s:'Stable'},
@@ -2135,6 +2136,7 @@ const CHIP_DB = {
       {ch:'#spt-fractal-rubin-l8-all',from:'mdespotovic',time:'Jun 18 9:26am',msg:'RubinCtcHbi::GetLineRateMbps RISCV failure: GetNDiv error 0x900077 for part 7 -- possible frel_tot regression. Investigating with Avisha Dhisle.'},
       {ch:'#swgpu-chips-gfw-rubin',from:'cturlik',time:'Jun 18 9:33pm',msg:'Confirmed: CTCHBI ucode + 71903 was not requested for Strata QS release -- presumed OK per Ssuyung Yeh. Strata QS proceeding without this ucode pull.'},
       {ch:'#swdl-fw-pytorch-status',from:'PyTorch DevOps Bot',time:'Jun 15',msg:'NVBug 6315025 (SWDL_gr10x_BLOCKING): Deepseek-v3 Triton/ptxas fails for sm_107a on VR200. Draft MR !1687 under pipeline verification (54809874). Monitor and merge when green.'},
+      {ch:'#perf_wg_minions',from:'PerfWG Infra Minion',time:'Jun 19',msg:'IPP6 GB200/Rubin systems completed planned BCM image update Jun 16-17. slurmd has not yet reconnected post-update. Fleet uptime: 75.3% (22 of 23 down nodes are IPP6 Rubin systems; planned maintenance).'},
     ],
     prog: 88, phase:'Post-Silicon'
   },
@@ -2143,7 +2145,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CMs: Vinay Sharma · Anshul Gupta · A01 Power-On Early Aug 2026',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/3529740918/GR15x+SW+Bringup',
     pills: [['pill-g','POWER-ON'],['pill-g','TAPEOUT DONE']],
-    anno: 'A01 power-on early Aug 2026 (TV bringup only); A01P Jan 2027 (QM5+self-hosted). Tapeout completed Jun 2; physical data review Jun 11 complete. MODS GR15x Status (6/11): burndown concerning, projection for predictable delivery at risk. NICs MODS requirements from SCG still unresolved (NVBugs 5985577, 5984800, 5984797) -- SW cannot plan PowerOn work until clarified (6/16 Slack). SW releases table not yet populated (GR150 Bringup SW Dashboard updated 6/16).',
+    anno: 'A01 power-on early Aug 2026 (TV bringup only); A01P Jan 2027 (QM5+self-hosted). Tapeout completed Jun 2; physical data review Jun 11 complete. MODS GR15x Status (6/11): burndown concerning, projection for predictable delivery at risk. NICs MODS requirements from SCG still unresolved (NVBugs 5985577, 5984800, 5984797) -- SW cannot plan PowerOn work until clarified (6/16 Slack). SW releases table not yet populated (GR150 Bringup SW Dashboard updated 6/16). MODS GR15x Resets Pre-Silicon Coverage Plan (Confluence, Jun 21, Akanksha Periwal): emulation-only checkout; reset entry/exit sequencing, cold/warm/functional reset paths -- netlist not yet available.',
     meetings: [
       {time:'7:00 PM', title:'GR15x Physical Data review', pill:'pill-g'},
     ],
