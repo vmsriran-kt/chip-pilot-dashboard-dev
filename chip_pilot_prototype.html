@@ -2232,10 +2232,10 @@ const CHIP_DB = {
   },
   tb600: {
     title: 'TB600 · Vera Ultra',
-    sub: 'Pre-Silicon · SW CM: Hui Fu · IAS/GFD Reviews Active · SCSIM vs System SIM Eval',
+    sub: 'Pre-Silicon · SW CM: Hui Fu · ATE Verif Active · 3 Open Regressions Jun 22',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
-    pills: [['pill-b','PRE-SILICON'],['pill-a','SCSIM/SYS-SIM EVAL']],
-    anno: 'Simulation environment evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026. SCSIM R1 milestone: TB600/T414 + FN10x SCSIM R1 simulator Buildroot boots to console in Backdoor boot -- RM team enabled for GPU bring-up (PSET 6/15). T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429). Latest TCS TB600 Confluence pages from May 2026 -- no fresh June updates found.',
+    pills: [['pill-b','PRE-SILICON'],['pill-r','3 ATE REGRESSIONS']],
+    anno: 'Simulation environment evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026. SCSIM R1 milestone: TB600/T414 + FN10x SCSIM R1 simulator Buildroot boots to console in Backdoor boot -- RM team enabled for GPU bring-up (PSET 6/15). T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429). ATE Verif Weekly Status (Jun 22, Confluence): 3 open regressions -- Bug 6305968 TB600M chip_mid_pkg.xml gen_ate_pin_clock_file_chip FAIL (>10 days, 5th consecutive nightly failure, AI: Hamza Khan, ETA today); Bug 6191042 TB600C TJV_TOPS no SSN clocks defined (3 consecutive fails Jun 16/18/20, ETA this week); TB600M NIV VSIM regression die_sel=6 vs expected 7 (blocks Satyam sign-off on NIV release, ETA this week). STUB no workable solutions yet. Regression unstable. Achievements: TB600C NFC selfcheck 2x-shift PASS; TB600 Pkg-B SFNL snapshot released (CL-101992053, Jun 10, ALL JTAG FMOD PASS); CR100 COA_UCF_MISC0 clock_pll VSIM PASS milestone.',
     meetings: [],
     risks: [
       {p:'m',t:'Gathering simulation requirements from SW teams -- IAS and GFD reviews ongoing'},
@@ -2253,6 +2253,7 @@ const CHIP_DB = {
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SCSIM vs System SIM evaluation for presi underway. IAS and GFD reviews active.'},
     ],
     slack: [
+      {ch:'Confluence: TB600 ATE Verif Weekly Status',from:'Shaileshkumar Bijapur',time:'Jun 22',msg:'TB600 ATE Verif Status (Jun 22): Bug 6305968 TB600M chip_mid_pkg.xml FAIL (>10 days, 5 consecutive, ETA today); Bug 6191042 TB600C TJV_TOPS no SSN clocks (3 consecutive fails); NIV VSIM regression die_sel=6 vs 7 (blocks NIV sign-off). Achievements: TB600C NFC selfcheck PASS; Pkg-B SFNL snapshot released ALL JTAG FMOD PASS; CR100 clock_pll VSIM PASS milestone.'},
       {ch:'#swrapids-release',from:'msisodia@nvidia.com',time:'Jun 16',msg:'Vera Rubin NVL4 QS board: no ETA as of now. Vera Rubin NVL4 TS1 board ETA Aug-17. RAPIDS-DLFW Rubin build blocked -- awaiting updated dlfw-base image with CTK 13.4 segfault fix.'}
     ],
     prog: 40, phase:'Pre-Silicon'
