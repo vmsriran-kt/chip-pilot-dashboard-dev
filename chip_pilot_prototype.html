@@ -1233,6 +1233,7 @@ const KNOWN_SPACES = [
 
 const S={phase:'pre',ccCat:'phase',selChip:null,ccState:JSON.parse(localStorage.getItem('cp2_cc')||'{}'),
   newChip:{name:'',codename:'',group:'fusion',cm:'',refId:'nr10x',
+    sowUrl:'',scheduleUrl:'',iasUrl:'',gfdUrl:'',
            confluenceSpace: USER_PERSONAL_SPACE, confluenceParent:''},
   ncPreview:false};
 function saveS(){localStorage.setItem('cp2_cc',JSON.stringify(S.ccState))}
@@ -1318,13 +1319,27 @@ function renderCC(){
     // Build tree HTML
     let treeHtml='';
     if(ps.length){
+      // Map page title keywords → which link fields apply
+      const linkMap=[
+        {keys:['schedule','milestone'], field:'scheduleUrl', label:'Schedule'},
+        {keys:['ias','architecture','arch spec'], field:'iasUrl', label:'IAS'},
+        {keys:['feature por','por'], field:'sowUrl', label:'SoW'},
+        {keys:['sw program home','program home'], field:'sowUrl', label:'SoW'},
+      ];
       treeHtml='<div class="pg-tree">';
       ps.forEach(p=>{
         const indent=p.level===0?'root':p.level===1?'pg-l1':'pg-l2';
         const title=p.title.replace(/\{CHIP\}/g,displayName);
         const isHome=p.level===0;
+        // Find applicable links for this page
+        const titleLower=title.toLowerCase();
+        const pageBadges=linkMap
+          .filter(lm=>lm.keys.some(k=>titleLower.includes(k)) && nc[lm.field])
+          .map(lm=>`<a href="${nc[lm.field]}" target="_blank" style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(66,153,225,.15);color:#4299e1;text-decoration:none;margin-left:4px">🔗 ${lm.label}</a>`)
+          .join('');
+        const sowBadge=isHome&&nc.sowUrl?`<a href="${nc.sowUrl}" target="_blank" style="font-size:8px;font-weight:700;padding:1px 5px;border-radius:3px;background:rgba(66,153,225,.15);color:#4299e1;text-decoration:none;margin-left:4px">🔗 SoW</a>`:'';
         treeHtml+=`<div class="pg-node ${indent}">
-          <span style="flex:1">${title}</span>
+          <span style="flex:1">${title}${pageBadges}${sowBadge}</span>
           ${isHome?`<a href="${confBaseUrl}${spaceKey}/overview" target="_blank" style="font-size:9px;color:var(--nv-green);text-decoration:none;opacity:.7">${spaceKey} ↗</a>`:''}
           <span class="pg-pill">${isHome?'HOME':'PAGE'}</span>
         </div>`;
@@ -1402,6 +1417,35 @@ function renderCC(){
             <input class="nc-input" id="nc-f-spacecustom" placeholder="e.g. MYSPC" value="${nc.confluenceSpace||''}"
               oninput="S.newChip.confluenceSpace=this.value;ncRebuildPreview()">
           </div>`:''}
+
+          <div class="nc-field" style="grid-column:1/-1;margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">
+            <label class="nc-label" style="color:var(--blue,#4299e1)">🔗 Key Links <span style="font-weight:400;color:var(--muted);font-size:9px">— populate Confluence pages with real URLs</span></label>
+          </div>
+
+          <div class="nc-field">
+            <label class="nc-label">SoW URL <span style="font-weight:400;color:var(--muted);font-size:9px">(Statement of Work)</span></label>
+            <input class="nc-input" id="nc-f-sow" placeholder="https://nvidia.atlassian.net/wiki/…" value="${nc.sowUrl||''}"
+              oninput="S.newChip.sowUrl=this.value;ncRebuildPreview()">
+          </div>
+
+          <div class="nc-field">
+            <label class="nc-label">Schedule URL <span style="font-weight:400;color:var(--muted);font-size:9px">(Excel / Confluence / SharePoint)</span></label>
+            <input class="nc-input" id="nc-f-schedule" placeholder="https://…" value="${nc.scheduleUrl||''}"
+              oninput="S.newChip.scheduleUrl=this.value;ncRebuildPreview()">
+          </div>
+
+          <div class="nc-field">
+            <label class="nc-label">IAS URL <span style="font-weight:400;color:var(--muted);font-size:9px">(Interface Architecture Spec)</span></label>
+            <input class="nc-input" id="nc-f-ias" placeholder="https://nvidia.atlassian.net/wiki/…" value="${nc.iasUrl||''}"
+              oninput="S.newChip.iasUrl=this.value;ncRebuildPreview()">
+          </div>
+
+          <div class="nc-field">
+            <label class="nc-label">GFD URL <span style="font-weight:400;color:var(--muted);font-size:9px">(GPU Functional Decomposition)</span></label>
+            <input class="nc-input" id="nc-f-gfd" placeholder="https://nvidia.atlassian.net/wiki/…" value="${nc.gfdUrl||''}"
+              oninput="S.newChip.gfdUrl=this.value;ncRebuildPreview()">
+          </div>
+
         </form>
 
         <!-- Preview zone — only this section gets patched by ncRebuildPreview / ncLiveUpdate -->
@@ -1485,6 +1529,27 @@ function buildAgentPrompt(){
     return `${'  '.repeat(p.level+1)}- ${title}`;
   }).join('\n');
 
+  // Build key links block for the prompt
+  const linkRows=[
+    nc.sowUrl      && `| SoW (Statement of Work) | [Link](${nc.sowUrl}) |`,
+    nc.scheduleUrl && `| Program Schedule         | [Link](${nc.scheduleUrl}) |`,
+    nc.iasUrl      && `| IAS (Interface Arch Spec)| [Link](${nc.iasUrl}) |`,
+    nc.gfdUrl      && `| GFD                      | [Link](${nc.gfdUrl}) |`,
+  ].filter(Boolean);
+  const keyLinksSection=linkRows.length
+    ? `\n## Key Links\n| Document | URL |\n|----------|-----|\n${linkRows.join('\n')}\n`
+    : '';
+
+  // Build page-specific link instructions
+  const pageInstructions=[];
+  if(nc.scheduleUrl) pageInstructions.push(`   - **Schedule & Milestones** page: embed a link to the program schedule: ${nc.scheduleUrl}`);
+  if(nc.iasUrl)      pageInstructions.push(`   - **SW Architecture / IAS** page: embed a link to the IAS document: ${nc.iasUrl}`);
+  if(nc.gfdUrl)      pageInstructions.push(`   - **SW Architecture** page: embed a link to the GFD: ${nc.gfdUrl}`);
+  if(nc.sowUrl)      pageInstructions.push(`   - **Home page**: embed a link to the SoW: ${nc.sowUrl}`);
+  const pageLinksNote=pageInstructions.length
+    ? `\n4a. **Pre-populate these links into the relevant pages:**\n${pageInstructions.join('\n')}\n`
+    : '';
+
   return `# New Chip SW Program Setup — ${chipName}
 
 ## Task
@@ -1519,10 +1584,10 @@ ${pageLines}
    - Architecture/Feature pages → heading sections with TBD placeholders
    - Risk/Bug pages → risk table template (Risk, Severity, Owner, Mitigation)
    - Release/WAR pages → version table template
-5. **Labels:** Add labels: \`chip-sw\`, \`${chipName.toLowerCase()}\`, \`${(nc.group||'cpu').toLowerCase()}\`
+${pageLinksNote}5. **Labels:** Add labels: \`chip-sw\`, \`${chipName.toLowerCase()}\`, \`${(nc.group||'cpu').toLowerCase()}\`
 6. **Owner:** Set page owner to \`${cmEmail}\`
 
-## API Reference (Confluence REST)
+${keyLinksSection}## API Reference (Confluence REST)
 \`\`\`
 POST https://nvidia.atlassian.net/wiki/rest/api/content
 Authorization: Bearer <token>
