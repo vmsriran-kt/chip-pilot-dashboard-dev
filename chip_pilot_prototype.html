@@ -1025,7 +1025,7 @@ mark{background:rgba(118,185,0,.25);color:var(--text);border-radius:2px;padding:
     </div><!-- /radar -->
 <!-- ════════════════ PM ASSISTANT ════════════════ -->
     <div id="v-pm" style="display:none">
-      <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 21, 2026 · Generated from Slack + Email signals</div>
+      <div class="anno">💡 PM Assistant — Cross-program priorities for week of Jun 22, 2026 · Generated from Slack + Email signals</div>
       <div class="three-col">
         <div class="g-card"><div class="c-hdr"><span class="c-hdr-title" style="color:var(--red)">🚨 Urgent — This Week</span></div><div class="c-body" style="padding:10px">
           <div class="risk-row"><div class="rd rd-h"></div><span><strong>NR10x:</strong> Resolve QM4↔NR10 emulation link-up — unblocks FNL Jun 29</span></div>
@@ -2247,10 +2247,10 @@ const CHIP_DB = {
   },
   tb500: {
     title: 'TB500 · Vera CPU',
-    sub: 'Post-Silicon · SW CM: Hui Fu · Prel 98% · SBIOS QS 44 Bugs · WAT Ph2 ~6/30',
+    sub: 'Post-Silicon · SW CM: Hui Fu · Prel 98% · TB500M QS SMT 6/25 · WAT Ph2 ~6/30',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','98% COMPLETE'],['pill-a','M-PKG ~6/24']],
-    anno: 'TB500 SWQA LKG Sanity (Jun 22): 0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug -- sanity report filed (yuanhengw). UEFI AAR Team Readout draft due 6/24 (Ashish Singhal): UEFI features 14/21 (66.7%) complete at tapeout (7/18/25). SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. P-rel 98% across teams. LP5 POR change confirmed: 1.5TB 4R -> 768GB 2R (7500MT/s); SW emulating 4R on 2R in progress. NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. JIRA burndown: 963/1041 (93%). SBIOS QS Critical Path: 2 features open + 44 blocker bugs (pgorla, Jun 16). TB500 MODS Bug RCA (Jun 20): 166 open MODS bugs (Sys Crash 6, App Crash 4, Functionality 55, Corruption 1, Performance 8).',
+    anno: 'SLT Alignment (Jun 22): TB500P SLT Diag released 06/12 on schedule; TB500M QS SMT 06/25; CR SMT build start 07/05; CR/PS SLT Diag release 07/17 (single bin qual); ECO for CR paused in KYEC at step 12; Fractal 820 SKU on hold. TB500 SWQA LKG Sanity (Jun 22): 0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug -- sanity report filed (yuanhengw). UEFI AAR Team Readout draft due 6/24 (Ashish Singhal): UEFI features 14/21 (66.7%) complete at tapeout (7/18/25). SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. P-rel 98% across teams. LP5 POR change confirmed: 1.5TB 4R -> 768GB 2R (7500MT/s); SW emulating 4R on 2R in progress. NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. JIRA burndown: 963/1041 (93%). SBIOS QS Critical Path: 2 features open + 44 blocker bugs (pgorla, Jun 16). TB500 MODS Bug RCA (Jun 20): 166 open MODS bugs (Sys Crash 6, App Crash 4, Functionality 55, Corruption 1, Performance 8).',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
@@ -2273,13 +2273,13 @@ const CHIP_DB = {
     emails: [
       {sub:'[PG558][Strata][C2G4] SWQA TB500 06/21 SBIOS LKG Sanity Report',from:'yuanhengw@nvidia.com',time:'Jun 22',body:'LKG sanity test on dev-tb500 06/21: Updated to 0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug. Test report filed to tb500-bringup-status.'},
       {sub:'[Notes] TB500 Bringup Meeting - 06/16/2026',from:'asdash@nvidia.com',time:'Jun 16',body:'P-Rel 98%. SCG WAT Phase-1 complete 6/15; Phase-2 trending 6/30. LP5 memory POR changed to 768GB 2R (7500MT/s); BCT good across all vendors. SW emulating 4R behavior on 2R in progress.'},
-      {sub:'[Critical Path] TB500 SBIOS QS - 2 Features Open, 44 Blocker Bugs',from:'pgorla@nvidia.com',time:'Jun 16',body:'SBIOS_SW_QS critical path: 2 features open + 44 blocker bugs active. Owners in To: field to update thread with progress for QS milestone.'},
+      {sub:'TB500 SLT Alignment - 06/22/2026',from:'Sagarika Das (EngOps Confluence)',time:'Jun 22',body:'TB500P SLT Diag released 06/12 on schedule. TB500M QS SMT: 06/25. CR SMT build start: 07/05. CR/PS SLT Diag release: 07/17 (single bin qual). ECO for CR paused at step 12 in KYEC. Fractal 820 SKU on hold.'},
       {sub:'[Critical path] Vera Rubin NVL72 0.6 SW/FW Release',from:'vvasudevan@nvidia.com',time:'Jun 16',body:'NVL72 0.6 SW/FW Release on critical path. Owners in To: line to respond with task status updates for the 0.6 release.'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'TB500: Prel at 98%. SCG WAT Phase-1 completing 6/15. LP5 POR change underway. T374 PSET bringup and T268 QS Qual L4T image released.'},
     ],
     slack: [
-      {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 15 2:17am',msg:'VR-NVL72 NVBugs Monitor: NEW 0.6_Blocker #6323884 (Vera MSC as CXLMEM from UEFI Option). Updated 0.6_Blocker #5646362 (GR mismatch tracking bug). Total: 547 bugs (0.6_Blocker: 345, 0.5_Blocker: 49, QS_Factory_Start: 37, QS_Factory_End: 20).'},
-      {ch:'#tegra-mods-oncall-monitor',from:'bot',time:'Jun 15 7:16am',msg:'VR-NVL72 NVBugs Monitor: UPDATED 0.6_Blocker #6306425 (DVS cuda r615 intermittent assertion). REMOVED 0.6_Blocker #6323884 (MSC as CXLMEM from UEFI -- not a blocker). Total: 547 bugs (0.6_Blocker: 345).'},
+      {ch:'#tb500-l11-ist-diag',from:'jerryyang@nvidia.com',time:'Jun 22 2:50pm',msg:'Asking if TP31 will be released to customers in 0.6 QS and whether PLDM test package upload will be enabled in 0.6.'},
+      {ch:'#swipp-devex-sre-alerts',from:'bacon-bot',time:'Jun 22 4:07pm',msg:'Active regression on t234 frspr-ts5-qs (84% fail rate, window 46043569→46047118). Bisection in progress; culprit window narrowed to 46043569-46044936.'}
       {ch:'Confluence: MGX Vera C2 Partner Mfg Diag',from:'jchen (SW-TEGRA)',time:'Jun 19',msg:'Vera C2 Partner Mfg Diag updated: SKU200 L10 r10.187_1.6.0 (Not QA\'d yet), SKU200 L6 r10.187_1.5.0 (latest QA\'d). SKU201 192GB variants in mixed QA state. Multiple SKU/L-level matrix active.'},
       {ch:'Confluence: VR NVL72 Program Open Bug List',from:'Aboli Pimpalkhare',time:'Jun 19',msg:'VR NVL72 Program Open Bug List (Jun 19): 27 total bugs — 0 Showstopper HW/SW, 6 P0, 12 P1, 6 P2, 3 Other. No active showstoppers.'},
       {ch:'#swipp-devex-sre-alerts',from:'Bacon SRE bot',time:'Jun 20',msg:'TB500 QS regression detected then resolved on Jun 20: config chips_a embedded-linux t234 frspr-ts5-qs. Peak fail rate 82.36% (windows 46028124→46031309); resolved by 3:34pm PDT. No persistent blocker.'},
