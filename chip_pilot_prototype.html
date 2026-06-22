@@ -2107,7 +2107,7 @@ const CHIP_DB = {
   },
   gr10x: {
     title: 'GR10x · Rubin GPU',
-    sub: 'Post-Silicon · SW CMs: Hema Kumar · QS Active · r615 94 uCLs',
+    sub: 'Post-Silicon · SW CM: Ranjani · QS Active · r615 94 uCLs',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/2598145065',
     pills: [['pill-a','r615 uCL CLEANUP'],['pill-g','QS ACTIVE']],
     anno: 'GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). GR100 Overall Dashboard (Jun 5): 129 total bugs, 3 showstoppers, 24 P0 open, 41 must-have. NVDEC Bug 5881444 HEVC GPTimer: SW WAR (1s delay) approved for FREL_1 (CMD #269183); R615 fix needed but root cause debate ongoing -- Hemant proposes increasing timeout vs Kaelin pushing for proper error reporting; fix from NVBug comment #156 under validation by Sainath (May 20 update). CTCHBI HBI link failures (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR100 NVLink bidir POR 328Gbps confirmed. RubinCtcHbi::GetLineRateMbps RISCV failure (GetNDiv 0x900077) under investigation (mdespotovic). Fractal Bug Scrub (Jun 21): 45 GR100 bugs, 15 blockers + 8 unscrubbed. GFW NVBug 6315025 (Deepseek-v3 sm_107a BLOCKING): Draft MR !1687 pipeline under verification. r615 Dev Drop 1 target 6/29, release target 7/9.',
