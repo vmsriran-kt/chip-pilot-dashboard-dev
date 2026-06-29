@@ -1954,7 +1954,9 @@ function renderChipView(chipId) {
   if(mode === 'collage') {
     document.getElementById('chip-title').textContent = 'Portfolio Overview';
     document.getElementById('chip-subtitle').textContent = `All 12 programs · ${CURRENT_USER.name}`;
-    document.getElementById('chip-anno').textContent = '';
+    const annoElClear = document.getElementById('chip-anno');
+    annoElClear.style.cssText = '';
+    annoElClear.innerHTML = '';
     document.getElementById('chip-pills').innerHTML = '';
     const statusOrder = {'Pre-Silicon':0,'Post-Silicon':1};
     const chips = Object.entries(CHIP_DB);
@@ -1990,7 +1992,14 @@ function renderChipView(chipId) {
   var tabEl = document.getElementById('tab-chip');
   if(tabEl) tabEl.textContent = '🔬 ' + chipId.toUpperCase();
   document.getElementById('chip-subtitle').textContent = d.sub;
-  document.getElementById('chip-anno').textContent = d.anno;
+  const annoEl = document.getElementById('chip-anno');
+  if(d.anno && d.anno.trim().startsWith('<')) {
+    annoEl.style.cssText = 'display:block;padding:12px 16px;margin-bottom:14px';
+    annoEl.innerHTML = d.anno;
+  } else {
+    annoEl.style.cssText = '';
+    annoEl.textContent = d.anno;
+  }
 
   // Pills + SW wiki link
   const pillsEl = document.getElementById('chip-pills');
@@ -2117,7 +2126,7 @@ const CHIP_DB = {
     sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026 · PON Apr 2027',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
     pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: 'NR10x revP4.0 PFNL timing reviews very active Jun 19-22 (NvlbridgeProjectHome): Padring Checklist signoff in progress (Jun 25 target for SCPM_PSC_K; Mike Ho reviews for IVBE/VBE, TS_VREF). NR10 Branching Plan in progress -- dev migrating to dev-main by 7/6; nv-bug-report tool not yet established for Fusion (sonawen, Jun 20). FNL SW feature-complete 6/29 remains target; DV All 6/19 target passed -- status update pending from team. QM4+NR10 emulation link bring-up blocked (NVBug 6331386, NET04 register forces not allowed; NET05 option under eval). DFP 0.7 (PFNL) actively slipping -- domain scope evaluations active this week (IO-NVLINK, IO-UCIE/HSIO due 6/24; Qual/WAT, IO-Electrical due 6/25). ERD Board Design SPT conversation active (Satish Prathaban/Alvin Ng). Tapeout: Aug 31 planning, Nov 30 real. PON Apr 2027.',
+    anno: '<div style="width:100%;font-size:11px;line-height:1.75"><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px"><div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;opacity:.75;margin-bottom:6px">📋 Highlights</div><ul style="margin:0;padding-left:14px"><li>NR10x revP4.0 PFNL timing reviews active Jun 19-22 &mdash; Padring Checklist signoff in progress (Jun 25: SCPM_PSC_K; Mike Ho: IVBE/VBE, TS_VREF)</li><li>NR10 Branching Plan in progress &mdash; dev migrating to dev-main by 7/6</li><li>FNL SW feature-complete 6/29 target; DV All 6/19 passed &mdash; team status update pending</li><li>ERD Board Design SPT active (Satish Prathaban / Alvin Ng)</li><li>Tapeout: Aug 31 planning &middot; Nov 30 real &middot; PON Apr 2027</li></ul></div><div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#e53e3e;margin-bottom:6px">⚠ Risks</div><ul style="margin:0;padding-left:14px;color:#e53e3e"><li>QM4+NR10 emulation link bring-up blocked &mdash; NVBug 6331386 (NET04 forces not allowed; NET05 under eval)</li><li>DFP 0.7 (PFNL) actively slipping &mdash; domain evals due 6/24-6/25 (IO-NVLINK, IO-UCIE/HSIO, Qual/WAT, IO-Electrical)</li><li>nv-bug-report tool not yet established for Fusion (sonawen, Jun 20)</li></ul></div></div></div>',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},,
