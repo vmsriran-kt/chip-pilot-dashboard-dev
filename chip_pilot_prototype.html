@@ -2123,10 +2123,10 @@ function updateThemeBtn(){
 const CHIP_DB = {
   nr10x: {
     title: 'NR10x · NVLink Fusion',
-    sub: 'Pre-Silicon · SW CM: Ranjani · FNL Jun 29, 2026 · PON Apr 2027',
+    sub: 'Pre-Silicon · SW CM: Ranjani · FNL Done 6/29 · ECO Close 7/24 · RfT 8/31',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/NBS/overview?homepageId=2520514562',
-    pills: [['pill-a','FNL AT RISK'],['pill-r','QM4 BLOCKED']],
-    anno: '<div style="width:100%;font-size:11px;line-height:1.75"><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px"><div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;opacity:.75;margin-bottom:6px">📋 Highlights</div><ul style="margin:0;padding-left:14px"><li>NR10x revP4.0 PFNL timing reviews active Jun 19-22 &mdash; Padring Checklist signoff in progress (Jun 25: SCPM_PSC_K; Mike Ho: IVBE/VBE, TS_VREF)</li><li>NR10 Branching Plan in progress &mdash; dev migrating to dev-main by 7/6</li><li>FNL SW feature-complete 6/29 target; DV All 6/19 passed &mdash; team status update pending</li><li>ERD Board Design SPT active (Satish Prathaban / Alvin Ng)</li><li>Tapeout: Aug 31 planning &middot; Nov 30 real &middot; PON Apr 2027</li></ul></div><div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#e53e3e;margin-bottom:6px">⚠ Risks</div><ul style="margin:0;padding-left:14px;color:#e53e3e"><li>QM4+NR10 emulation link bring-up blocked &mdash; NVBug 6331386 (NET04 forces not allowed; NET05 under eval)</li><li>DFP 0.7 (PFNL) actively slipping &mdash; domain evals due 6/24-6/25 (IO-NVLINK, IO-UCIE/HSIO, Qual/WAT, IO-Electrical)</li><li>nv-bug-report tool not yet established for Fusion (sonawen, Jun 20)</li></ul></div></div></div>',
+    pills: [['pill-g','FNL DONE 6/29'],['pill-b','ECO CLOSE 7/24']],
+    anno: '<div style="width:100%;font-size:11px;line-height:1.75"><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px"><div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;opacity:.75;margin-bottom:6px">📋 Highlights</div><ul style="margin:0;padding-left:14px"><li>NR10x revP4.0 PFNL timing reviews active Jun 19-22 &mdash; Padring Checklist signoff in progress (Jun 25: SCPM_PSC_K; Mike Ho: IVBE/VBE, TS_VREF)</li><li>NR10 Branching Plan in progress &mdash; dev migrating to dev-main by 7/6</li><li>FNL snapped 6/29 on schedule; DV All 6/19 passed &mdash; ECO window closes 7/24, Ready-for-Tapeout 8/31</li><li>ERD Board Design SPT active (Satish Prathaban / Alvin Ng)</li><li>Tapeout: Aug 31 planning &middot; Nov 30 real &middot; PON Apr 2027</li></ul></div><div><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#e53e3e;margin-bottom:6px">⚠ Risks</div><ul style="margin:0;padding-left:14px;color:#e53e3e"><li>Post-FNL: NCISoC SHIM checklist &amp; coverage closure remaining (only non-blocker open); UCIe PHY T7 final pre-QA release ETA 7/15</li><li>UPHY XPROP sim failures (Bugs 6340039, 6364484) under UPHY investigation; Synopsys UCIe PHY VDD noise + M16 DRC + TDR loopback closure pending</li><li>nv-bug-report tool not yet established for Fusion (sonawen, Jun 20)</li></ul></div></div></div>',
     meetings: [
       {time:'4:00 PM', title:'NR10 -- QM4 link-bring up', pill:'pill-r'},
       {time:'10:30 PM', title:'NR10 Branching Plan', pill:'pill-a'},,
@@ -2142,10 +2142,10 @@ const CHIP_DB = {
     ],
     risks: [
       {p:'h',t:'PON slipped Jan-2027 → Apr 2027 per DFP Progress tracker (Confluence, Jun 11) -- schedule cascade risk under review'},
-      {p:'h',t:'QM4 TREX may slip past FNL RTL snap (Jun 29) -- SW teams reviewing critical path to de-risk'},
-      {p:'h',t:'QM4 <-> NR10 emulation link bring-up blocking FM testing -- MSE/NetIR loopback up but not talking to QM4; In Debug'},
+      {p:'m',t:'NCISoC SHIM: coverage + checklist closure remaining (only non-FNL-blocker open); SHIM perf ECO WIP (Bug 6399590)'},
+      {p:'m',t:'Co-emulation with Sirius adapter die: first A-die drop received, integration in progress -- low co-sim/co-emu coverage is a post-FNL ECO risk'},
       {p:'h',t:'DFP 0.5 (SWPOR) overdue ~7 months -- catch-up plan under review; risk of DFP 0.7/0.9 schedule cascade'},
-      {p:'h',t:'DFP 0.7 (PFNL) actively slipping from Apr 2026 target -- impacts DFP 0.9 FNL milestone (Aug 2026)'},
+      {p:'m',t:'Synopsys UCIe PHY open items (not FNL blockers): VDD noise mitigation, one critical M16 metal DRC, PHY DFT TDR mainband loopback; PHY T7 final pre-QA ETA 7/15'},
       {p:'m',t:'Simulation feature gaps -- boot, resets, UCIe init/error handling not exercised; emulation team preparing bare-metal setup'},
       {p:'m',t:'SystemSim NR10 CAGUID incorrect -- init-vector fix in progress, needed before QM4-ready release'},
       {p:'m',t:'FM PRD / POR dates slipped to 6/30 and 7/30'},
@@ -2157,8 +2157,8 @@ const CHIP_DB = {
     ],
     checklist: [
       {t:'QM4 + NR10 emulation link bring-up unblocked',owner:'Ranjani',done:false},
-      {t:'DV All / FCV All by 6/19',owner:'Ranjani',done:false},
-      {t:'FNL SW feature-complete by 6/29',owner:'Ranjani',done:false},
+      {t:'DV All / FCV All by 6/19',owner:'Ranjani',done:true},
+      {t:'FNL SW feature-complete by 6/29',owner:'Ranjani',done:true},
       {t:'SystemSim CAGUID fix delivered',owner:'Ranjani',done:false},
       {t:'Co-emulation scope finalized',owner:'Ranjani',done:false},
       {t:'IAS Top v1.0 sign-off (NVBug 6222048)',owner:'Hao Liu',done:false},
@@ -2166,6 +2166,8 @@ const CHIP_DB = {
       {t:'Finalize co-emu scope + ~2-wk FNL slip option',owner:'Ranjani',done:false},
     ],
     emails: [
+      {sub:'NR10/NR20 Weekly Status 07/06/2026',from:'glu@nvidia.com',time:'Jul 6',body:'NR10 FNL snapped 6/29 on schedule. ECO window closes 7/24; Ready-for-Tapeout 8/31. RTL WOULD_ECO items: 6399590 SHIM perf (ECO WIP), 6398766/6397872 SHIM DEC. UCIe PHY T7 final pre-QA ETA 7/15. NR20 execution starts 7/10 (tree opens this week).'},
+      {sub:'Top 5 | NVL-Fusion | NR10 | Program Weekly Status 6/30/2026',from:'dachiang@nvidia.com',time:'Jun 30',body:'NR10 achieved DV all (6/19) and FNL (6/29) on schedule. All IPs ready for FNL, no blocker except NCISoC SHIM checklist/coverage. TOT FCV stable. NV-BFM delivered to Sirius adapter-die partner; co-emulation first A-die drop received; post-silicon planning ramping (E-board, SIPI guideline).'},
       {sub:'RE: NR10 Branching Plan -- Need Input from SW PICs',from:'sonawen@nvidia.com',time:'Jun 20',body:'nv-bug-report does not yet exist for NVLink Fusion -- clarification added. Branching plan table and package structure definition AI pending from yesterday sync; dev→dev-main migration target 7/6.'},
       {sub:'Top 5 | NVL-Fusion | NR10 | Program Weekly Status 6/16/2026',from:'dachiang@nvidia.com',time:'Jun 17',body:'DV All 6/19 target -- blocker bugs being resolved, mostly toggle coverage. FNL SW feature-complete 6/29. NCISOC SHIM risk to FNL confirmed. Regression failure buckets down 16->9 RTL bugs.'},
       {sub:'IST NR10 Weekly Sync - 06/17/2026',from:'mdeshmukh@nvidia.com',time:'Jun 17',body:'FNL date 6/29 confirmed. Emulation checkout NVBug 6331386 open -- NET04 does not allow register forces; NET05 may. Co-emulation checkout ideal for handshake test.'},
@@ -2173,6 +2175,7 @@ const CHIP_DB = {
       {sub:'Top 5 | NVL Fusion | NR10 & NR20 | Project Weekly status - 06/15/2026',from:'glu@nvidia.com',time:'Jun 16',body:'DV all (6/19) and FNL (6/29) readiness under review. NCISOC SHIM has risk to miss FNL. Regression failure buckets cut from 16->9 RTL bugs. MSE L0 passing.'},
     ],
     slack: [
+      {ch:'Confluence: NR10 FNL Snap / Weekly Status',from:'Gser Lu',time:'Jul 6',msg:'NR10 FNL snapped 6/29 (on schedule). ECO window close 7/24; Ready-for-Tapeout 8/31. Only non-FNL-blocker open is NCISoC SHIM coverage/checklist. NR20 tree opens this week; execution starts 7/10.'},
       {ch:'NvlbridgeProjectHome: NR10 Padring Checklist',from:'Grant Liu',time:'Jun 22',msg:'NR10 Padring Checklist updated today: Pinoutspec review and signoff task active -- filing bug for interface owner sign-off across all chip interfaces in progress.'},
       {ch:'NvlbridgeProjectHome: NR10 H0 revP4.0 PFNL timing review',from:'Levi Li',time:'Jun 22',msg:'NR10 H0 revP4.0 PFNL function timing review page updated today. Timing tree opened, clock source files active for revP4.0 default_func path.'},
       {ch:'#nvlink-fusion-sw',from:'Team',time:'Jun 17',msg:'NR10 FNL 6/29 remains target. NCISOC SHIM is new FNL risk -- team assessing scope. Regression failures down to 9 open RTL bugs (was 16 last week). Co-emu checkout strategy being finalized.'},
@@ -2184,7 +2187,7 @@ const CHIP_DB = {
     sub: 'Post-Silicon · SW CM: Ranjani · PRel Trending 6/30 · CWAT 98% · BWAT 80%',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/2598145065',
     pills: [['pill-a','RIST BLOCKERS'],['pill-g','PRel TRENDING 6/30']],
-    anno: 'GR10x PS/PRel (6/22-6/26): PS FGI + PRel trending 6/30 (slipped from 6/22). CWAT (Eboard) 98%, BWAT (Pboard excl. RIST) 80%; RIST blockers in active debug (Bugs 6330656 RIST exit voltage, 6273862 PMU TGP, 6259532 Isense, 6000157 DVFS Arbiter). NVLink POR speed confirmed 328Gbps (was 345Gbps). Full cluster (2× NVL72 racks) on 0.6 build 3; NVLink stability NCCL BW tests ongoing (Bug 6335356). DVS: VBIOS 99.00.1C.00.00 resolved driver install fails; P-board count 21% of planned (risk for coverage). A01P power-on planning ~7/1. GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). GR100 Overall Dashboard (Jun 5): 129 total bugs, 3 showstoppers, 24 P0 open, 41 must-have. NVDEC Bug 5881444 HEVC GPTimer: SW WAR (1s delay) approved for FREL_1 (CMD #269183); R615 fix needed but root cause debate ongoing -- Hemant proposes increasing timeout vs Kaelin pushing for proper error reporting; fix from NVBug comment #156 under validation by Sainath (May 20 update). CTCHBI HBI link failures (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR100 NVLink bidir POR 328Gbps confirmed. RubinCtcHbi::GetLineRateMbps RISCV failure (GetNDiv 0x900077) under investigation (mdespotovic). Fractal Bug Scrub (Jun 21): 45 GR100 bugs, 15 blockers + 8 unscrubbed. GFW NVBug 6315025 (Deepseek-v3 sm_107a BLOCKING): Draft MR !1687 pipeline under verification. r615 Dev Drop 1 target 6/29, release target 7/9.',
+    anno: 'GR10x PS/PRel (6/22-6/26): PS FGI + PRel trending 6/30 (slipped from 6/22). CWAT (Eboard) 98%, BWAT (Pboard excl. RIST) 80%; RIST blockers in active debug (Bugs 6330656 RIST exit voltage, 6273862 PMU TGP, 6259532 Isense, 6000157 DVFS Arbiter). NVLink POR speed confirmed 328Gbps (was 345Gbps). Full cluster (2× NVL72 racks) on 0.6 build 3; NVLink stability NCCL BW tests ongoing (Bug 6335356). DVS: VBIOS 99.00.1C.00.00 resolved driver install fails; P-board count 21% of planned (risk for coverage). A01P power-on planning ~7/1. GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). GR100 Overall Dashboard (Jun 5): 129 total bugs, 3 showstoppers, 24 P0 open, 41 must-have. NVDEC Bug 5881444 HEVC GPTimer: SW WAR (1s delay) approved for FREL_1 (CMD #269183); R615 fix needed but root cause debate ongoing -- Hemant proposes increasing timeout vs Kaelin pushing for proper error reporting; fix from NVBug comment #156 under validation by Sainath (May 20 update). CTCHBI HBI link failures (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR100 NVLink bidir POR 328Gbps confirmed. RubinCtcHbi::GetLineRateMbps RISCV failure (GetNDiv 0x900077) under investigation (mdespotovic). Fractal Bug Scrub (Jun 21): 45 GR100 bugs, 15 blockers + 8 unscrubbed. GFW NVBug 6315025 (Deepseek-v3 sm_107a BLOCKING): Draft MR !1687 pipeline under verification. r615 Dev Drop 1 target 6/29, release target 7/9. [7/6] QS1 L10 PD bring-up active at Oracle mfg (Ingrasys/Quanta): CpuPcieTraffic failures (Bugs 6388563/6377173; Gen5x4 max ~126Gbps vs 70Gbps threshold under discussion), SystemThermal + NvmeDataDriveBandwidth (Bug 6397816), PD version mismatch (Bug 6388665). Rubin pre-prod HW (6/26): Vera Rubin NVL4 TS1 board ETA 8/17, NVL4 QS board no ETA, Fractal GR100 TS3/CR at-risk. MGX-VERA-C2 QS 0.6 driver 615.16 Bug 6380898 (nvmps_cuda/green_contexts/io_consistency fails).',
     meetings: [],
     stack: [],
     risks: [
@@ -2206,6 +2209,8 @@ const CHIP_DB = {
       {sub:'RE: GR100 NVLink POR Updates',from:'jungtsungy@nvidia.com',time:'Jun 15',body:'QM4 NVLink POR is 328Gbps. Checking GR10x (Rubin) bidir test POR alignment with QM4 specification.'},
     ],
     slack: [
+      {ch:'#vr-qs1-oracle-igs-support',from:'steven_chou',time:'Jun 30',msg:'QS1 L10 PD failures at Oracle mfg (Ingrasys/Quanta): CpuPcieTraffic Bugs 6388563/6377173 (Gen5x4 max ~126Gbps; 70Gbps threshold proposed), SystemThermal + NvmeDataDriveBandwidth Bug 6397816, PD version mismatch Bug 6388665.'},
+      {ch:'#swrapids-release',from:'Mayur Sisodia',time:'Jun 26',msg:'Rubin pre-prod HW: no change. Vera Rubin NVL4 TS1 board delivered (x86); NVL4 QS board no ETA; Fractal GR100 TS3 & CR boards at-risk (high demand/low supply).'},
       {ch:'#ghw-bringup-gr10x-sit-debug-nvdec-conc-5881444',from:'Hemant/Sainath',time:'Jun 16',msg:'NVDEC Bug 5881444: HEVC GPTimer SW WAR (1s delay) approved for FREL_1. Root cause: ISR handler clears error code before reporting. Fix also needed in chips_a→r615 for customer release.'},
       {ch:'#swgpu-chips-gfw-rubin',from:'kssoni',time:'Jun 16 7:48am',msg:'GR100 and GR150 release pipelines triggered. FSP/FSP-RT components submitted: GR10x v0300.0097.0160.0000. BAR0 Decoupler fix queued — QS dev drop 1 candidate targeting noon.'},
       {ch:'Confluence: Strata Bug Scrub',from:'Marcel Kuo',time:'Jun 19 3:16am',msg:'Strata Bug Scrub (104 bugs, VR-NVL72 0.3): 5 SWQA Blockers + 2 Blockers + 3 Stale + 97 new bugs recently created. Generated Jun 19, 3:16 AM (DGX Software / Confluence).'},
@@ -2257,14 +2262,15 @@ const CHIP_DB = {
   },
   tb500: {
     title: 'TB500 · Vera CPU',
-    sub: 'Post-Silicon · SW CM: Hui Fu · P-Rel 98% · PS FGI Done · M-pkg FGI ~7/31 · WAT Ph2 6/30',
+    sub: 'Post-Silicon · SW CM: Hui Fu · P-Rel 98% · M-pkg PS-FGI ~7/31 · P-pkg BWAT Ph2 ~70% (7/8)',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182006/TB500+Chip+SW+Development+PLC-L1+Process',
     pills: [['pill-g','P-REL 98%'],['pill-a','M-PKG FGI ~7/31']],
-    anno: 'TB500 (6/23-6/27): P pkg P-Rel 98% across teams; PS FGI done. M-pkg PS FGI pushed to ~7/31 (A01Z CPU Fmax char). WAT Phase-2 (thermal swaps) on track for 6/30. CIP-2 confirmed as POR for TB500-M P-rel. Astera RT/Switch: Gen5 clean at 10k loops; Gen6 failures being debugged with Astera. SLT 6/27: FY 97.46%, FPY 70%, Vol 823. Risk: CRI interrupt → L2 boot fail Bug 6239716 (P-rel BWAT blocker; scandump obtained, root cause debug ongoing). MODS TB500-M A01Z + P5035 C2 Bug 6303912 -- unplanned SW effort. SLT Alignment (Jun 22): TB500P SLT Diag released 06/12 on schedule; TB500M QS SMT 06/25; CR SMT build start 07/05; CR/PS SLT Diag release 07/17 (single bin qual); ECO for CR paused in KYEC at step 12; Fractal 820 SKU on hold. TB500 SWQA LKG Sanity (Jun 22): 0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug -- sanity report filed (yuanhengw). UEFI AAR Team Readout draft due 6/24 (Ashish Singhal): UEFI features 14/21 (66.7%) complete at tapeout (7/18/25). SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. P-rel 98% across teams. LP5 POR change confirmed: 1.5TB 4R -> 768GB 2R (7500MT/s); SW emulating 4R on 2R in progress. NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. JIRA burndown: 963/1041 (93%). SBIOS QS Critical Path: 2 features open + 44 blocker bugs (pgorla, Jun 16). TB500 MODS Bug RCA (Jun 20): 166 open MODS bugs (Sys Crash 6, App Crash 4, Functionality 55, Corruption 1, Performance 8).',
+    anno: 'TB500 (6/23-6/27): P pkg P-Rel 98% across teams; PS FGI done. M-pkg PS FGI pushed to ~7/31 (A01Z CPU Fmax char). WAT Phase-2 (thermal swaps) on track for 6/30. CIP-2 confirmed as POR for TB500-M P-rel. Astera RT/Switch: Gen5 clean at 10k loops; Gen6 failures being debugged with Astera. SLT 6/27: FY 97.46%, FPY 70%, Vol 823. Risk: CRI interrupt → L2 boot fail Bug 6239716 (P-rel BWAT blocker; scandump obtained, root cause debug ongoing). MODS TB500-M A01Z + P5035 C2 Bug 6303912 -- unplanned SW effort. SLT Alignment (Jun 22): TB500P SLT Diag released 06/12 on schedule; TB500M QS SMT 06/25; CR SMT build start 07/05; CR/PS SLT Diag release 07/17 (single bin qual); ECO for CR paused in KYEC at step 12; Fractal 820 SKU on hold. TB500 SWQA LKG Sanity (Jun 22): 0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug -- sanity report filed (yuanhengw). UEFI AAR Team Readout draft due 6/24 (Ashish Singhal): UEFI features 14/21 (66.7%) complete at tapeout (7/18/25). SCG Final WAT Phase-1 COMPLETE 6/15; Phase-2 (thermal swaps) trending 6/30. P-rel 98% across teams. LP5 POR change confirmed: 1.5TB 4R -> 768GB 2R (7500MT/s); SW emulating 4R on 2R in progress. NVL72 SW 0.6 Build 4 in QA; Dev Drop 1 6/29, release target 7/9. JIRA burndown: 963/1041 (93%). SBIOS QS Critical Path: 2 features open + 44 blocker bugs (pgorla, Jun 16). TB500 MODS Bug RCA (Jun 20): 166 open MODS bugs (Sys Crash 6, App Crash 4, Functionality 55, Corruption 1, Performance 8). [6/30] P-pkg BWAT Phase-2 ~70% (target 7/8); M-pkg FinalCWAT SW image ready (SWQA ETA 7/1); M-pkg MODS PS SLT trending 7/13; PS FGI 88% bin ETA 7/31. New: Bug 6378881 intermittent CXL(1x16) Gen4 speed-switching failure (Gen5 clean; dropping Gen4 switching under discussion). Astera RT/Switch interop root-caused to Astera-side timing violation; raising stgrtime_0 passed all speed changes (Astera to provide fix). P5035 CCR start delayed to mid-Aug (SOCAMM 96GB-2R shortage; 64GB-2R exploring; System-Prel blocker). CMX power-on 1st week July.',
     meetings: [
       {time:'4:00 PM', title:'TB500 Bringup Meeting', pill:'pill-g'},
     ],
     risks: [
+      {p:'h',t:'Bug 6378881 (NEW, 6/30): intermittent CXL(1x16) Gen4 speed-switching failure; Gen5 clean -- dropping Gen4 switching under discussion'},
       {p:'h',t:'SBIOS QS phase critical path (Jun 16): 2 features open + 44 blocker bugs active -- owners notified, resolution in progress (pgorla)'},
       {p:'h',t:'M-pkg SK memory decision: do not build with SK memory -- Hynix 2R/96GB SOCAMM failing at 4800 MHz (Bug 6217453)'},
       {p:'h',t:'SBIOS P-rel blocker bugs: 49 open -- Test Package from DFX no ETA (IST-3146 blocked); GVS enablement issues; P-rel CRI interrupt L2 boot fail (Bug 6239716) and MNOC Port 0 SKernel panic (Bug 6254611)'},
@@ -2281,6 +2287,8 @@ const CHIP_DB = {
       {t:'DCPOR QS features (4 remaining) close by 6/5',owner:'SW team',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'TB500 (Vera): M-pkg PS-FGI ~7/31; A01Z CPU Fmax characterization ongoing. P-pkg BWAT Phase-2 ~70% (target 7/8). M-pkg FinalCWAT SW image ready (SWQA ETA 7/1). M-pkg MODS PS SLT trending 7/13. Focus: Product WAT + QS bug resolution.'},
+      {sub:'TB500 SCG WW35 Status -- 6/27/2026',from:'mhaveri@nvidia.com',time:'Jun 27',body:'PS FGI 88% bin ETA 7/31. Final CWAT (M-pkg) start trending; 24 parts in BDC. Astera RT/Switch interop root-caused to Astera timing violation (stgrtime_0 WAR passes; Astera fix pending). P5035 CCR delayed to mid-Aug (SOCAMM 96GB-2R shortage). SHTOL P-pkg 1xTBTI complete; M-pkg starts 7/8 with A01Z. Bug 6239716 L2-reset boot failure under debug.'},
       {sub:'[PG558][Strata][C2G4] SWQA TB500 06/21 SBIOS LKG Sanity Report',from:'yuanhengw@nvidia.com',time:'Jun 22',body:'LKG sanity test on dev-tb500 06/21: Updated to 0.6 Build 4 + SBIOS dev-tb500 TOT on Strata TS3 + Debug. Test report filed to tb500-bringup-status.'},
       {sub:'[Notes] TB500 Bringup Meeting - 06/16/2026',from:'asdash@nvidia.com',time:'Jun 16',body:'P-Rel 98%. SCG WAT Phase-1 complete 6/15; Phase-2 trending 6/30. LP5 memory POR changed to 768GB 2R (7500MT/s); BCT good across all vendors. SW emulating 4R behavior on 2R in progress.'},
       {sub:'TB500 SLT Alignment - 06/22/2026',from:'Sagarika Das (EngOps Confluence)',time:'Jun 22',body:'TB500P SLT Diag released 06/12 on schedule. TB500M QS SMT: 06/25. CR SMT build start: 07/05. CR/PS SLT Diag release: 07/17 (single bin qual). ECO for CR paused at step 12 in KYEC. Fractal 820 SKU on hold.'},
@@ -2288,8 +2296,9 @@ const CHIP_DB = {
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'TB500: Prel at 98%. SCG WAT Phase-1 completing 6/15. LP5 POR change underway. T374 PSET bringup and T268 QS Qual L4T image released.'},
     ],
     slack: [
+      {ch:'#spike-flm',from:'Matthew Paige',time:'Jul 1',msg:'TB500 SBIOS 6.04.00.01 Prod-Signed packages published for P5035 QS/C1-QS/TS3 and TB500-ES-a01y (VR-NVL72 / Quark / Vera-CPU-P5035-C2).'},
       {ch:'#tb500-l11-ist-diag',from:'jerryyang@nvidia.com',time:'Jun 22 2:50pm',msg:'Asking if TP31 will be released to customers in 0.6 QS and whether PLDM test package upload will be enabled in 0.6.'},
-      {ch:'#swipp-devex-sre-alerts',from:'bacon-bot',time:'Jun 22 4:07pm',msg:'Active regression on t234 frspr-ts5-qs (84% fail rate, window 46043569→46047118). Bisection in progress; culprit window narrowed to 46043569-46044936.'}
+      {ch:'#swipp-devex-sre-alerts',from:'bacon-bot',time:'Jun 22 4:07pm',msg:'Active regression on t234 frspr-ts5-qs (84% fail rate, window 46043569→46047118). Bisection in progress; culprit window narrowed to 46043569-46044936.'},
       {ch:'Confluence: MGX Vera C2 Partner Mfg Diag',from:'jchen (SW-TEGRA)',time:'Jun 19',msg:'Vera C2 Partner Mfg Diag updated: SKU200 L10 r10.187_1.6.0 (Not QA\'d yet), SKU200 L6 r10.187_1.5.0 (latest QA\'d). SKU201 192GB variants in mixed QA state. Multiple SKU/L-level matrix active.'},
       {ch:'Confluence: VR NVL72 Program Open Bug List',from:'Aboli Pimpalkhare',time:'Jun 19',msg:'VR NVL72 Program Open Bug List (Jun 19): 27 total bugs — 0 Showstopper HW/SW, 6 P0, 12 P1, 6 P2, 3 Other. No active showstoppers.'},
       {ch:'#swipp-devex-sre-alerts',from:'Bacon SRE bot',time:'Jun 20',msg:'TB500 QS regression detected then resolved on Jun 20: config chips_a embedded-linux t234 frspr-ts5-qs. Peak fail rate 82.36% (windows 46028124→46031309); resolved by 3:34pm PDT. No persistent blocker.'},
@@ -2309,10 +2318,10 @@ const CHIP_DB = {
   },
   tb600: {
     title: 'TB600 · Vera Ultra',
-    sub: 'Pre-Silicon · SW CM: Hui Fu · SCSIM R1 Active · Buildroot Backdoor Boot Up',
+    sub: 'Pre-Silicon · SW CM: Hui Fu · SCSIM R1 Done · Frontdoor Boot In Progress · SW Kickoff 7/8',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-b','PRE-SILICON'],['pill-g','SCSIM R1 MILESTONE']],
-    anno: 'Simulation environment evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026. SCSIM R1 milestone: TB600/T414 + FN10x SCSIM R1 simulator Buildroot boots to console in Backdoor boot -- RM team enabled for GPU bring-up (PSET 6/15). T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429). ATE Verif Weekly Status (Jun 22, Confluence): 3 open regressions -- Bug 6305968 TB600M chip_mid_pkg.xml gen_ate_pin_clock_file_chip FAIL (>10 days, 5th consecutive nightly failure, AI: Hamza Khan, ETA today); Bug 6191042 TB600C TJV_TOPS no SSN clocks defined (3 consecutive fails Jun 16/18/20, ETA this week); TB600M NIV VSIM regression die_sel=6 vs expected 7 (blocks Satyam sign-off on NIV release, ETA this week). STUB no workable solutions yet. Regression unstable. Achievements: TB600C NFC selfcheck 2x-shift PASS; TB600 Pkg-B SFNL snapshot released (CL-101992053, Jun 10, ALL JTAG FMOD PASS); CR100 COA_UCF_MISC0 clock_pll VSIM PASS milestone.',
+    anno: 'Simulation environment evaluation: SCSIM vs System SIM for presi. IAS and GFD reviews active. ES target Q4 2026. SCSIM R1 milestone: TB600/T414 + FN10x SCSIM R1 simulator Buildroot boots to console in Backdoor boot -- RM team enabled for GPU bring-up (PSET 6/15). T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429). ATE Verif Weekly Status (Jun 22, Confluence): 3 open regressions -- Bug 6305968 TB600M chip_mid_pkg.xml gen_ate_pin_clock_file_chip FAIL (>10 days, 5th consecutive nightly failure, AI: Hamza Khan, ETA today); Bug 6191042 TB600C TJV_TOPS no SSN clocks defined (3 consecutive fails Jun 16/18/20, ETA this week); TB600M NIV VSIM regression die_sel=6 vs expected 7 (blocks Satyam sign-off on NIV release, ETA this week). STUB no workable solutions yet. Regression unstable. Achievements: TB600C NFC selfcheck 2x-shift PASS; TB600 Pkg-B SFNL snapshot released (CL-101992053, Jun 10, ALL JTAG FMOD PASS); CR100 COA_UCF_MISC0 clock_pll VSIM PASS milestone. [6/30] TB600 (Rosa) SW kickoff 7/8; Rosa SCSIM front door boot in progress.',
     meetings: [],
     risks: [
       {p:'m',t:'Gathering simulation requirements from SW teams -- IAS and GFD reviews ongoing'},
@@ -2326,6 +2335,7 @@ const CHIP_DB = {
       {t:'Simulation requirements finalized',owner:'Hui Fu',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'TB600 (Rosa): SW kickoff 7/8; Rosa SCSIM front door boot in progress. PIC Hui Fu.'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'TB600/T414 + FN10x SCSIM R1 simulator: Buildroot boots to console in Backdoor boot -- RM team enabled for GPU bring-up. T414 chip ID support added to Bootwrapper. Frontdoor boot bringup starting (Bug 6286429).'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'SCSIM vs System SIM evaluation for presi underway. IAS and GFD reviews active.'},
     ],
@@ -2337,10 +2347,10 @@ const CHIP_DB = {
   },
   thorz: {
     title: 'ThorZ · CPU',
-    sub: 'Post-Silicon · SW CM: Mayank Kapoor · CS Done · MNB 8/5 · MG 9/2 · MODS IFT-RA ~6/30',
+    sub: 'Post-Silicon · SW CM: Mayank Kapoor · CS Done · MNB 8/5 · MG 9/2 · MODS IFT-RA ~7/8',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/2872182184/T268+SW',
     pills: [['pill-g','CS ACHIEVED'],['pill-a','MNB SLIPPED 8/5']],
-    anno: 'T268 (6/23): CS milestone achieved. MNB/MG dates revised: MNB 6/13→8/5, MG 7/11→9/2 to accommodate Thor-Z RA/liquid-cool (420 TOPS / 84.3W POR). MODS IFT-RA ETA 6/30. MODS QS Qual package released to SIT; Cold/Warm boot runs initiated. HWQA MNB coverage 99.08%, pass 88.75%. Thor-Z Max-P SW implementation in progress. AAR consolidation in progress. T268 BL Weekly Sync (Jun 17 Confluence): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). T268 MB1 Binary Releases page updated Jun 17. CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK); DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28. ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA. HSIO MNB electrical coverage blocked on CPrev0.4 (unfused OPT_PHY_PLL_SPEEDO_TRIM_NVHS); ~30 locally fused CPrev0.5/FTrev0.6 units as MNB mitigation. QS Qual L4T image released; dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases.',
+    anno: 'T268 (6/23): CS milestone achieved. MNB/MG dates revised: MNB 6/13→8/5, MG 7/11→9/2 to accommodate Thor-Z RA/liquid-cool (420 TOPS / 84.3W POR). MODS IFT-RA ETA 6/30. MODS QS Qual package released to SIT; Cold/Warm boot runs initiated. HWQA MNB coverage 99.08%, pass 88.75%. Thor-Z Max-P SW implementation in progress. AAR consolidation in progress. T268 BL Weekly Sync (Jun 17 Confluence): Jira tasks created for NVBugs tracking; Inline PLC flashing/boot support in progress (Shankar). T268 MB1 Binary Releases page updated Jun 17. CP rev0.7 trending 6/29 (new VNM patterns). NVCAL DTS released 6/16 (Fmax w/o VNM ISINK); DTS with VNM ISINK for RA trending 7/10. POR: 360->420 TOPS (+11W). BNB Declared 5/28. ATS Nightly Jun 17 (Build #1090): linux_dev_nsr 488/510 passed; qnx_debug_sr 470/486 passed. Escalations ongoing: PwrCtrl, TMON, VMON, ASILNA, NFW flash, OTA. HSIO MNB electrical coverage blocked on CPrev0.4 (unfused OPT_PHY_PLL_SPEEDO_TRIM_NVHS); ~30 locally fused CPrev0.5/FTrev0.6 units as MNB mitigation. QS Qual L4T image released; dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases. [6/30] MODS IFT-WriteAssist(WA) release on track; IFT-ReadAssist(RA) retargeted to 7/8 with ISINK fix in place. MNB 8/5 and MG 9/2 holding, contingent on WA QS Qual resolution. MODS FFT release for QS chip screen in planning (unified WA+RA single build for SLT screening). HWQA MNB: coverage 99.24%, pass 89.43%. AAR consolidation in progress; AAR to be hosted mid-July.',
     meetings: [],
     risks: [
       {p:'h',t:'POR updated 360→420 TOPS (+11W: 73.3W→84.3W) -- dual RAM assist modes required; MNB schedule under review pending Liquid-Cool/Read-Assist mode timelines'},
@@ -2357,6 +2367,7 @@ const CHIP_DB = {
       {t:'QBAA noise -- isolated to wafer lot U6F059.000; replacements ordered 5/29',owner:'PHY team',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'T268 (ThorZ): Read Assist SW implementation in progress; MODS IFT-RA release targeting 7/8 (ISINK fix in place); IFT-WA on track. MNB 8/5 / MG 9/2 holding, contingent on WA QS Qual. HWQA MNB coverage 99.24%, pass 89.43%. AAR consolidation in progress; host mid-July.'},
       {sub:'T268 Bring-up Status SCG - 6/14/2026',from:'bbakhru@nvidia.com',time:'Jun 14',body:'ThorZ MaxP (RA/Liquid cooled) is primary MNB/QS schedule driver. CP rev0.7 trending 6/29 with new VNM ISINK patterns. NVCAL DTS releasing 6/16. HSIO MNB blocked on CPrev0.4 unfused fuses -- ~30 locally fused units as mitigation.'},
       {sub:'T268-Bringup PDE Update -06122026',from:'mgadkari@nvidia.com',time:'Jun 13',body:'Overall: functional tests for CPU/GPU passing at room temperature. Additional tuning required to achieve yield targets at higher operating conditions.'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'ThorZ QS Qual L4T image created, validated, and released to MODS/SCG teams. dev-t268 branch repurposed from bringup to MODS stable branch for SCG/SLT releases.'},
@@ -2414,12 +2425,15 @@ const CHIP_DB = {
   },
   n2x: {
     title: 'N2x · CPU',
-    sub: 'Pre-Silicon · SW CM: Vivek Desikan · SOC FDI 6/30 At Risk · GB21B FNL Slipped 7/6',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · SOC FDI At Risk (7/1 review) · GB21B FNL 7/6 · T/O ~12/30',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
-    pills: [['pill-r','AT RISK'],['pill-a','FDI 6/30']],
-    anno: 'N2x (6/23-6/27): H3+NET05 released wide; NET06 planned ~7/2 (2x nvdec/nvenc, ATSD, LPWR). GB21B FNL pushed 6/29→7/6. T354S FDI 6/30 still target; SW ~1 month late vs SOL signoff. Display and Windows lagging (late enablement). NVPOR: 474 total, 224 committed. S-Die L0 35% (was 22%), L1 15% (was 12%). FPGA: 6 setups only. Key blockers: FLR extra during boot (Bug 6337833), C2C HS errors (Bug 5958307), PMU RTOS crash, Windows EL2 abort (Bug 6339277), VIC IRQ Bug 6281029. D3 Cold POR unconfirmed -- potential schedule push-out. T354 SW Status - Graphics Linux (Jun 22, mradev): GFX FPGA testplan L0 86%, L1 99.8%, L2 82.8% -- Display/VIC/VPR/NVENC still need FPGA access (large part of testplan remaining). H3 SOC+iGPU Backdoor Boot active on HAPS FPGA (Jun 17 email thread). MODs no-test on N2X guide published Jun 21 (Amod Kumar, Drive Farm setup). T354 HAPS Display Bringup active on H2.07 netlist (Jun 20). MODS HAPS status (Jun 22, Confluence): Vulkan, Compute, Cask, Graphics (OpenGL) and Video tests passing; display checkout ETA 6/26; testDB updates in progress. T354 dFPGA bringup at Jade site week of June 22 (needs management approval + new build variant, failing locally; Bug 6349535). NVPOR: FD reviews ongoing between ARCH, SCG, RM and MODS; ETA 6/22. N2x SOR_IF_CLK SW Implementation Guide published Jun 16 (P0, before FD). SOC FDI 6/30 at risk; HSIO carries most tapeout risk. H3.05-7 netlist w/ Display Support released Jun 17. dev migrating to dev-main by 7/6. FPGA RM test plan: 76.38% passrate, 83.29% coverage (1106/4408 passed). NVPOR: 474 total; L0: 27%, L1: 12%. RM Chips Jun 18: N1x RTM_OEM issues highest priority; N2x display 1 bug, constant 3-4 bug inflow.',
+    pills: [['pill-r','AT RISK'],['pill-a','FDI 7/1 REVIEW']],
+    anno: 'N2x (6/23-6/27): H3+NET05 released wide; NET06 planned ~7/2 (2x nvdec/nvenc, ATSD, LPWR). GB21B FNL pushed 6/29→7/6. T354S FDI 6/30 still target; SW ~1 month late vs SOL signoff. Display and Windows lagging (late enablement). NVPOR: 474 total, 224 committed. S-Die L0 35% (was 22%), L1 15% (was 12%). FPGA: 6 setups only. Key blockers: FLR extra during boot (Bug 6337833), C2C HS errors (Bug 5958307), PMU RTOS crash, Windows EL2 abort (Bug 6339277), VIC IRQ Bug 6281029. D3 Cold POR unconfirmed -- potential schedule push-out. T354 SW Status - Graphics Linux (Jun 22, mradev): GFX FPGA testplan L0 86%, L1 99.8%, L2 82.8% -- Display/VIC/VPR/NVENC still need FPGA access (large part of testplan remaining). H3 SOC+iGPU Backdoor Boot active on HAPS FPGA (Jun 17 email thread). MODs no-test on N2X guide published Jun 21 (Amod Kumar, Drive Farm setup). T354 HAPS Display Bringup active on H2.07 netlist (Jun 20). MODS HAPS status (Jun 22, Confluence): Vulkan, Compute, Cask, Graphics (OpenGL) and Video tests passing; display checkout ETA 6/26; testDB updates in progress. T354 dFPGA bringup at Jade site week of June 22 (needs management approval + new build variant, failing locally; Bug 6349535). NVPOR: FD reviews ongoing between ARCH, SCG, RM and MODS; ETA 6/22. N2x SOR_IF_CLK SW Implementation Guide published Jun 16 (P0, before FD). SOC FDI 6/30 at risk; HSIO carries most tapeout risk. H3.05-7 netlist w/ Display Support released Jun 17. dev migrating to dev-main by 7/6. FPGA RM test plan: 76.38% passrate, 83.29% coverage (1106/4408 passed). NVPOR: 474 total; L0: 27%, L1: 12%. RM Chips Jun 18: N1x RTM_OEM issues highest priority; N2x display 1 bug, constant 3-4 bug inflow. [6/30] SOC FDI at risk, final decision pending Jade HSIO regression review 7/1; GB21B FNL extended to 7/6. D3cold on iGPU trending accepted -> tapeout slipping from 11/17 to ~12/30. Windows: Hypervisor issue root-caused (Microsoft build pending); Multicore issue resolved on Microsoft test kernel (pending production validation). Display Hybrid IPP bringup ungated (MODS bringup ongoing). Testplan: S-Die L0 52% (was 35), L1 15%; G-Die L0 40% (was 35), L1 22%. Risks: NET06 GB21B netlist late (ETA 7/2) may slip iGPU i2c/ATSD/therm; V7 sim boot 3x slower (pre-si perf regression, debug w/ Jade). Blockers: Bug 5958307 C2C HS training (G-die link/clock detect), Bug 6281029 VIC IRQ. VIC (7/1): FPGA legacy interrupt confirmed SW issue; SSID HW fix slipped to 7/10 (high risk).',
     meetings: [],
     risks: [
+      {p:'h',t:'V7 sim boot 3x slower than expected -- pre-silicon performance regression, debug ongoing with Jade'},
+      {p:'h',t:'Windows Display/GPU testing blocked on Hypervisor enablement; Hypervisor root-caused (MSFT build pending), Multicore fixed on MSFT test kernel (production validation pending)'},
+      {p:'h',t:'NET06 GB21B netlist late (ETA 7/2) -- iGPU i2c/ATSD/therm testing at risk of slip'},
       {p:'h',t:'Display bring-up on H2 blocked by Jade HW bug -- fix expected this week'},
       {p:'h',t:'Windows boot not up on N2x FPGA platform -- Jade bringing up on p-core only netlist'},
       {p:'h',t:'D3 discussions ongoing -- may result in chip schedule pushout if approved'},
@@ -2431,11 +2445,13 @@ const CHIP_DB = {
       {t:'FPGA H3 netlist released to emulation',owner:'DV team',done:true},
       {t:'H3.05-7 netlist with Display Support released to SW (Jun 17)',owner:'vdesikan',done:true},
       {t:'Display H2 Jade HW bug fix resolved',owner:'HW team',done:false},
-      {t:'Testplan L0 at 27% (was 22%), L1 at 12% -- continue progress',owner:'DV team',done:true},
+      {t:'Testplan progress: S-Die L0 52% (was 35), L1 15%; G-Die L0 40%, L1 22%',owner:'DV team',done:true},
       {t:'Windows boot FPGA coverage gap closed',owner:'SW team',done:false},
       {t:'NV Perf validation kickoff (next week)',owner:'Vivek Desikan',done:false},
     ],
     emails: [
+      {sub:'N2x FDI/FNL update -- 6/29',from:'vdesikan@nvidia.com',time:'Jun 29',body:'SOC FDI (6/30) dependent on Jade HSIO HW regressions; reviewed 7/1 before final decision. NV IPs (Display, DLA, VIC, C2C) in ECO mode. GB21B FNL extended to 7/6. Action: prioritize SOC<->GPU testing; complete L0/L1 by 7/23 (T354G FNL).'},
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'N2x: SOC FDI at risk (7/1 review). Potential tapeout slip 11/17 -> ~12/30 due to D3cold POR change; SW ~1mo behind FDI signoff. Windows Hypervisor root-caused (MSFT build pending); Multicore resolved on MSFT test kernel. Testplan S-Die L0 52%.'},
       {sub:'[Notes 6/23] T354/N2x SW Sync',from:'vdesikan@nvidia.com',time:'Jun 26',body:'GB21B FNL pushed 6/29→7/6. T354S FDI 6/30, GB21B 7/6, T354G FNL 7/23. SOC FDI at risk; SW ~1 month late. Hybrid IPP platform enabled in Taiwan. Windows multi-core boot debug in progress.'},
       {sub:'T354 SW Status - Graphics Linux 22 June 2026',from:'mradev@nvidia.com',time:'Jun 22',body:'GFX FPGA testplan execution: L0 86%, L1 99.8%, L2 82.8%. Display/VIC/VPR/NVENC testplan still needs FPGA access -- large part of testplan remaining.'},
       {sub:'[Status][T254/N1x][T256/N1C][T354/N2X] RM Chips - 06/14',from:'sbommisetti@nvidia.com',time:'Jun 18',body:'N2X RM status: display 1 bug open, constant inflow of 3-4 bugs. N1x RTM_OEM issues taken as highest priority. FPGA access still bottleneck for remaining testplan.'},
@@ -2444,6 +2460,7 @@ const CHIP_DB = {
       {sub:'N2x RM Linux Status : 17 Jun 2026',from:'abhsahu@nvidia.com',time:'Jun 17',body:'RM init and sanity tests working in FPGA H3 NL; all UMD teams started with H3 NL. FPGA test plan: 76.38% passrate, 83.29% coverage (1106 passed, 94 failed, 2960 not run of 4408 total).'},
     ],
     slack: [
+      {ch:'Confluence: N2X VIC Video SW sync',from:'Bo Zhao',time:'Jul 1',msg:'FPGA: Legacy interrupt confirmed as SW issue; MSIX working on H3; Actmon verified; nvcuvid first test case debugging. SSID HW fix delayed further to 7/10 -- high risk. SMMU patch ready, KMD change needed.'},
       {ch:'TCS: Steps To RUN MODs no test on N2X',from:'Amod Kumar',time:'Jun 21',msg:'N2X MODs no-test guide updated Jun 21: Drive Farm setup (Oregon location, ubuntu 22) for FPGA-based N2X MODs test runs. VDK V5 changes documented.'},
       {ch:'TCS: T354 HAPS Display Bringup',from:'Sandeep Panda',time:'Jun 20',msg:'T354 HAPS Display Bringup page updated Jun 20. Using H2.07 netlist bitstream. H3 SOC+iGPU Backdoor Boot without display active on FPGA (Jun 17).'},
     ],
@@ -2472,10 +2489,10 @@ const CHIP_DB = {
   },
   t257: {
     title: 'T257 · Monet CPU',
-    sub: 'Pre-Silicon · SW CM: Vivek Desikan · BMW Award Pending · Tapeout Decision Jul 3',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · BMW Award Pending · Tapeout Decision Jul 2',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-m','SETUP']],
-    anno: 'T257 (Monet): BMW design award pending; tapeout decision postponed to July 3 (6/23 status email). FPGA validation framework active.',
+    anno: 'T257 (Monet): BMW design award pending; tapeout decision deferred to July 2 (per 6/30 Top N). FPGA validation framework active.',
     meetings: [],
     risks: [
       {p:'m',t:'BMW design award decision pending -- outcome may affect program scope/timeline'},
@@ -2485,6 +2502,7 @@ const CHIP_DB = {
       {t:'FPGA validation ongoing',owner:'DV team',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'T257 (Monet): Pending BMW design award; tapeout decision deferred to July 2.'},
       {sub:'Top N Things - Tegra SW CM (6/23/26)',from:'rranganathan@nvidia.com',time:'Jun 23',body:'T257 (Monet): Pending BMW design award. Tapeout decision postponed to July 3.'},
     ],
     slack: [],
@@ -2507,6 +2525,7 @@ const CHIP_DB = {
       {t:'90% POR by 6/30',owner:'Roopa',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'T294 (Magni): Arch investigations and readouts ongoing; POR completion targeted by 6/30.'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'T294 Magni: Arch targeting chip POR 90% complete by June-end. C2C was pushed out of TB600; team requesting prioritization for Magni inclusion.'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T294 Magni: Arch investigations and readouts ongoing. Targeting POR complete by 6/30.'},
     ],
@@ -2515,12 +2534,13 @@ const CHIP_DB = {
   },
   t374: {
     title: 'T374 · Beacon',
-    sub: 'Post-Silicon · SW CM: Roopa · Intel CRB Bringup Active · RMTest L0 Running',
+    sub: 'Post-Silicon · SW CM: Roopa · A/B Update Verified · RMTest L0/OpenRM CI',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-a','POST-SI']],
-    anno: 'T374 Beacon post-silicon. Beacon SW Requirement documents updated Jun 15 (Spoorthi D Silva): workstreams for Boot Programming Guide, Boot SW Requirements, and overall SW POR active with Iris-facing requirements. Beacon x86 Build/Flash/Boot (NVIDIA rmtest) guide updated Jun 12 (Rohit Khanna). Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- schedule impact review ongoing. PSET bringup: Buildroot up on Intel CRB + PTL+GB207 platforms; RMTest L0 running, SRT teardown/CUDA extraction debug. PXE boot for remote flashing next. Intel CRB systems procurement for CI/CD enablement (Bug 6269597).',
+    anno: 'T374 Beacon post-silicon. Beacon SW Requirement documents updated Jun 15 (Spoorthi D Silva): workstreams for Boot Programming Guide, Boot SW Requirements, and overall SW POR active with Iris-facing requirements. Beacon x86 Build/Flash/Boot (NVIDIA rmtest) guide updated Jun 12 (Rohit Khanna). Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- schedule impact review ongoing. PSET bringup: Buildroot up on Intel CRB + PTL+GB207 platforms; RMTest L0 running, SRT teardown/CUDA extraction debug. PXE boot for remote flashing next. Intel CRB systems procurement for CI/CD enablement (Bug 6269597). [6/30] Buildroot up; A/B update flow verified; RMTest L0/OpenRM CI automation in progress. SW pre-silicon validation window compressed to ~10-12 weeks due to late FPGA availability.',
     meetings: [],
     risks: [
+      {p:'h',t:'SW pre-silicon validation window compressed to ~10-12 weeks due to late FPGA availability'},
       {p:'m',t:'Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- reviewing schedule impact'},
     ],
     checklist: [
@@ -2528,6 +2548,7 @@ const CHIP_DB = {
       {t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'T374 (Beacon): Buildroot up; A/B update flow verified; RMTest L0/OpenRM CI automation in progress. SW pre-silicon validation window compressed to ~10-12 weeks (late FPGA availability).'},
       {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'T374 PSET bringup: Buildroot up on Intel CRB + PTL+GB207 platforms; running RMTest L0, debugging SRT teardown/CUDA extraction issues. PXE boot for remote flashing next. Intel CRB systems procurement requested for CI/CD (Bug 6269597).'},
       {sub:'Top N Things - Tegra SW CM (6/9/26)',from:'rranganathan@nvidia.com',time:'Jun 9',body:'T374 Beacon: First FPGA to GPU teams Feb 2027 post SOC FNL -- risks SW validation timelines/purpose. Escalation ack but no change to release dates. Focus on post-si schedule.'},
     ],
