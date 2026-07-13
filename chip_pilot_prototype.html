@@ -2190,16 +2190,16 @@ const CHIP_DB = {
   },
   gr10x: {
     title: 'GR10x · Rubin GPU',
-    sub: 'Post-Silicon · SW CM: Ranjani · SW PS Signed Off 7/6 · PRel Trending 7/7',
+    sub: 'Post-Silicon · SW CM: Ranjani · SW PS Signed Off 7/6 · PRel Active · R615 13.4 CL At Risk (7/13)',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/RubinSW/pages/2598145065',
-    pills: [['pill-g','SW PS SIGNED OFF 7/6'],['pill-b','PRel TRENDING 7/7']],
+    pills: [['pill-g','SW PS SIGNED OFF 7/6'],['pill-r','R615 13.4 AT RISK']],
     anno: 'GR10x PS/PRel (6/22-6/26): PS FGI + PRel trending 6/30 (slipped from 6/22). CWAT (Eboard) 98%, BWAT (Pboard excl. RIST) 80%; RIST blockers in active debug (Bugs 6330656 RIST exit voltage, 6273862 PMU TGP, 6259532 Isense, 6000157 DVFS Arbiter). NVLink POR speed confirmed 328Gbps (was 345Gbps). Full cluster (2× NVL72 racks) on 0.6 build 3; NVLink stability NCCL BW tests ongoing (Bug 6335356). DVS: VBIOS 99.00.1C.00.00 resolved driver install fails; P-board count 21% of planned (risk for coverage). A01P power-on planning ~7/1. GR10x (GR100/GR102) QS active; r615 uCL cleanup ongoing -- 94 uCLs remaining as of 6/17 (was 131 on 6/15). GR100 Overall Dashboard (Jun 5): 129 total bugs, 3 showstoppers, 24 P0 open, 41 must-have. NVDEC Bug 5881444 HEVC GPTimer: SW WAR (1s delay) approved for FREL_1 (CMD #269183); R615 fix needed but root cause debate ongoing -- Hemant proposes increasing timeout vs Kaelin pushing for proper error reporting; fix from NVBug comment #156 under validation by Sainath (May 20 update). CTCHBI HBI link failures (NVBug 6335312): FW_STATUS check and HS_INIT mailbox(13) debug ongoing; not blocking secureboot. GR100 NVLink bidir POR 328Gbps confirmed. RubinCtcHbi::GetLineRateMbps RISCV failure (GetNDiv 0x900077) under investigation (mdespotovic). Fractal Bug Scrub (Jun 21): 45 GR100 bugs, 15 blockers + 8 unscrubbed. GFW NVBug 6315025 (Deepseek-v3 sm_107a BLOCKING): Draft MR !1687 pipeline under verification. r615 Dev Drop 1 target 6/29, release target 7/9. [7/6] QS1 L10 PD bring-up active at Oracle mfg (Ingrasys/Quanta): CpuPcieTraffic failures (Bugs 6388563/6377173; Gen5x4 max ~126Gbps vs 70Gbps threshold under discussion), SystemThermal + NvmeDataDriveBandwidth (Bug 6397816), PD version mismatch (Bug 6388665). Rubin pre-prod HW (6/26): Vera Rubin NVL4 TS1 board ETA 8/17, NVL4 QS board no ETA, Fractal GR100 TS3/CR at-risk. MGX-VERA-C2 QS 0.6 driver 615.16 Bug 6380898 (nvmps_cuda/green_contexts/io_consistency fails). [7/7] SW signed off Post-Silicon (PS) on 7/6 - factory final diag, BWAT and CWAT, and all planned Qual complete (per R. Vasantha, SW CM); PRel (formal production-ready chip signoff) now trending 7/7. Fractal MODS TS3 L8 release 7/7 (r10.198_1.4.0 / frel_1.286). [7/8] 14.5k boards w/ GR10x delivered (14k GR100 / 498 GR102). VR NVL72 0.6 Build 8 (nmx-c fix) sent to QA; posting-risk Bug 6417727 under scrub; MODS golden frel_1_256_2.47 posted for gr100/gr102. New blockers: Bug 6199028 TS1 HBM4 boards fail 5GHz DRAM (0.6 blocker), Bug 6430208 Fractal P0-proposed. R615 branch still NOT released as of 7/8 -- blocks signed Spark driver for DGX 8.1.0 RC. Factory milestones: v0.6 QS Full Drop 7/24, P-Rel (Factory) 7/31.',
     meetings: [],
     stack: [],
     risks: [
       {p:'m',t:'Bug 6199028: TS1 high-speed HBM4 boards fail to reach 5GHz DRAM / "No devices found" (3 boards) -- 0.6 blocker (Esme Li)'},
       {p:'m',t:'Bug 6417727: posting risk on VR NVL72 0.6 Build 8 SW/FW release -- under scrub'},
-      {p:'m',t:'R615 branch not yet released (as of 7/8) -- blocks signed Spark driver for DGX 8.1.0 RC; downstream driver-signing gated'},
+      {p:'h',t:'R615 13.4 Last CL readiness at risk (7/13): 14 open bugs, closure rate behind pace for 7/13 deadline -- blocks signed Spark driver for DGX 8.1.0 RC'},
       {p:'l',t:'Bug 6430208: new Fractal P0-proposed bug ("not ready") from 7/8 triage sweep'},
       {p:'h',t:'r615 uCL cleanup still in progress -- 94 uCLs remaining (was 131 on 6/15); Dev Drop 1 slipped 6/29->7/6, release target 7/9; GPTIMER error-reporting fix approach still open'},
       {p:'h',t:'NVDEC Bug 5881444 HEVC GPTimer silent timeout -- SW WAR approved for FREL_1; chips_a -> r615 submission pending for customer release'},
@@ -2208,12 +2208,13 @@ const CHIP_DB = {
     checklist: [
       {t:'NVDEC Bug 5881444 WAR land in chips_a -> r615',owner:'Hemant/Sainath',done:false},
       {t:'r615 Dev Drop 1 (slipped 6/29 -> 7/6)',owner:'Hema Kumar',done:false},
-      {t:'r615 release (target 7/9; not released as of 7/8)',owner:'Hema Kumar',done:false},
+      {t:'r615 13.4 CL release (deadline 7/13; at risk -- 14 bugs, behind pace)',owner:'Hema Kumar',done:false},
       {t:'Close VR NVL72 0.6 Build 8 posting-risk (Bug 6417727)',owner:'RM/SW-FW',done:false},
       {t:'Resolve HBM4 5GHz board blocker (Bug 6199028)',owner:'Esme Li/QA',done:false},
       {t:'P-Rel (Factory) sign-off 7/31',owner:'GR10x program',done:false},
     ],
     emails: [
+      {sub:'RM GR10X R615 - 13.4 Last CL Readiness (2026-07-13)',from:'cpereznafarrate@nvidia.com',time:'Jul 13',body:'14 total bugs at risk for 7/13 promotion deadline; closure rate behind pace -- 9 bugs requiring more details or in triaging. Risk: blocks signed Spark driver for DGX 8.1.0 RC.'},
       {sub:'GR10x Board Deliveries Update - 7/8',from:'ccapela@nvidia.com',time:'Jul 8',body:'14.5k boards with GR10x delivered (14k GR100 incl. 10.1k Strata; 498 GR102).'},
       {sub:'RE: [Critical path] Vera Rubin NVL72 0.6 SW/FW Release',from:'vvasudevan@nvidia.com',time:'Jul 8',body:'0.6 Build 8 with nmx-c fix sent to QA; posting risk Bug 6417727 reviewed/scrubbed; MODS golden posted.'},
       {sub:'[MODS - GOLDEN] MODS Golden frel_1_256_2.47 Posted (gr100, gr102, gb202)',from:'svccfttapp@nvidia.com',time:'Jul 8',body:'MODS golden + hotfix posted for gr100/gr102.'},
@@ -2607,9 +2608,9 @@ const CHIP_DB = {
   },
   t374: {
     title: 'T374 · Beacon',
-    sub: 'Post-Silicon · SW CM: Roopa · A/B Update Verified · RMTest L0/OpenRM CI',
+    sub: 'Pre-Silicon · SW CM: Roopa · FPGA Avail Late · Pre-Si Validation ~10-12 wks · Lx Plans Triaging',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
-    pills: [['pill-a','POST-SI']],
+    pills: [['pill-a','FPGA DELAY']],
     anno: 'T374 Beacon post-silicon. Beacon SW Requirement documents updated Jun 15 (Spoorthi D Silva): workstreams for Boot Programming Guide, Boot SW Requirements, and overall SW POR active with Iris-facing requirements. Beacon x86 Build/Flash/Boot (NVIDIA rmtest) guide updated Jun 12 (Rohit Khanna). Iris requesting QS MODS/Fuse release 7 weeks prior to original QS/PS milestone -- schedule impact review ongoing. PSET bringup: Buildroot up on Intel CRB + PTL+GB207 platforms; RMTest L0 running, SRT teardown/CUDA extraction debug. PXE boot for remote flashing next. Intel CRB systems procurement for CI/CD enablement (Bug 6269597). [6/30] Buildroot up; A/B update flow verified; RMTest L0/OpenRM CI automation in progress. SW pre-silicon validation window compressed to ~10-12 weeks due to late FPGA availability. [7/8] SW pre-Si validation window still compressed ~10-12wk (late FPGA); teams triaging Lx test plans to prioritize. Buildroot up on Intel Panther Lake (PTL) boards; A/B update flow VERIFIED; RMTest L0 (rmtest_l0_linux_openrm gb207) / OpenRM CI automation in progress (boot via USB/GRUB). COSIM: Iris R1 done 6/5, Nimbus R1 7/6, Nimbus Cosim-Basic 7/31, Iris R2 8/28. New: Beacon reset issue under review (TEGS, 7/6).',
     meetings: [],
     risks: [
