@@ -2159,6 +2159,7 @@ const CHIP_DB = {
       {p:'m',t:'SPI boot emulation validation outstanding -- at risk for FNL scope'},
       {p:'m',t:'Thermal solution for NR10x dielet unspecified -- flagged high risk in DFP progress; no thermal sync cadence established'},
       {p:'l',t:'Sirius OOB telemetry requirement under revision -- scope impact to POR being assessed'},
+      {p:'h',t:'A-die (Sirius) co-emulation platform just starting bring-up -- Astera XPU traffic in System Sim projected Sim3 by Aug 30 (risk to Tapeout); UCIe link init/interrupts/error handling/resets all needed on co-emu; MODS driver API trending Aug 2026 (limited integration time)'},
     ],
     checklist: [
       {t:'QM4 + NR10 emulation link bring-up unblocked (Bug 6075676 still open)',owner:'Ranjani',done:false},
@@ -2174,6 +2175,7 @@ const CHIP_DB = {
     ],
     emails: [
       {sub:'Top 5 | NVL-Fusion | NR10 | Program Weekly Status 7/7/2026',from:'dachiang@nvidia.com',time:'Jul 8',body:'FNL snap 6/29; ECO window closing 7/24. SHIM ECOs 6399590/6398766/6397872; new FCV bug 6414778 (BSI/SCI); UPHY sim bugs 6340039/6364484. UCIe PnR review w/ Synopsys done 7/6; UCIe PHY T7 ETA 7/15; VDD-noise fix analysis due 7/8.'},
+      {sub:'Re: NR10/A-Die co-emulation/SW Follow up',from:'pramanagaram@nvidia.com',time:'Jul 10',body:'A-die co-emulation platform bring-up just started (A-die availability confirmed); platform integration in progress -- few weeks to complete before coverage ramp can begin.'},
       {sub:'NR10 Chip SW Status Report (07/07/2026)',from:'ssriranjani@nvidia.com',time:'Jul 8',body:'N-die schedule FNL 6/29 -> ECO Freeze 7/24 -> TO-Ready 8/31 -> TO 11/30 -> PON ~Apr 2027; A-die FNL Sep 2026, TO Dec 2026. OOB-HUB de-commit and NVLink POR speed pending program-level; SW FNL signoff in review (E2E TRex pending).'},
       {sub:'Top5 | NVLink Fusion | NR10,NR20,NF10 | Arch',from:'aaingaran@nvidia.com',time:'Jul 7',body:'Disconnect found between ALAB/Sirius PCIe isolation flows and non-fatal error handling; solutions under evaluation.'},
       {sub:'Re: NR10/A-Die co-emulation/SW Follow up',from:'pramanagaram@nvidia.com',time:'Jul 10',body:'A-die co-emulation with partner now started (post-FNL); platform bringup in progress, will take more time to bring up and verify link.'},
@@ -2199,7 +2201,7 @@ const CHIP_DB = {
     risks: [
       {p:'m',t:'Bug 6199028: TS1 high-speed HBM4 boards fail to reach 5GHz DRAM / "No devices found" (3 boards) -- 0.6 blocker (Esme Li)'},
       {p:'m',t:'Bug 6417727: posting risk on VR NVL72 0.6 Build 8 SW/FW release -- under scrub'},
-      {p:'h',t:'R615 13.4 Last CL readiness at risk (7/13): 14 open bugs, closure rate behind pace for 7/13 deadline -- blocks signed Spark driver for DGX 8.1.0 RC'},
+      {p:'h',t:'R615 13.4 Last CL readiness DEADLINE TODAY (7/13): 14 bugs, 9 in triage (Bug 6441023 new today; Bug 6233255 vCXL ETA 7/14; Bug 6083810 long pole pending customer). Slip likely -- blocks signed Spark driver for DGX 8.1.0 RC'},
       {p:'l',t:'Bug 6430208: new Fractal P0-proposed bug ("not ready") from 7/8 triage sweep'},
       {p:'h',t:'r615 uCL cleanup still in progress -- 94 uCLs remaining (was 131 on 6/15); Dev Drop 1 slipped 6/29->7/6, release target 7/9; GPTIMER error-reporting fix approach still open'},
       {p:'h',t:'NVDEC Bug 5881444 HEVC GPTimer silent timeout -- SW WAR approved for FREL_1; chips_a -> r615 submission pending for customer release'},
@@ -2210,7 +2212,7 @@ const CHIP_DB = {
     checklist: [
       {t:'NVDEC Bug 5881444 WAR land in chips_a -> r615',owner:'Hemant/Sainath',done:false},
       {t:'r615 Dev Drop 1 (delivered 7/6)',owner:'Hema Kumar',done:true},
-      {t:'r615 13.4 CL release (deadline 7/13; at risk -- 14 bugs, behind pace)',owner:'Hema Kumar',done:false},
+      {t:'r615 13.4 CL release (deadline 7/13 TODAY; 14 bugs, 9 in triage; day-slip likely; Bug 6441023 new today)',owner:'Hema Kumar',done:false},
       {t:'Close VR NVL72 0.6 Build 8 posting-risk (Bug 6417727)',owner:'RM/SW-FW',done:false},
       {t:'Resolve HBM4 5GHz board blocker (Bug 6199028)',owner:'Esme Li/QA',done:false},
       {t:'P-Rel (Factory) sign-off 7/31',owner:'GR10x program',done:false},
@@ -2377,6 +2379,7 @@ const CHIP_DB = {
       {t:'IAS/GFD reviews complete',owner:'Hui Fu',done:false},
     ],
     emails: [
+      {sub:'Top N - PSET - July 13, 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'TB600/T414 SCSIM R1.5 released 7/12; frontdoor boot unblocked (Bug 6286429 patched); GVS sanity enablement started; dielet naming convention discussion active.'},
       {sub:'Top N Things - Tegra SW Chip Mgmt (07/07/26)',from:'rranganathan@nvidia.com',time:'Jul 8',body:'TB600 (Rosa) SW kickoff 7/8; Rosa SCSIM front-door boot in progress.'},
       {sub:'Top N – PSET – July 13 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'TB600 (T414) + FN10x SCSIM R1.5 Simulator released 7/12. Buildroot boots to console in Backdoor boot; FD boot now unblocked with patched bpmp-fw (Bug 6286429). GVS sanity enablement WIP. Naming conventions discussion for CPU/GPU/NIC components ongoing.'},
       {sub:'Top5 Golden Register Team 6/25-7/1',from:'anandb@nvidia.com',time:'Jul 1',body:'GR Check proactively for TB600 during PreSi/bringup; drive bugs to closure ETA end July.'},
@@ -2634,6 +2637,7 @@ const CHIP_DB = {
       {t:'Buildroot up on Intel PTL boards',owner:'Beacon SW',done:true},
       {t:'RMTest L0 / OpenRM CI automation',owner:'Beacon SW',done:false},
       {t:'Post-Si schedule alignment complete',owner:'Roopa',done:false},
+      {t:'Beacon RVP requirements doc delivered to Iris (target end of July)',owner:'Beacon SW',done:false},
       {t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false},
     ],
     emails: [
