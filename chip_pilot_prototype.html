@@ -2519,12 +2519,11 @@ const CHIP_DB = {
       {t:'NV Perf validation kickoff',owner:'Vivek Desikan',done:false},
     ],
     emails: [
-      {sub:'Top N – PSET – July 13 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'N2x Sim V7: Jade released V7 SOC simulator but boot 3x slower due to CPU tickers in HFRP overflow prints. Root-caused; SW update from Jade provided. GPU fmodel integrated; Boot from NVMe restarting with Marlin NVMe model. TinyLinux migration 6.14→6.18 LTS in progress. BaseOS sanity enabled in dev-main and mod* branches.'},
+      {sub:'Top N - PSET - July 13, 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'N2x Sim V7: boot 3x slower root-caused to CPU tickers in HFRP overflow prints; Jade SW update provided. GPU fmodel integrated. NVMe moving to Marlin model. TinyLinux 6.14→6.18 LTS migration; BaseOS sanity in dev-main/mod*.'},
       {sub:'[B] 6376584 [T35x][N2x] Fuse macro burning support for N2x G-die on FPGA',from:'mbedi@nvidia.com',time:'Jul 8',body:'NVBug notification for N2x G-die FPGA fuse-macro burning support (Emulation-T354).'},
       {sub:'T35x COSIM Performance Status Update',from:'sasuman@nvidia.com',time:'Jul 8',body:'N2X corrective action (regen from RTL, rerun traces on ESL); 2-sector store/mix matches T254 silicon+EMU.'},
       {sub:'Top N Things - Tegra SW Chip Management (07/07/26)',from:'rranganathan@nvidia.com',time:'Jul 8',body:'N2x SOC FDI snapped, SW signoff trending 7/30, D3 Cold approved, F2F 7/13-14, full module/KPI table.'},
-      {sub:'Top N - PSET - July 13, 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'N2x: V7 SOC simulator perf issue root-caused (HFRP CPU tickers causing overflow prints); SW fix provided by Jade. TinyLinux kernel 6.14→6.18 LTS migration in progress. BaseOS sanity enabled in dev-main and mod* branches. RM sanity enablement in progress.'},
-      {sub:'Top N - PSET - July 13, 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'N2x V7 sim perf fix from Jade (CPU ticker overflow prints); GPU fmodel integrated; boot-from-NVMe moving to Marlin model; TinyLinux 6.14→6.18 LTS; BaseOS sanity in dev-main.'},
+      {sub:'Fw: T354/N2x Chip SW Status Report (7/6/2026)',from:'rranganathan@nvidia.com',time:'Jul 7',body:'D3 Cold approved; tapeout end-Dec; POR updates pending Jade alignment.'},
     ],
     slack: [
       {ch:'#hwinf-capacity-planner-support',from:'Tony Louca/Mengyao Wu',time:'Jul 8',msg:'GB21B milestones + nvstatus template (GB21Y_HW_V5_3) loaded into CapacityPlanner/ChipPOR.'},
@@ -2641,10 +2640,10 @@ const CHIP_DB = {
       {t:'QS MODS/Fuse early release decision',owner:'Roopa',done:false},
     ],
     emails: [
-      {sub:'Top N – PSET – July 13 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'T374 Beacon: Bringup in progress on Intel CRB PTL+GB207 platforms — RM validation, Iris/Nimbus CI and GVS deployment. RTX PRO 4000 SFF Blackwell successfully validated with Intel CRB/PTL. Beacon RVP requirements drafting started, targeting delivery to Iris end of July. FPGA Automation API requirements presented to Iris and NV FPGA teams, workflow under scoping.'},
+      {sub:'Top N - PSET - July 13, 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'T374 Beacon: Bringup on Intel CRB + PTL+GB207 -- RM validation, Iris/Nimbus CI and GVS deployment. RTX PRO 4000 SFF Blackwell validated. Beacon RVP requirements drafting started (target: Iris by end July). FPGA Automation API requirements presented; Buildroot vs LiteLinux SLT assessment underway.'},
+      {sub:'Top N Things - Tegra SW Chip Management (07/07/26)',from:'rranganathan@nvidia.com',time:'Jul 8',body:'T374 (Beacon): SW pre-silicon window compressed ~10-12 wks (late FPGA); teams triaging Lx test plans to prioritize.'},
       {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'T374 (Beacon): Buildroot up; A/B update flow verified; RMTest L0/OpenRM CI automation in progress.'},
-      {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'T374 PSET bringup: Buildroot up on Intel CRB + PTL+GB207 platforms; running RMTest L0; Intel CRB systems procurement requested for CI/CD (Bug 6269597).'},
-      {sub:'Top N - PSET - July 13, 2026',from:'sgarg@nvidia.com',time:'Jul 13',body:'T374 (Beacon): RTX PRO 4000 SFF Blackwell validated on Intel CRB/PTL; RVP requirements drafting (target: Iris by end July); Buildroot vs LiteLinux SLT assessment; FPGA Automation API requirements presented.'},
+      {sub:'Top N - PSET - June 15, 2026',from:'sgarg@nvidia.com',time:'Jun 15',body:'T374 PSET bringup: Buildroot up on Intel CRB + PTL+GB207; running RMTest L0; Intel CRB systems procurement (Bug 6269597).'},
     ],
     slack: [],
     prog: 5, phase:'Post-Silicon'
