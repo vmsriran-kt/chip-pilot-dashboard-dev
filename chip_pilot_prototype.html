@@ -2497,12 +2497,38 @@ const CHIP_DB = {
       {ch:'Confluence: FN10x ESCHED First NL RTL Snap',from:'Zinsser Zhang',time:'Jul 14',msg:'FN10x ESCHED First NL RTL Snap page updated (7/14): snap milestones and verification readiness per module tracked. RC sequence update and ECC removal timing confirmed relative to 1NL.'},
     
     ],
+    prog: 38, phase:'Pre-Silicon'
+  },
+  n2x: {
+    title: 'N2x · CPU',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · GB21B FNL Snapped · SW Signoff 7/30 · T354G FNL 7/23 · Win FPGA Boot ✓ · T/O 12/30',
+    wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS/pages/3228994147/T354+SW+AAR',
+    pills: [['pill-g','SOC FDI DONE'],['pill-a','SW SIGNOFF 7/30']],
+    anno: '[7/17] HDMI up with MODS on N2x Hybrid IPP FPGA confirmed milestone (7/15). T354G FNL checklist 95.5% (only pending: bug closure). T356G PFNL 100%. MTK N2X Design Document delivery received 7/15. N2X RM Weekly Syncup (7/15): FNL blocker Bug 6329712 working with test arg change; N2X FPGA Display handoff active (ESI→legacy WAR working, RM short-pulse race found). T354 S-Die TO pushed late December; G-Die TO worst case 12/8; power-on mid-to-late April. GFX FPGA testplan L0 87.7%/L1 99.8%/L2 99.2% (7/16). | [7/15] HDMI up with MODS on N2x Hybrid IPP FPGA — key display bringup milestone. T354G FNL checklist 95.5% (only pending: all bugs closed). T356G PFNL checklist 100%. MTK N2X Design Document delivery received 7/15. Fuse macro burning support for N2x G-die on FPGA (Bug 6376584) in progress. | N2x (6/23-6/27): H3+NET05 released wide; NET06 planned ~7/2 (2x nvdec/nvenc, ATSD, LPWR). GB21B FNL pushed 6/29→7/6. T354S FDI 6/30 still target; SW ~1 month late vs SOL signoff. Display and Windows lagging (late enablement). NVPOR: 474 total (226 committed; 19 in planning; 45 to-do). S-Die L0 58% (was 57%), L1 37% (was 36%). G-Die L0 56% (was 48%), L1 29% (was 22%). MTK F2F 7/13–14 to align on N2x/N2 post-silicon chip/product schedule. D3 Cold approved; tapeout targeting end of December. Windows Hypervisor in progress — hypervisor enters but gated on kernel launch (Bug 6339277). VDK v7 bringup: boot and perf degradation (Display, GPU_RISCV) under debug. FPGA: 6 setups only. Key blockers: FLR extra during boot (Bug 6337833), C2C HS errors (Bug 5958307), PMU RTOS crash, Windows EL2 abort (Bug 6339277), VIC IRQ Bug 6281029. D3 Cold POR unconfirmed -- potential schedule push-out.',
+    meetings: [],
+    risks: [
+      {p:'m',t:'[7/14] C2C R4.2 for D3 cold fix targeting Jade delivery by 7/24; team evaluating pulling in a few days'},
+      {p:'h',t:'GB21B FNL (7/6) slipping -- new POR adoption of 2b Trellis + ProRes decode HW features (under investigation); impacts GB21B/T354G'},
+      {p:'m',t:'GPU MODS blocked -- SOC+GPU L2-reset under debug (L0 5%); MODS init post-L2-reset failing (Bug 6391805, ETA 7/10); VDK Vulkan/Compute blocked (Bug 5985590)'},
+      {p:'m',t:'EMU capacity risk -- ~1 week to run testlist with no perf-triage buffer; graphics/compute/power share one EMU; GB21B/T354 EMU perf-triage 0% (ETA slipped 7/15->7/23)'},
+      {p:'m',t:'USB/DP Tunneling SW validation still in progress -- needed to prevent late HW escapes'},
+      {p:'l',t:'✅ RESOLVED (7/13) -- V7 sim perf issue: Jade root-caused to 2 CPU tickers in HFRP causing overflow prints; SW fix applied; GPU fmodel integrated (pending perf-fix verification)'},
+      {p:'h',t:'Windows Display/GPU testing gated on Hypervisor enablement; Hypervisor root-caused (MSFT build pending), Multicore fixed on MSFT test kernel (production validation pending)'},
+      {p:'h',t:'D3 Cold POR approved (7/6) -- adds C2C HW + SW validation effort; tapeout pushed to ~end of Dec; updated schedule pending Jade closure'},
+      {p:'l',t:'✅ RESOLVED (7/8) -- Display H2 VIC IRQ root-caused to FW config issue; VPR validation ongoing (VIC L0 79%)'},
+      {p:'m',t:'GB21B: HW investigating 2b Trellis + ProRes decode features -- pending acceptance may add further schedule impact to GB21B/T354G'},
+      {p:'h',t:'SW FDI signoff for N2x still open -- gated on remaining FDI validation coverage, trending 7/30 for closure'},
+      {p:'h',t:'VDK -- Multiple performance bottlenecks across Display, GPU_RISCV, and front door boot'},
+      {p:'m',t:'NV Perf validation not started due to resource unavailability -- expected next week'},
+      {p:'m',t:'Hybrid IPP Bringup delayed due to Jade netlist issues till July'},
+    ],
     checklist: [
       {t:'FPGA H3 netlist released to emulation',owner:'DV team',done:true},
       {t:'H3.05-7 netlist with Display Support released to SW (Jun 17)',owner:'vdesikan',done:true},
       {t:'SOC FDI snapped (T354S 6/30)',owner:'HW team',done:true},
       {t:'VIC IRQ resolved (FW config); VPR validation ongoing',owner:'SW team',done:true},
       {t:'F2F with MTK to align N2x/N2 post-Si schedule (7/13-7/14)',owner:'Vivek Desikan',done:true},
+      {t:'HDMI up with MODS on Hybrid IPP FPGA (7/15) ✅',owner:'TPURANKAR',done:true},
       {t:'SW SOC-FDI signoff (7/30)',owner:'SW teams',done:false},
       {t:'T354G FNL (7/23)',owner:'SW/Arch',done:false},
       {t:'GB21B FNL POR decision on 2b Trellis+ProRes',owner:'GB21B/Arch',done:false},
@@ -2510,18 +2536,18 @@ const CHIP_DB = {
       {t:'NV Perf validation kickoff',owner:'Vivek Desikan',done:false},
     ],
     emails: [
-      {sub:'T35X Top N and Details - 7/14/2026',from:'CKiris@nvidia.com',time:'Jul 14',body:'T35X: Delivering C2C R4.2 for D3 cold fix to Jade by 7/24; team evaluating feasibility of releasing a few days earlier. Verification of C2C R4.2 in progress.'},
-      {sub:'Top N Things - Tegra SW Chip Management (07/13/26)',from:'rranganathan@nvidia.com',time:'Jul 14',body:'N2x: GB21B FNL snapped. SW FDI signoff trending 7/30. Windows boots on FPGA with Hypervisor and multicore; DLA SMMU + iGPU enumeration successful. Post-Si Linux/WoA qual/WAT coverage alignment ongoing. Testplan: S-Die L0 58%/L1 37%, G-Die L0 56%/L1 29%.'},
-      {sub:'Notes/Slides: T35X Project Management Meeting 7/15/2026',from:'CKiris@nvidia.com',time:'Jul 16',body:'T354 S-Die TO pushed to late December; G-Die TO worst case 12/8 (FNL snap 9/21). Power-on mid-to-late April. ESL Phase 2.5 complete (55/56 pass); Phase 3 in progress. SW power: Jade @59%, Marlin @35%. Modern Standby aligned to Dec TO. C2C HS boot working; iGPU LPWR SW sign-off ready.'},
+      {sub:'Notes/Slides: T35X Project Management Meeting 7/15/2026',from:'CKiris@nvidia.com',time:'Jul 16',body:'T354 S-Die TO pushed to late December; G-Die TO worst case 12/8 (FNL snap 9/21). Power-on mid-to-late April. ESL Phase 2.5 complete (55/56 pass). C2C HS boot working; iGPU LPWR SW sign-off ready. SW power: Jade @59%, Marlin @35%.'},
       {sub:'T354 SW Status - Graphics Linux 16 July 2026',from:'mradev@nvidia.com',time:'Jul 16',body:'GFX FPGA testplan: L0 87.7% pass, L1 99.8%, L2 99.2%. Blockers: Display not functional on ToT; VPR not supported on T254/T354 Linux/coreboot. GPU+VIC+CPU interop verified via nvmemtest on FPGA and VDK.'},
-      {sub:'N2x IPP Hybrid FPGA - HDMI Up with MODS',from:'TPURANKAR@nvidia.com',time:'Jul 15',body:'N2x Hybrid IPP FPGA milestone: HDMI up with MODS — significant display bringup progress. T354G FNL checklist 95.5% (pending: bug closure). T356G PFNL checklist 100%. MTK N2X Design Document delivery received 7/15 (tbergstrom reply). Fuse macro burning support for N2x G-die on FPGA (Bug 6376584) in progress.'},
+      {sub:'N2x IPP Hybrid FPGA - HDMI Up with MODS',from:'TPURANKAR@nvidia.com',time:'Jul 15',body:'N2x Hybrid IPP FPGA milestone: HDMI up with MODS — significant display bringup progress. T354G FNL checklist 95.5% (pending: bug closure). T356G PFNL checklist 100%. MTK N2X Design Document delivery received 7/15. Fuse macro burning support for N2x G-die on FPGA (Bug 6376584) in progress.'},
+      {sub:'T35X Top N and Details - 7/14/2026',from:'CKiris@nvidia.com',time:'Jul 14',body:'T35X: Delivering C2C R4.2 for D3 cold fix to Jade by 7/24; team evaluating feasibility of releasing a few days earlier. Verification of C2C R4.2 in progress.'},
+      {sub:'Top N Things - Tegra SW Chip Management (07/13/26)',from:'rranganathan@nvidia.com',time:'Jul 14',body:'N2x: GB21B FNL snapped. SW FDI signoff trending 7/30. Windows boots on FPGA with Hypervisor and multicore; DLA SMMU + iGPU enumeration successful. Testplan: S-Die L0 58%/L1 37%, G-Die L0 56%/L1 29%.'},
     ],
     slack: [
+      {ch:'Confluence: N2X RM Weekly Syncup',from:'Amod Kumar',time:'Jul 15',msg:'N2X RM weekly sync (7/15): FNL blocker Bug 6329712 (sys clk slowdown rmtest hang) working with test arg change (Ayush to update bug). Bug 6357366 (GB21B NV_CPWR_THERM_HW_DVFS_GPCCLK_FREQ) still open.'},
+      {ch:'Confluence: N2X FPGA Display Hand-off SC-KR',from:'Hosung Kim',time:'Jul 15',msg:'N2X FPGA Display handoff (7/15): chips_a @ CL 38443617; ESI→legacy WAR confirmed working; RM short-pulse race found; WARs in CL 38514124; verification request: run CycleNvDisp2 from new MST runspace.'},
+      {ch:'Emulation Status Report',from:'risgupta@nvidia.com',time:'Jul 17',msg:'T354[SoC+GPU] Emulation Status 07/16/2026: latest SoC+GPU emulation status update for N2x.'},
       {ch:'#hwinf-capacity-planner-support',from:'Tony Louca/Mengyao Wu',time:'Jul 8',msg:'GB21B milestones + nvstatus template (GB21Y_HW_V5_3) loaded into CapacityPlanner/ChipPOR.'},
-      {ch:'#yaqid-email',from:'Chaozhou',time:'Jul 8',msg:'GB21B/T354 EMU perf-triage: compute top10 ~95% on co-sim RTL; EMU perf-triage 0%, ETA slipped 7/15->7/23; EMU-timeline capacity risk flagged.'},
-      {ch:'#cdd-catalyze-queries',from:'Setu Patel/Catalyze Bot',time:'Jul 7',msg:'t354 RTL SM ctas_launched stat dropped for SM1/2/3 -- root-caused to 4-level vs 3-level suffix mismatch (feynman chiplib vs t354 VPM); fix in mars_t35x.'},
       {ch:'Group DM',from:'Vivek Desikan',time:'Jul 7',msg:'T35x = GB21B Blackwell; reviewing WoA-specific bug list (CMN-hang 5578434) + next steps, incl. asking Jade for Linux testing.'},
-      {ch:'Emulation Status Report',from:'risgupta@nvidia.com',time:'Jul 17',msg:'T354[SoC+GPU] Emulation Status 07/16/2026 sent by Rishabh Gupta — latest SoC+GPU emulation status update for N2x.'},
     ],
     prog: 32, phase:'Pre-Silicon'
   },
@@ -2641,7 +2667,11 @@ const CHIP_DB = {
       {sub:'Top N Things - Tegra SW Chip Management (07/07/26)',from:'rranganathan@nvidia.com',time:'Jul 8',body:'T374 (Beacon): SW pre-silicon window compressed ~10-12 wks (late FPGA); teams triaging Lx test plans.'},
       {sub:'Top N Things - Tegra SW CM (6/30/26)',from:'rranganathan@nvidia.com',time:'Jun 30',body:'T374 (Beacon): Buildroot up; A/B update flow verified; RMTest L0/OpenRM CI automation in progress.'},
     ],
-    slack: [],
+    slack: [
+      {ch:'Confluence: Beacon JFrog Artifacts Developer Setup Guide',from:'Sophia Wu',time:'Jul 16',msg:'Beacon JFrog Artifacts Developer Setup Guide published (7/16): request sw-beacon-jfrog-read-access DL membership (hours for propagation), then browse sw-beacon-public-gitlfs Artifactory repository.'},
+      {ch:'Confluence: Beacon x86 Build/Flash/Boot (NVIDIA rmtest)',from:'Rohit Khanna',time:'Jul 16',msg:'Beacon x86 Build/Flash/Boot guide updated (7/16): Buildroot+kernel-RM validation track for Intel PTL. Host-built OpenRM driver, nvidia-smi, DVS rmtest (rmtest_l0_linux_openrm). Steps in GitHub README.'},
+      {ch:'Confluence: Beacon OS & GPU MODS Strategy',from:'Rohit Khanna',time:'Jul 16',msg:'Beacon OS/GPU MODS Strategy updated (7/16): Buildroot as primary pre-silicon/validation/SLT OS; Ubuntu track for GFX/CUDA; GPU MODS distro-agnostic. Stakeholder sign-off per Bug 6111137.'},
+    ],
     prog: 5, phase:'Post-Silicon'
   }
 };
