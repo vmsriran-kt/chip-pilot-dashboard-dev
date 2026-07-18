@@ -2334,6 +2334,7 @@ const CHIP_DB = {
       {t:'Chip P-Rel & PS 1st FGI (TB500M 88% bin) 7/31',owner:'SW team',done:false},
     ],
     emails: [
+      {sub:'Top N Things - Tegra SW Chip Management (07/13/26)',from:'rranganathan@nvidia.com',time:'Jul 14',body:'TB500 (Vera): P-pkg chip P-rel activities complete. Final reliability/Pkg Qual/Control run sign-off trending 7/31. TB500-M WAT trailing ~1 week; PS targeted 7/31. TB550 new CPU-dielet re-spin: TO 8/31/26, PON 1/10/27, P-rel 5/30/27. SBIOS: all committed features complete; QS branch frozen with 12 blockers. Risk: Bug 6031481 PCIe P2P perf ~10% degradation on A01Y GPU-GPU P2P.'},
       {sub:'TB500 SW Bring-up Status - KIST - 2026-07-16',from:'sruskamp@nvidia.com',time:'Jul 16',body:'KIST bringup status: VR NVL72 SW 0.6 is KIST first and main customer milestone. OS warm reboot cycling failure from 7/15 SWQA LKG sanity (0.6 Build 10) under investigation — blocks 0.6 QA closure.'},
       {sub:'Enterprise SWQA – VR NVL72 QS 0.6 Build 10 Full Test Mid-term Report (07/17/2026)',from:'thli@nvidia.com',time:'Jul 17',body:'Mid-term test report for VR NVL72 QS 0.6 Build 10 with SBIOS 06.05.01.00 filed. Coverage and quality metrics in review; VR NVL72 0.6 QS Full Drop AT RISK 7/24 → week of 7/27.'},
       {sub:'<Agenda: 7/14/2026> TB500 SBIOS Weekly Execution Meeting',from:'pgorla@nvidia.com',time:'Jul 14',body:'TB500 SBIOS QS: All committed features complete; 8 blocker bugs remaining. VR NVL72 schedule: 0.6 Build 10 in QA. Next milestone: PS-FGI and Chip P-rel by 7/31.'},
@@ -2580,10 +2581,10 @@ const CHIP_DB = {
   },
   t257: {
     title: 'T257 · Monet CPU',
-    sub: 'Pre-Silicon · SW CM: Vivek Desikan · BMW Award Pending · Tapeout Decision Deferred Jul 17',
+    sub: 'Pre-Silicon · SW CM: Vivek Desikan · BMW Award Pending · 7/17 Decision Date Passed · Outcome TBD',
     wikiUrl: 'https://nvidia.atlassian.net/wiki/spaces/TCS',
     pills: [['pill-m','SETUP']],
-    anno: '[7/17] TODAY is the deferred tapeout decision date (deferred from July 10 → July 17). BMW design award still pending — no go/no-go confirmed yet as of this sync. | T257 (Monet): BMW design award pending; tapeout decision deferred to July 2 (per 6/30 Top N). FPGA validation framework active. [7/8] Tapeout decision deferred again to July 10 (was July 2), tied to pending BMW design award. New: a HAPS (sc-haps117) issue is blocking T257 FNL validation; T257/T258 HW demand planning underway (4x TS1 + 12 CR). No BMW-award or tapeout-go decision confirmed as of 7/8. [7/13] Tapeout decision deferred from July 10 to July 17 (per Roopa email 7/13). BMW award still pending; no tapeout-go confirmed yet.',
+    anno: '[7/18] Tapeout decision date (7/17) has now passed. No confirmed go/no-go outcome received in available sources as of 7/18. BMW design award outcome still pending. | T257 (Monet): BMW design award pending; tapeout decision deferred to July 2 (per 6/30 Top N). FPGA validation framework active. [7/8] Tapeout decision deferred again to July 10 (was July 2), tied to pending BMW design award. New: a HAPS (sc-haps117) issue is blocking T257 FNL validation; T257/T258 HW demand planning underway (4x TS1 + 12 CR). No BMW-award or tapeout-go decision confirmed as of 7/8. [7/13] Tapeout decision deferred from July 10 to July 17 (per Roopa email 7/13). BMW award still pending; no tapeout-go confirmed yet.',
     meetings: [],
     risks: [
       {p:'m',t:'Tapeout decision slipped July 2 -> July 10 -> July 17 (tied to BMW award) -- ongoing schedule slip'},
